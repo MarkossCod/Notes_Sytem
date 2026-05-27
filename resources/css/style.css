@@ -1,0 +1,365 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: #f0f2f5;
+}
+
+/* NAVBAR */
+.navbar {
+    width: 100%;
+    background: #ff7b00;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.logo {
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.navbar ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background .2s;
+}
+
+.navbar a:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* CONTAINER */
+.container {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* TÍTULO */
+.title {
+    margin-bottom: 30px;
+    color: #ff7b00;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+/* GRID DE NOTAS */
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: transform .2s, box-shadow .2s;
+    border-top: 4px solid #ff7b00;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.card h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.card-date {
+    font-size: 13px;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.card-badge {
+    font-size: 12px;
+    background: #fff3e0;
+    color: #ff7b00;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* BOTÕES */
+.btn {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 10px 20px;
+    background: #ff7b00;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background .2s;
+}
+
+.btn:hover {
+    background: #e06e00;
+}
+
+/* FORMULÁRIO */
+.form-container {
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    max-width: 520px;
+    margin: auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.form-container h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: border .2s;
+    background: #fafafa;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #ff7b00;
+    background: white;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    background: #ff7b00;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+button:hover {
+    background: #e06e00;
+}
+
+/* NOTA PAGE */
+.note-page h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.note-page .note-date {
+    font-size: 14px;
+    color: #888;
+    margin-top: 6px;
+    margin-bottom: 24px;
+}
+
+/* SECTION CARD */
+.section-card {
+    background: white;
+    padding: 20px;
+    border-left: 5px solid #ff7b00;
+    margin-top: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: opacity .3s;
+}
+
+.section-card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+}
+
+.section-card p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* CONCLUÍDO */
+.section-completed {
+    border-left-color: #4caf50;
+    background: #f1faf1;
+}
+
+.section-completed h2 {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.section-completed p {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.badge-completed {
+    display: inline-block;
+    font-size: 11px;
+    background: #e8f5e9;
+    color: #4caf50;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* BOTÕES DE AÇÃO */
+.section-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.btn-edit, .btn-complete, .btn-cancel, .btn-reopen {
+    width: auto;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: opacity .2s;
+}
+
+.btn-edit {
+    background: #fff3e0;
+    color: #ff7b00;
+}
+
+.btn-edit:hover { opacity: .8; }
+
+.btn-complete {
+    background: #e8f5e9;
+    color: #4caf50;
+}
+
+.btn-complete:hover { opacity: .8; }
+
+.btn-reopen {
+    background: #f3f3f3;
+    color: #888;
+}
+
+.btn-reopen:hover { opacity: .8; }
+
+.btn-cancel {
+    background: #f3f3f3;
+    color: #555;
+}
+
+.btn-cancel:hover { opacity: .8; }
+
+/* ALERT DE SUCESSO */
+.alert-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-left: 4px solid #4caf50;
+}
+
+/* SEÇÃO DE ADICIONAR */
+.add-section-box {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-top: 30px;
+}
+
+.add-section-box h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 16px;
+}
+
+/* ANIMAÇÃO */
+.fadeIn {
+    animation: fade .5s ease;
+}
+
+@keyframes fade {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+    .container { padding: 20px; }
+    .notes-grid { grid-template-columns: 1fr; }
+    .form-container { padding: 20px; }
+}
