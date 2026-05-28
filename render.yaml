@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: notessytem
+    env: docker
+    plan: free
+    envVars:
+      - key: APP_NAME
+        value: NOTESSYTEM
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: mysql
