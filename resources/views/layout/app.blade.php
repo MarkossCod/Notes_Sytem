@@ -8,17 +8,17 @@
 <body>
 
 <nav class="navbar">
-    <div class="logo">
-        NOTESSYTEM
-    </div>
-
+    <div class="logo">NOTESSYTEM</div>
     <ul>
         <li>
-            <a href="{{ route('notes.index') }}">Gerenciar Notas</a>
+            <a href="{{ route('notes.index') }}">
+                <span>📋</span> Gerenciar Notas
+            </a>
         </li>
-
         <li>
-            <a href="{{ route('notes.create') }}">Nova Nota</a>
+            <a href="{{ route('notes.create') }}">
+                <span>➕</span> Nova Nota
+            </a>
         </li>
     </ul>
 </nav>

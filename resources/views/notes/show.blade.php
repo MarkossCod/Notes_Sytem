@@ -2,78 +2,142 @@
 
 @section('content')
 
-<div class="note-page">
+<div class="show-layout">
 
-    <h1>{{ $note->title }}</h1>
-    <p>Data: {{ $note->created_day }}</p>
+    {{-- SIDEBAR --}}
+    <aside class="sidebar">
 
-    <div class="sections">
-        @foreach($note->sections as $section)
-            <div class="section-card {{ $section->completed ? 'section-completed' : '' }}">
-                <h2>{{ $section->section_title }}</h2>
-                <p>{{ $section->section_content }}</p>
+        <a href="{{ route('notes.index') }}" class="back-link">← Voltar para notas</a>
 
-                <div class="section-actions">
+        <button class="sidebar-info-btn">ℹ️ Informações da Nota</button>
 
-                    {{-- Botão Editar --}}
-                    <a href="{{ route('notes.section.edit', [$note->id, $section->id]) }}"
-                       class="btn-edit">
-                        Editar
-                    </a>
+        <p class="sidebar-section-label">Divisões</p>
 
-                    {{-- Botão Concluir --}}
-                    <form action="{{ route('notes.section.complete', [$note->id, $section->id]) }}"
-                          method="POST" style="display:inline">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" class="btn-complete">
-                            {{ $section->completed ? 'Reabrir' : 'Concluir' }}
-                        </button>
-                    </form>
+        <ul class="sidebar-sections">
+            @foreach($note->sections as $section)
+            <li class="{{ $section->completed ? 'sidebar-section-done' : '' }}">
+                <a href="#section-{{ $section->id }}">
+                    📋 {{ $section->section_title }}
+                </a>
+            </li>
+            @endforeach
+        </ul>
 
+        <a href="#add-section" class="sidebar-add-btn">+ Nova Divisão</a>
+
+    </aside>
+
+    {{-- CONTEÚDO PRINCIPAL --}}
+    <main class="main-content">
+
+        @if(session('success'))
+            <div class="alert-success">✅ {{ session('success') }}</div>
+        @endif
+
+        <div class="note-header">
+            <div>
+                <h1>{{ $note->title }}</h1>
+                <div class="note-meta">
+                    <span>📅 Criado em: {{ \Carbon\Carbon::parse($note->created_day)->format('d/m/Y') }}</span>
+                    <span>✏️ Total de divisões: {{ $note->sections->count() }}</span>
                 </div>
             </div>
-        @endforeach
-    </div>
+            <form action="{{ route('notes.destroy', $note->id) }}" method="POST"
+                  onsubmit="return confirm('Tem certeza que deseja excluir esta nota?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn-delete-note">🗑️ Excluir Nota</button>
+            </form>
+        </div>
 
-    <hr>
+        <h2 class="sections-title">Divisões da Nota</h2>
 
-    {{-- Formulário de Adicionar / Editar --}}
-    @isset($editingSection)
-        <h2>Editar Divisão</h2>
-        <form action="{{ route('notes.section.update', [$note->id, $editingSection->id]) }}"
-              method="POST">
-            @csrf
-            @method('PUT')
+        <div class="sections">
+            @foreach($note->sections as $section)
+            <div class="section-card fadeIn {{ $section->completed ? 'section-completed' : '' }}"
+                 id="section-{{ $section->id }}">
 
-            <input type="text"
-                   name="section_title"
-                   value="{{ $editingSection->section_title }}"
-                   placeholder="Título da Divisão"
-                   required>
+                <div class="section-card-content">
+                    <div>
+                        <h2>{{ $section->section_title }}</h2>
+                        <p>{{ $section->section_content }}</p>
+                    </div>
+                    <div class="section-icons">
 
-            <textarea name="section_content"
-                      placeholder="Conteúdo">{{ $editingSection->section_content }}</textarea>
+                        <a href="{{ route('notes.section.edit', [$note->id, $section->id]) }}"
+                           class="icon-btn icon-edit" title="Editar">✏️</a>
 
-            <button type="submit">Salvar</button>
-            <a href="{{ route('notes.show', $note->id) }}" class="btn-cancel">Cancelar</a>
-        </form>
-    @else
-        <h2>Adicionar Divisão</h2>
-        <form action="{{ route('notes.section', $note->id) }}" method="POST">
-            @csrf
+                        <form action="{{ route('notes.section.complete', [$note->id, $section->id]) }}"
+                              method="POST" style="display:inline">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="icon-btn icon-delete" title="{{ $section->completed ? 'Reabrir' : 'Concluir' }}">
+                                {{ $section->completed ? '🔄' : '🗑️' }}
+                            </button>
+                        </form>
 
-            <input type="text"
-                   name="section_title"
-                   placeholder="Título da Divisão"
-                   required>
+                    </div>
+                </div>
 
-            <textarea name="section_content"
-                      placeholder="Conteúdo"></textarea>
+            </div>
+            @endforeach
+        </div>
 
-            <button type="submit">Adicionar</button>
-        </form>
-    @endisset
+    </main>
+
+    {{-- PAINEL LATERAL DIREITO --}}
+    <aside class="right-panel" id="add-section">
+
+        @isset($editingSection)
+            <h2 class="panel-title">Editar Divisão</h2>
+            <form action="{{ route('notes.section.update', [$note->id, $editingSection->id]) }}"
+                  method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="form-group">
+                    <label>Título da Divisão</label>
+                    <input type="text"
+                           name="section_title"
+                           value="{{ $editingSection->section_title }}"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>Conteúdo da Divisão</label>
+                    <textarea name="section_content"
+                              placeholder="Descreva os detalhes desta divisão...">{{ $editingSection->section_content }}</textarea>
+                </div>
+
+                <button type="submit">Salvar Alterações</button>
+                <a href="{{ route('notes.show', $note->id) }}" class="btn-cancel-block">Cancelar</a>
+
+            </form>
+        @else
+            <h2 class="panel-title">Adicionar Nova Divisão</h2>
+            <form action="{{ route('notes.section, $note->id) }}" method="POST">
+                @csrf
+
+                <div class="form-group">
+                    <label>Título da Divisão</label>
+                    <input type="text"
+                           name="section_title"
+                           placeholder="Ex: Descrição do Problema"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>Conteúdo da Divisão</label>
+                    <textarea name="section_content"
+                              placeholder="Descreva os detalhes desta divisão..."></textarea>
+                </div>
+
+                <button type="submit">Adicionar Divisão</button>
+
+            </form>
+        @endisset
+
+    </aside>
 
 </div>
 

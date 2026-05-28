@@ -2,28 +2,38 @@
 
 @section('content')
 
-<div class="form-container">
+<div class="back-link">
+    <a href="{{ route('notes.index') }}">← Voltar</a>
+</div>
 
-<h1>Nova Nota</h1>
+<div class="form-container fadeIn">
 
-<form action="{{ route('notes.store') }}" method="POST">
+    <h1>Nova Nota</h1>
+    <div class="title-underline"></div>
 
-@csrf
+    <form action="{{ route('notes.store') }}" method="POST">
+        @csrf
 
-<input type="text"
-name="title"
-placeholder="Título da Nota"
-required>
+        <div class="form-group">
+            <label for="title">Título da Nota <span class="required">*</span></label>
+            <input type="text"
+                   id="title"
+                   name="title"
+                   placeholder="Digite o título da nota"
+                   required>
+        </div>
 
-<input type="date"
-name="created_day"
-required>
+        <div class="form-group">
+            <label for="created_day">Dia da Criação <span class="required">*</span></label>
+            <input type="date"
+                   id="created_day"
+                   name="created_day"
+                   required>
+        </div>
 
-<button type="submit">
-Criar Nota
-</button>
+        <button type="submit">Criar Nota</button>
 
-</form>
+    </form>
 
 </div>
 
