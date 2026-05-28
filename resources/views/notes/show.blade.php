@@ -7,9 +7,9 @@
     {{-- SIDEBAR --}}
     <aside class="sidebar">
 
-        <a href="{{ route('notes.index') }}" class="back-link">← Voltar para notas</a>
+        <a href="{{ route('notes.index') }}" class="btn-back">← Voltar para notas</a>
 
-        <button class="sidebar-info-btn">ℹ️ Informações da Nota</button>
+        <button class="sidebar-info-btn" onclick="openInfoModal()">ℹ️ Informações da Nota</button>
 
         <p class="sidebar-section-label">Divisões</p>
 
@@ -22,9 +22,6 @@
             </li>
             @endforeach
         </ul>
-
-        <a href="#add-section" class="sidebar-add-btn">+ Nova Divisão</a>
-
     </aside>
 
     {{-- CONTEÚDO PRINCIPAL --}}
@@ -64,15 +61,24 @@
                     </div>
                     <div class="section-icons">
 
+                        {{-- Botão Ver --}}
+                        <button type="button" class="icon-btn"
+                                title="Ver divisão"
+                                onclick="openViewModal('{{ addslashes($section->section_title) }}', '{{ addslashes($section->section_content) }}')">
+                            👁️
+                        </button>
+
+                        {{-- Botão Editar --}}
                         <a href="{{ route('notes.section.edit', [$note->id, $section->id]) }}"
                            class="icon-btn icon-edit" title="Editar">✏️</a>
 
+                        {{-- Botão Concluir/Reabrir --}}
                         <form action="{{ route('notes.section.complete', [$note->id, $section->id]) }}"
                               method="POST" style="display:inline">
                             @csrf
                             @method('PATCH')
-                            <button type="submit" class="icon-btn icon-delete" title="{{ $section->completed ? 'Reabrir' : 'Concluir' }}">
-                                {{ $section->completed ? '🔄' : '🗑️' }}
+                            <button type="submit" class="icon-btn" title="{{ $section->completed ? 'Reabrir' : 'Concluir' }}">
+                                {{ $section->completed ? '🔄' : '✅' }}
                             </button>
                         </form>
 
@@ -115,7 +121,7 @@
             </form>
         @else
             <h2 class="panel-title">Adicionar Nova Divisão</h2>
-            <form action="{{ route('notes.section, $note->id) }}" method="POST">
+            <form action="{{ route('notes.section', $note->id) }}" method="POST">
                 @csrf
 
                 <div class="form-group">
@@ -140,5 +146,66 @@
     </aside>
 
 </div>
+
+{{-- MODAL: INFORMAÇÕES DA NOTA --}}
+<div id="infoModal" class="modal-overlay" onclick="closeModal('infoModal')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>📋 {{ $note->title }}</h2>
+            <button class="modal-close" onclick="closeModal('infoModal')">✕</button>
+        </div>
+        <p class="modal-date">📅 Criado em: {{ \Carbon\Carbon::parse($note->created_day)->format('d/m/Y') }}</p>
+        <div class="modal-sections">
+            @foreach($note->sections as $index => $section)
+            <div class="modal-section-item {{ $section->completed ? 'modal-section-done' : '' }}">
+                <div class="modal-section-number">{{ $index + 1 }}</div>
+                <div class="modal-section-body">
+                    <h3>{{ $section->section_title }}</h3>
+                    <p>{{ $section->section_content }}</p>
+                    @if($section->completed)
+                        <span class="modal-badge-done">✅ Concluído</span>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+{{-- MODAL: VER DIVISÃO --}}
+<div id="viewModal" class="modal-overlay" onclick="closeModal('viewModal')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 id="viewModalTitle"></h2>
+            <button class="modal-close" onclick="closeModal('viewModal')">✕</button>
+        </div>
+        <div class="modal-view-content">
+            <p id="viewModalContent"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openInfoModal() {
+        document.getElementById('infoModal').classList.add('modal-active');
+    }
+
+    function openViewModal(title, content) {
+        document.getElementById('viewModalTitle').innerText = title;
+        document.getElementById('viewModalContent').innerText = content;
+        document.getElementById('viewModal').classList.add('modal-active');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('modal-active');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal('infoModal');
+            closeModal('viewModal');
+        }
+    });
+</script>
 
 @endsection

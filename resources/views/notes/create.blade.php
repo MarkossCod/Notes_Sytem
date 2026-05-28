@@ -2,11 +2,9 @@
 
 @section('content')
 
-<div class="back-link">
-    <a href="{{ route('notes.index') }}">← Voltar</a>
-</div>
-
 <div class="form-container fadeIn">
+
+    <a href="{{ route('notes.index') }}" class="btn-back">← Voltar</a>
 
     <h1>Nova Nota</h1>
     <div class="title-underline"></div>
