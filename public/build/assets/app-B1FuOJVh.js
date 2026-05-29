@@ -1,0 +1,1 @@
+document.querySelectorAll(`.card`).forEach(e=>{e.addEventListener(`mouseenter`,()=>{e.style.transform=`scale(1.03)`}),e.addEventListener(`mouseleave`,()=>{e.style.transform=`scale(1)`})});
