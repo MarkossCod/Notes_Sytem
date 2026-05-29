@@ -121,7 +121,7 @@
             </form>
         @else
             <h2 class="panel-title">Adicionar Nova Divisão</h2>
-            <form action="{{ route('notes.section', $note->id) }}" method="POST">
+		<form action="{{ route('notes.section', $note->id) }}" method="POST" autocomplete="off">
                 @csrf
 
                 <div class="form-group">
