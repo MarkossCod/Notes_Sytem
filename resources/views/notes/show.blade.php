@@ -7,7 +7,7 @@
     {{-- SIDEBAR --}}
     <aside class="sidebar">
 
-        <a href="{{ route('notes.index') }}" class="btn-back">← Voltar para notas</a>
+        <a href="{{ secure_url(route('notes.index', [], false)) }}" class="btn-back">← Voltar para notas</a>
 
         <button class="sidebar-info-btn" onclick="openInfoModal()">ℹ️ Informações da Nota</button>
 
@@ -39,7 +39,7 @@
                     <span>✏️ Total de divisões: {{ $note->sections->count() }}</span>
                 </div>
             </div>
-            <form action="{{ route('notes.destroy', $note->id) }}" method="POST"
+            <form action="{{ secure_url(route('notes.destroy', [$note->id], false)) }}" method="POST"
                   onsubmit="return confirm('Tem certeza que deseja excluir esta nota?')" autocomplete="off">
                 @csrf
                 @method('DELETE')
@@ -69,11 +69,11 @@
                         </button>
 
                         {{-- Botão Editar --}}
-                        <a href="{{ route('notes.section.edit', [$note->id, $section->id]) }}"
+                        <a href="{{ secure_url(route('notes.section.edit', [$note->id, $section->id], false)) }}"
                            class="icon-btn icon-edit" title="Editar">✏️</a>
 
                         {{-- Botão Concluir/Reabrir --}}
-                        <form action="{{ route('notes.section.complete', [$note->id, $section->id]) }}"
+                        <form action="{{ secure_url(route('notes.section.complete', [$note->id, $section->id], false)) }}"
                               method="POST" style="display:inline" autocomplete="off">
                             @csrf
                             @method('PATCH')
@@ -96,7 +96,7 @@
 
         @isset($editingSection)
             <h2 class="panel-title">Editar Divisão</h2>
-            <form action="{{ route('notes.section.update', [$note->id, $editingSection->id]) }}"
+            <form action="{{ secure_url(route('notes.section.update', [$note->id, $editingSection->id], false)) }}"
                   method="POST" autocomplete="off">
                 @csrf
                 @method('PUT')
@@ -118,12 +118,12 @@
                 </div>
 
                 <button type="submit">Salvar Alterações</button>
-                <a href="{{ route('notes.show', $note->id) }}" class="btn-cancel-block">Cancelar</a>
+                <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn-cancel-block">Cancelar</a>
 
             </form>
         @else
             <h2 class="panel-title">Adicionar Nova Divisão</h2>
-            <form action="{{ route('notes.section', $note->id) }}" method="POST" autocomplete="off">
+            <form action="{{ secure_url(route('notes.section', [$note->id], false)) }}" method="POST" autocomplete="off">
                 @csrf
 
                 <div class="form-group">
