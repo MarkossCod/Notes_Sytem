@@ -10,13 +10,7 @@ class AppServiceProvider extends ServiceProvider
     }
     public function boot(): void
     {
+        URL::forceRootUrl(config('app.url'));
         URL::forceScheme('https');
-        \Illuminate\Support\Facades\Request::setTrustedProxies(
-            ['REMOTE_ADDR'],
-            \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR |
-            \Illuminate\Http\Request::HEADER_X_FORWARDED_HOST |
-            \Illuminate\Http\Request::HEADER_X_FORWARDED_PORT |
-            \Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO
-        );
     }
 }
