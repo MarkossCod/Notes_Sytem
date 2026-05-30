@@ -29,7 +29,7 @@
             </span>
         </div>
 
-        <a href="{{ route('notes.show', $note->id) }}" class="btn">
+        <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn">
             Abrir Nota →
         </a>
 
