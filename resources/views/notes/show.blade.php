@@ -40,7 +40,7 @@
                 </div>
             </div>
             <form action="{{ route('notes.destroy', $note->id) }}" method="POST"
-                  onsubmit="return confirm('Tem certeza que deseja excluir esta nota?')">
+                  onsubmit="return confirm('Tem certeza que deseja excluir esta nota?')" autocomplete="off">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn-delete-note">🗑️ Excluir Nota</button>
@@ -74,7 +74,7 @@
 
                         {{-- Botão Concluir/Reabrir --}}
                         <form action="{{ route('notes.section.complete', [$note->id, $section->id]) }}"
-                              method="POST" style="display:inline">
+                              method="POST" style="display:inline" autocomplete="off">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="icon-btn" title="{{ $section->completed ? 'Reabrir' : 'Concluir' }}">
@@ -97,7 +97,7 @@
         @isset($editingSection)
             <h2 class="panel-title">Editar Divisão</h2>
             <form action="{{ route('notes.section.update', [$note->id, $editingSection->id]) }}"
-                  method="POST">
+                  method="POST" autocomplete="off">
                 @csrf
                 @method('PUT')
 
@@ -106,12 +106,14 @@
                     <input type="text"
                            name="section_title"
                            value="{{ $editingSection->section_title }}"
+                           autocomplete="off"
                            required>
                 </div>
 
                 <div class="form-group">
                     <label>Conteúdo da Divisão</label>
                     <textarea name="section_content"
+                              autocomplete="off"
                               placeholder="Descreva os detalhes desta divisão...">{{ $editingSection->section_content }}</textarea>
                 </div>
 
@@ -121,7 +123,7 @@
             </form>
         @else
             <h2 class="panel-title">Adicionar Nova Divisão</h2>
-		<form action="{{ route('notes.section', $note->id) }}" method="POST" autocomplete="off">
+            <form action="{{ route('notes.section', $note->id) }}" method="POST" autocomplete="off">
                 @csrf
 
                 <div class="form-group">
@@ -129,12 +131,14 @@
                     <input type="text"
                            name="section_title"
                            placeholder="Ex: Descrição do Problema"
+                           autocomplete="off"
                            required>
                 </div>
 
                 <div class="form-group">
                     <label>Conteúdo da Divisão</label>
                     <textarea name="section_content"
+                              autocomplete="off"
                               placeholder="Descreva os detalhes desta divisão..."></textarea>
                 </div>
 
