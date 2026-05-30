@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <title>NOTESSYTEM</title>
     @vite(['resources/css/style.css', 'resources/js/app.js'])
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FF6D00">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
 </head>
 <body>
 

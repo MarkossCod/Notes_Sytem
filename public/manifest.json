@@ -1,0 +1,22 @@
+{
+    "name": "NOTESSYTEM",
+    "short_name": "NOTESSYTEM",
+    "description": "Sistema de gerenciamento de notas e chamados",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#fff8f0",
+    "theme_color": "#FF6D00",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
