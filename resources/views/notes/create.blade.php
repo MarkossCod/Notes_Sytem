@@ -9,7 +9,7 @@
     <h1>Nova Nota</h1>
     <div class="title-underline"></div>
 
-    <form action="{{ route('notes.store') }}" method="POST">
+    <form action="{{ secure_url(route('notes.store', [], false)) }}" method="POST" autocomplete="off">
         @csrf
 
         <div class="form-group">
