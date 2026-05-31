@@ -42,7 +42,7 @@
 </div>
 
 {{-- MODAL SOBRE --}}
-<div id="sobreModal" class="modal-overlay" onclick="closeSobreModal()">
+<div id="sobreModal" class="modal-overlay" onclick="closeSobreModal()" style="display:none;">
     <div class="modal-box sobre-box" onclick="event.stopPropagation()">
 
         <div class="modal-header">
