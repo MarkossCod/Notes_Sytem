@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NoteController;
 
-Route::get('/', [NoteController::class, 'index']);
+Route::get('/', function () {
+    return view('splash');
+});
 
 Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
 
