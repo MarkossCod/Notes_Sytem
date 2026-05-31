@@ -8,25 +8,40 @@ use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
+    private function getUserName()
+    {
+        return session('user_name');
+    }
+
     public function index()
     {
-        $notes = Note::latest()->get();
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
+        $notes = Note::where('user_name', $this->getUserName())->latest()->get();
         return view('notes.index', compact('notes'));
     }
 
     public function create()
     {
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
         return view('notes.create');
     }
 
     public function store(Request $request)
     {
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
         $request->validate([
             'title' => 'required',
             'created_day' => 'required'
         ]);
 
         $note = Note::create([
+            'user_name' => $this->getUserName(),
             'title' => $request->title,
             'created_day' => $request->created_day
         ]);
@@ -36,7 +51,12 @@ class NoteController extends Controller
 
     public function show($id)
     {
-        $note = Note::with('sections')->findOrFail($id);
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
+        $note = Note::with('sections')
+            ->where('user_name', $this->getUserName())
+            ->findOrFail($id);
         return view('notes.show', compact('note'));
     }
 
@@ -47,13 +67,17 @@ class NoteController extends Controller
             'section_title' => $request->section_title,
             'section_content' => $request->section_content
         ]);
-
         return back()->with('success', 'Divisão adicionada com sucesso!');
     }
 
     public function editSection($id, $sectionId)
     {
-        $note = Note::with('sections')->findOrFail($id);
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
+        $note = Note::with('sections')
+            ->where('user_name', $this->getUserName())
+            ->findOrFail($id);
         $editingSection = Section::findOrFail($sectionId);
         return view('notes.show', compact('note', 'editingSection'));
     }
@@ -65,7 +89,6 @@ class NoteController extends Controller
             'section_title' => $request->section_title,
             'section_content' => $request->section_content
         ]);
-
         return redirect()->route('notes.show', $id)->with('success', 'Divisão atualizada com sucesso!');
     }
 
@@ -73,13 +96,12 @@ class NoteController extends Controller
     {
         $section = Section::findOrFail($sectionId);
         $section->update(['completed' => !$section->completed]);
-
         return back();
     }
 
     public function destroy($id)
     {
-        Note::destroy($id);
+        Note::where('user_name', $this->getUserName())->findOrFail($id)->delete();
         return redirect()->route('notes.index');
     }
 }

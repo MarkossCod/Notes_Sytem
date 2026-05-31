@@ -20,12 +20,12 @@
     <div class="logo">NOTESSYTEM</div>
     <ul>
         <li>
-            <a href="{{ route('notes.index') }}">
+            <a href="{{ secure_url(route('notes.index', [], false)) }}">
                 <span>📋</span> Gerenciar Notas
             </a>
         </li>
         <li>
-            <a href="{{ route('notes.create') }}">
+            <a href="{{ secure_url(route('notes.create', [], false)) }}">
                 <span>➕</span> Nova Nota
             </a>
         </li>
@@ -33,6 +33,19 @@
             <a href="#" onclick="openSobreModal(); return false;">
                 <span>👤</span> Sobre
             </a>
+        </li>
+        <li>
+            <span style="color:rgba(255,255,255,0.8); font-size:13px; padding:8px 10px; display:flex; align-items:center; gap:6px;">
+                👋 {{ session('user_name') }}
+            </span>
+        </li>
+        <li>
+            <form action="{{ secure_url(route('logout', [], false)) }}" method="POST" style="margin:0;">
+                @csrf
+                <button type="submit" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); color:white; padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; margin-top:0; width:auto;">
+                    Sair
+                </button>
+            </form>
         </li>
     </ul>
 </nav>
