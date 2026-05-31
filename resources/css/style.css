@@ -545,11 +545,15 @@ button:hover {
 @media (max-width: 768px) {
     .navbar {
         padding: 12px 16px;
+        flex-direction: column;
+        align-items: flex-start;
         flex-wrap: wrap;
         gap: 10px;
     }
     .logo { font-size: 17px; }
     .navbar ul {
+        width: 100%;
+        justify-content: space-between;
         gap: 4px;
         flex-wrap: wrap;
     }
@@ -571,7 +575,7 @@ button:hover {
     .search-box { width: 100%; }
 
     /* GRID */
-    .notes-grid { grid-template-columns: 1fr; gap: 14px; }
+    .notes-grid { grid-template-columns: 1fr !important; gap: 14px; }
 
     /* CARD */
     .card { padding: 16px; }
