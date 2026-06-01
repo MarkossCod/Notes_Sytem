@@ -21,10 +21,10 @@
         .field label { font-size: 12px; font-weight: 600; color: #FF6D00; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; display: block; }
         .field input { width: 100%; padding: 13px 16px; border: 2px solid #FFE0B2; border-radius: 12px; font-size: 15px; color: #1a1a1a; outline: none; transition: border .2s, background .2s; background: #FFF8F0; }
         .field input:focus { border-color: #FF6D00; background: white; }
-        .login-btn { width: 100%; padding: 14px; background: #FF6D00; color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 20px; letter-spacing: .5px; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 4px 16px rgba(255,109,0,0.3); }
-        .login-btn:hover { background: #e06300; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,109,0,0.4); }
-        .login-btn:active { transform: scale(0.98); }
-        .login-btn.loading { background: #FF8F00; pointer-events: none; }
+        .login-btn { width: 100% !important; padding: 14px !important; background: #FF6D00 !important; color: white !important; border: none !important; border-radius: 12px !important; font-size: 15px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 20px !important; letter-spacing: .5px; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 4px 16px rgba(255,109,0,0.3); }
+        .login-btn:hover { background: #e06300 !important; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,109,0,0.4); }
+        .login-btn:active { transform: scale(0.98) !important; }
+        .login-btn.loading { background: #FF8F00 !important; pointer-events: none; }
         .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
         .divider span { font-size: 12px; color: #ccc; }
         .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #FFE0B2; }
