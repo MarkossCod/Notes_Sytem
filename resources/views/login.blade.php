@@ -73,7 +73,7 @@
         @csrf
         <div class="field">
             <label>Seu nome</label>
-            <input type="text" name="user_name" id="nameInput" placeholder="Ex: João Silva" value="{{ old('user_name') }}" required autocomplete="off"/>
+            <input type="text" name="user_name" id="nameInput" placeholder="Ex: José Silva" value="{{ old('user_name') }}" required autocomplete="off"/>
         </div>
         <button type="button" class="login-btn" id="enterBtn" onclick="handleEnter()">Entrar →</button>
     </form>
