@@ -16,7 +16,7 @@
     </script>
     <style>
         .navbar { animation: slideDown .4s cubic-bezier(.34,1.56,.64,1) both; }
-        .page-transition { animation: pageEnter .5s cubic-bezier(.34,1.56,.64,1) both; animation-delay: .1s; opacity: 0; }
+        .page-transition { animation: pageEnter .5s cubic-bezier(.34,1.56,.64,1) both; }
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-20px); }
             to   { opacity: 1; transform: translateY(0); }
