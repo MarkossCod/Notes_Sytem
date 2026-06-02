@@ -96,6 +96,13 @@ function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = wind
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
+document.getElementById('nameInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        handleEnter();
+    }
+});
+
 let pts = Array.from({length: 30}, () => ({
     x: Math.random() * canvas.width, y: Math.random() * canvas.height,
     vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4,
