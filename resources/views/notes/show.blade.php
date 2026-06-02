@@ -64,7 +64,9 @@
                         {{-- Botão Ver --}}
                         <button type="button" class="icon-btn"
                                 title="Ver divisão"
-                                onclick="openViewModal('{{ addslashes($section->section_title) }}', '{{ addslashes($section->section_content) }}')">
+                                data-title="{{ $section->section_title }}"
+                                data-content="{{ $section->section_content }}"
+                                onclick="openViewModal(this.dataset.title, this.dataset.content)">
                             👁️
                         </button>
 
@@ -195,8 +197,8 @@
     }
 
     function openViewModal(title, content) {
-        document.getElementById('viewModalTitle').innerText = title;
-        document.getElementById('viewModalContent').innerText = content;
+        document.getElementById('viewModalTitle').innerText = title || '';
+        document.getElementById('viewModalContent').innerText = content || '';
         document.getElementById('viewModal').classList.add('modal-active');
     }
 
