@@ -542,15 +542,20 @@ button:hover {
 /* MODAIS */
 .modal-overlay {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.55);
-    z-index: 9999;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0,0,0,0.6);
+    z-index: 99999 !important;
     align-items: center;
     justify-content: center;
+    padding: 20px;
+    margin: 0 !important;
+    transform: none !important;
 }
 
 .modal-active {
@@ -560,14 +565,16 @@ button:hover {
 .modal-box {
     background: white;
     border-radius: 20px;
-    padding: 30px;
-    width: 90%;
-    max-width: 560px;
-    max-height: 80vh;
+    padding: 32px;
+    width: 100%;
+    max-width: 540px;
+    max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
     animation: modalEnter .3s cubic-bezier(.34,1.56,.64,1);
-    margin: 20px;
+    position: relative;
+    margin: auto;
+    flex-shrink: 0;
 }
 
 @keyframes modalEnter {
@@ -775,7 +782,7 @@ button:hover {
     .section-card { padding: 12px 14px; }
     .section-card-content { flex-direction: column; gap: 10px; }
     .section-icons { justify-content: flex-end; }
-    .modal-box { margin: 16px; padding: 20px 16px; max-height: 85vh; border-radius: 12px; }
+    .modal-box { padding: 20px 16px; max-height: 85vh; border-radius: 12px; }
     .btn-delete-note { width: 100%; text-align: center; }
     .btn-back { font-size: 13px; padding: 8px 14px; }
 }
