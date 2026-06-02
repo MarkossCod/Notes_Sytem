@@ -153,6 +153,9 @@
 
 </div>
 
+@endsection
+
+@section('modals')
 {{-- MODAL: INFORMAÇÕES DA NOTA --}}
 <div id="infoModal" class="modal-overlay" onclick="closeModal('infoModal')">
     <div class="modal-box" onclick="event.stopPropagation()">
@@ -213,5 +216,4 @@
         }
     });
 </script>
-
 @endsection
