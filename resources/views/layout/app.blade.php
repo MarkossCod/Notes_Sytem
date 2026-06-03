@@ -43,11 +43,6 @@
             </a>
         </li>
         <li>
-            <a href="#" onclick="openSobreModal(); return false;">
-                <span>👤</span> Sobre
-            </a>
-        </li>
-        <li>
             <a href="#" onclick="openModelosModal(); return false;">
                 <span>📝</span> Modelos
             </a>
@@ -64,6 +59,11 @@
                     Sair
                 </button>
             </form>
+        </li>
+        <li>
+            <a href="#" onclick="openSobreModal(); return false;">
+                <span>👤</span> Sobre
+            </a>
         </li>
     </ul>
 </nav>
