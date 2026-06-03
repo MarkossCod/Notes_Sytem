@@ -99,26 +99,37 @@
         </div>
     </div>
 </div>
-    @yield('modals')
     <script>
+        function openSobreModal() {
+            document.getElementById('sobreModal').classList.add('modal-active');
+        }
+
+        function closeSobreModal() {
+            document.getElementById('sobreModal').classList.remove('modal-active');
+        }
+
         function openInfoModal() {
             document.getElementById('infoModal').classList.add('modal-active');
         }
+
         function openViewModal(title, content) {
             document.getElementById('viewModalTitle').innerText = title || '';
             document.getElementById('viewModalContent').innerText = content || '';
             document.getElementById('viewModal').classList.add('modal-active');
         }
+
         function closeModal(id) {
             document.getElementById(id).classList.remove('modal-active');
         }
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
+                closeSobreModal();
                 if(document.getElementById('infoModal')) closeModal('infoModal');
                 if(document.getElementById('viewModal')) closeModal('viewModal');
-                closeSobreModal();
             }
         });
     </script>
+    @yield('modals')
 </body>
 </html>
