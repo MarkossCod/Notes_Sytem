@@ -8,6 +8,12 @@ Route::get('/', function () {
     return view('splash');
 });
 
+Route::get('/icons/{file}', function ($file) {
+    $path = public_path('icons/' . $file);
+    if (!file_exists($path)) abort(404);
+    return response()->file($path);
+});
+
 Route::get('/login', [LoginController::class, 'show'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

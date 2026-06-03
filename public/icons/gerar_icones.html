@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+    ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r);
+    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h);
+    ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r);
+    ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.closePath();
+}
+function desenhar(canvas, size) {
+    const ctx = canvas.getContext('2d');
+    const s = size/192;
+    ctx.fillStyle='#FF6D00'; roundRect(ctx,0,0,size,size,38*s); ctx.fill();
+    ctx.fillStyle='#ffffff'; roundRect(ctx,48*s,52*s,96*s,112*s,8*s); ctx.fill();
+    ctx.fillStyle='#FF8F00'; roundRect(ctx,44*s,46*s,104*s,18*s,6*s); ctx.fill();
+    ctx.fillStyle='#FF6D00';
+    [68,88,108,128].forEach(x=>{ctx.beginPath();ctx.arc(x*s,55*s,5*s,0,Math.PI*2);ctx.fill();});
+    ctx.fillStyle='#FFE0B2';
+    [[60,80,72],[60,95,56],[60,110,64],[60,125,48]].forEach(([x,y,w])=>{roundRect(ctx,x*s,y*s,w*s,6*s,3*s);ctx.fill();});
+    ctx.fillStyle='#FF6D00';
+    ctx.font=`900 ${28*s}px Arial`;
+    ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+    ctx.fillText('NS',96*s,148*s);
+}
+async function gerar() {
+    for(const [size,name] of [[192,'icon-192x192'],[512,'icon-512x512']]) {
+        const c = document.createElement('canvas');
+        c.width=c.height=size;
+        desenhar(c,size);
+        await new Promise(r=>{ c.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name+'.png'; a.click(); setTimeout(r,800); },'image/png'); });
+    }
+    document.body.innerHTML='<h2 style="color:green;font-family:Arial">✅ Ícones baixados! Mova para public/icons/</h2>';
+}
+gerar();
+</script>
+</body>
+</html>
