@@ -48,6 +48,11 @@
             </a>
         </li>
         <li>
+            <a href="#" onclick="openSobreModal(); return false;">
+                <span>👤</span> Sobre
+            </a>
+        </li>
+        <li>
             <span style="color:rgba(255,255,255,0.8); font-size:13px; padding:8px 10px; display:flex; align-items:center; gap:6px;">
                 👋 {{ session('user_name') }}
             </span>
@@ -59,11 +64,6 @@
                     Sair
                 </button>
             </form>
-        </li>
-        <li>
-            <a href="#" onclick="openSobreModal(); return false;">
-                <span>👤</span> Sobre
-            </a>
         </li>
     </ul>
 </nav>
