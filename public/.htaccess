@@ -9,6 +9,11 @@
     RewriteCond %{HTTP:X-Forwarded-Proto} =http
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+    # Serve icons directly without going through Laravel
+    RewriteCond %{REQUEST_URI} ^/icons/
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
