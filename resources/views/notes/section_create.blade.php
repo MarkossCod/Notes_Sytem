@@ -54,11 +54,11 @@
         <div class="ed-field">
             <div class="ed-section-title">📄 Conteúdo</div>
             <div class="ed-toolbar">
-                <button type="button" class="ed-tool" onclick="inserirTexto('**', '**')">B Negrito</button>
-                <button type="button" class="ed-tool" onclick="inserirTexto('_', '_')">I Itálico</button>
-                <button type="button" class="ed-tool" onclick="inserirTexto('\n- ', '')">≡ Lista</button>
-                <button type="button" class="ed-tool" onclick="inserirTexto('\n---\n', '')">— Linha</button>
-                <button type="button" class="ed-tool" onclick="inserirTexto('\n', '')">↵ Nova linha</button>
+                <button type="button" class="ed-tool" onclick="inserirTexto('**', '**')"><strong>B</strong></button>
+                <button type="button" class="ed-tool" onclick="inserirTexto('_', '_')"><em>I</em></button>
+                <button type="button" class="ed-tool ed-tool-sep" onclick="inserirTexto('\n- ', '')">≡</button>
+                <button type="button" class="ed-tool" onclick="inserirTexto('\n---\n', '')">—</button>
+                <button type="button" class="ed-tool" onclick="inserirTexto('\n', '')">↵</button>
             </div>
             <textarea class="ed-textarea" id="contentArea" name="section_content" placeholder="Digite o conteúdo da divisão aqui..."></textarea>
         </div>
