@@ -29,6 +29,7 @@ Route::post('/recover', [LoginController::class, 'recoverQuestion'])->name('reco
 Route::get('/recover/answer', function() { return redirect()->route('recover'); });
 Route::post('/recover/answer', [LoginController::class, 'recoverReset'])->name('recover.reset');
 
+Route::get('/notes/{id}/section/create', [NoteController::class, 'createSection'])->name('notes.section.create');
 Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
 Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
 Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');

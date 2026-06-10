@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="show-layout">
+<div class="show-layout" style="grid-template-columns: 220px 1fr;">
 
     {{-- SIDEBAR --}}
     <aside class="sidebar">
@@ -39,12 +39,19 @@
                     <span>✏️ Total de divisões: {{ $note->sections->count() }}</span>
                 </div>
             </div>
-            <form action="{{ secure_url(route('notes.destroy', [$note->id], false)) }}" method="POST"
-                  onsubmit="return confirm('Tem certeza que deseja excluir esta nota?')" autocomplete="off">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn-delete-note">🗑️ Excluir Nota</button>
-            </form>
+            <div style="display:flex;gap:10px;align-items:center;">
+                <a href="{{ secure_url(route('notes.section.create', [$note->id], false)) }}"
+                   style="padding:8px 16px;background:#FF6D00;color:white;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:background .2s;"
+                   onmouseover="this.style.background='#e06300'" onmouseout="this.style.background='#FF6D00'">
+                    ➕ Nova Divisão
+                </a>
+                <form action="{{ secure_url(route('notes.destroy', [$note->id], false)) }}" method="POST"
+                      onsubmit="return confirm('Tem certeza que deseja excluir esta nota?')" autocomplete="off">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-delete-note">🗑️ Excluir Nota</button>
+                </form>
+            </div>
         </div>
 
         <h2 class="sections-title">Divisões da Nota</h2>
@@ -55,12 +62,50 @@
                  id="section-{{ $section->id }}">
 
                 <div class="section-card-content">
-                    <div>
+                    <div style="flex:1;">
                         <h2>{{ $section->section_title }}</h2>
                         <p>{{ $section->section_content }}</p>
-                    </div>
-                    <div class="section-icons">
 
+                        {{-- Imagens --}}
+                        @if($section->images && count($section->images) > 0)
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+                            @foreach($section->images as $img)
+                            <img src="{{ asset('storage/' . $img) }}"
+                                 style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:2px solid #FFE0B2;cursor:pointer;"
+                                 onclick="window.open(this.src)" alt="imagem"/>
+                            @endforeach
+                        </div>
+                        @endif
+
+                        {{-- Tabela --}}
+                        @if($section->table_data)
+                        @php $tableData = json_decode($section->table_data, true); @endphp
+                        @if($tableData && isset($tableData['headers']) && count($tableData['headers']) > 0)
+                        <div style="overflow-x:auto;margin-top:12px;">
+                            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                                <thead>
+                                    <tr>
+                                        @foreach($tableData['headers'] as $header)
+                                        <th style="background:#FF6D00;color:white;padding:7px 12px;text-align:left;font-weight:600;">{{ $header }}</th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($tableData['rows'] as $row)
+                                    <tr>
+                                        @foreach($row as $cell)
+                                        <td style="padding:6px 12px;border-bottom:1px solid #f0f0f0;color:#333;">{{ $cell }}</td>
+                                        @endforeach
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif
+                        @endif
+                    </div>
+
+                    <div class="section-icons">
                         {{-- Botão Ver --}}
                         <button type="button" class="icon-btn"
                                 title="Ver divisão"
@@ -83,7 +128,6 @@
                                 {{ $section->completed ? '🔄' : '✅' }}
                             </button>
                         </form>
-
                     </div>
                 </div>
 
@@ -92,64 +136,6 @@
         </div>
 
     </main>
-
-    {{-- PAINEL LATERAL DIREITO --}}
-    <aside class="right-panel" id="add-section">
-
-        @isset($editingSection)
-            <h2 class="panel-title">Editar Divisão</h2>
-            <form action="{{ secure_url(route('notes.section.update', [$note->id, $editingSection->id], false)) }}"
-                  method="POST" autocomplete="off">
-                @csrf
-                @method('PUT')
-
-                <div class="form-group">
-                    <label>Título da Divisão</label>
-                    <input type="text"
-                           name="section_title"
-                           value="{{ $editingSection->section_title }}"
-                           autocomplete="off"
-                           required>
-                </div>
-
-                <div class="form-group">
-                    <label>Conteúdo da Divisão</label>
-                    <textarea name="section_content"
-                              autocomplete="off"
-                              placeholder="Descreva os detalhes desta divisão...">{{ $editingSection->section_content }}</textarea>
-                </div>
-
-                <button type="submit">Salvar Alterações</button>
-                <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn-cancel-block">Cancelar</a>
-
-            </form>
-        @else
-            <h2 class="panel-title">Adicionar Nova Divisão</h2>
-            <form action="{{ secure_url(route('notes.section', [$note->id], false)) }}" method="POST" autocomplete="off">
-                @csrf
-
-                <div class="form-group">
-                    <label>Título da Divisão</label>
-                    <input type="text"
-                           name="section_title"
-                           placeholder="Ex: Descrição do Problema"
-                           autocomplete="off"
-                           required>
-                </div>
-
-                <div class="form-group">
-                    <label>Conteúdo da Divisão</label>
-                    <textarea name="section_content"
-                              autocomplete="off"
-                              placeholder="Descreva os detalhes desta divisão..."></textarea>
-                </div>
-
-                <button type="submit">Adicionar Divisão</button>
-
-            </form>
-        @endisset
-
-    </aside>
 
 </div>
 

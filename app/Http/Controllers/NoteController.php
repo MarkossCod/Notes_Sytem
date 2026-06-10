@@ -62,12 +62,34 @@ class NoteController extends Controller
 
     public function addSection(Request $request, $id)
     {
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('section_images', 'public');
+                $imagePaths[] = $path;
+            }
+        }
+
         Section::create([
-            'note_id' => $id,
-            'section_title' => $request->section_title,
-            'section_content' => $request->section_content
+            'note_id'         => $id,
+            'section_title'   => $request->section_title,
+            'section_content' => $request->section_content,
+            'images'          => json_encode($imagePaths),
+            'table_data'      => $request->table_data,
         ]);
+
         return back()->with('success', 'Divisão adicionada com sucesso!');
+    }
+
+        public function createSection($id)
+    {
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
+        $note = Note::with('sections')
+            ->where('user_name', $this->getUserName())
+            ->findOrFail($id);
+        return view('notes.section_create', compact('note'));
     }
 
     public function editSection($id, $sectionId)

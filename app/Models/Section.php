@@ -11,6 +11,13 @@ class Section extends Model
         'section_title',
         'section_content',
         'completed',
+        'images',
+        'table_data',
+    ];
+
+    protected $casts = [
+        'completed' => 'boolean',
+        'images'    => 'array',
     ];
 
     public function note()
