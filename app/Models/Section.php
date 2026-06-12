@@ -12,12 +12,14 @@ class Section extends Model
         'section_content',
         'completed',
         'images',
+        'files',
         'table_data',
     ];
 
     protected $casts = [
-        'completed' => 'boolean',
-        'images'    => 'array',
+        'completed'  => 'boolean',
+        'images'     => 'array',
+        'files'      => 'array',
     ];
 
     public function note()

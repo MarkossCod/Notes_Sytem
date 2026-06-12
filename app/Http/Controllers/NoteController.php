@@ -36,13 +36,13 @@ class NoteController extends Controller
             return redirect()->route('login');
         }
         $request->validate([
-            'title' => 'required',
+            'title'       => 'required',
             'created_day' => 'required'
         ]);
 
         $note = Note::create([
-            'user_name' => $this->getUserName(),
-            'title' => $request->title,
+            'user_name'   => $this->getUserName(),
+            'title'       => $request->title,
             'created_day' => $request->created_day
         ]);
 
@@ -60,28 +60,7 @@ class NoteController extends Controller
         return view('notes.show', compact('note'));
     }
 
-    public function addSection(Request $request, $id)
-    {
-        $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('section_images', 'public');
-                $imagePaths[] = $path;
-            }
-        }
-
-        Section::create([
-            'note_id'         => $id,
-            'section_title'   => $request->section_title,
-            'section_content' => $request->section_content,
-            'images'          => json_encode($imagePaths),
-            'table_data'      => $request->table_data,
-        ]);
-
-        return back()->with('success', 'Divisão adicionada com sucesso!');
-    }
-
-        public function createSection($id)
+    public function createSection($id)
     {
         if (!session('user_name')) {
             return redirect()->route('login');
@@ -92,6 +71,35 @@ class NoteController extends Controller
         return view('notes.section_create', compact('note'));
     }
 
+    public function addSection(Request $request, $id)
+    {
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('section_images', 'public');
+                $imagePaths[] = $path;
+            }
+        }
+
+        $filePaths = [];
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $path = $file->store('section_files', 'public');
+                $filePaths[] = ['name' => $file->getClientOriginalName(), 'path' => $path];
+            }
+        }
+
+        Section::create([
+            'note_id'         => $id,
+            'section_title'   => $request->section_title,
+            'section_content' => $request->section_content,
+            'images'          => json_encode($imagePaths),
+            'files'           => json_encode($filePaths),
+        ]);
+
+        return redirect()->route('notes.show', $id)->with('success', 'Divisão adicionada com sucesso!');
+    }
+
     public function editSection($id, $sectionId)
     {
         if (!session('user_name')) {
@@ -100,18 +108,39 @@ class NoteController extends Controller
         $note = Note::with('sections')
             ->where('user_name', $this->getUserName())
             ->findOrFail($id);
-        $editingSection = Section::findOrFail($sectionId);
-        return view('notes.show', compact('note', 'editingSection'));
+        $section = Section::findOrFail($sectionId);
+        return view('notes.section_edit', compact('note', 'section'));
     }
 
     public function updateSection(Request $request, $id, $sectionId)
     {
         $section = Section::findOrFail($sectionId);
+
+        $imagePaths = json_decode($request->existing_images ?? '[]', true) ?? [];
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('section_images', 'public');
+                $imagePaths[] = $path;
+            }
+        }
+
+        $filePaths = json_decode($section->files ?? '[]', true) ?? [];
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $path = $file->store('section_files', 'public');
+                $filePaths[] = ['name' => $file->getClientOriginalName(), 'path' => $path];
+            }
+        }
+
         $section->update([
-            'section_title' => $request->section_title,
-            'section_content' => $request->section_content
+            'section_title'   => $request->section_title,
+            'section_content' => $request->section_content,
+            'images'          => json_encode($imagePaths),
+            'files'           => json_encode($filePaths),
         ]);
-        return redirect()->route('notes.show', $id)->with('success', 'Divisão atualizada com sucesso!');
+
+        return redirect()->route('notes.show', $id)->with('success', 'Divisão atualizada!');
     }
 
     public function completeSection($id, $sectionId)

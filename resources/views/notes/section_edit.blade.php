@@ -18,44 +18,62 @@
     .ed-img-wrap { position:relative; }
     .ed-img-wrap img { width:80px; height:80px; object-fit:cover; border-radius:8px; border:2px solid #FFE0B2; display:block; }
     .ed-img-del { position:absolute; top:-6px; right:-6px; background:#e53935; color:white; border:none; border-radius:50%; width:20px; height:20px; font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; margin:0; line-height:1; }
-    .ed-file-list { margin-top:10px; display:flex; flex-direction:column; gap:6px; }
-    .ed-file-item { display:flex; align-items:center; justify-content:space-between; background:#FFF8F0; border:1px solid #FFE0B2; border-radius:8px; padding:8px 12px; font-size:13px; color:#555; }
-    .ed-file-del { background:none; border:none; color:#e53935; cursor:pointer; font-size:16px; padding:0; margin:0; width:auto; }
     .ed-actions { display:flex; gap:12px; margin-top:28px; }
     .ed-btn-confirm { flex:1; padding:14px; background:#FF6D00; color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; transition:background .2s; box-shadow:0 4px 16px rgba(255,109,0,0.3); }
     .ed-btn-confirm:hover { background:#e06300; }
     .ed-btn-cancel { padding:14px 20px; background:#f5f5f5; color:#555; border:1px solid #e0e0e0; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; margin-top:0; transition:background .2s; }
     .ed-btn-cancel:hover { background:#e0e0e0; }
     .ed-field { margin-bottom:20px; }
+    .ed-file-list { margin-top:10px; display:flex; flex-direction:column; gap:6px; }
+    .ed-file-item { display:flex; align-items:center; justify-content:space-between; background:#FFF8F0; border:1px solid #FFE0B2; border-radius:8px; padding:8px 12px; font-size:13px; color:#555; }
+    .ed-file-del { background:none; border:none; color:#e53935; cursor:pointer; font-size:16px; padding:0; margin:0; width:auto; }
 </style>
 
 <div class="ed-header">
     <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn-back" style="margin-bottom:0;">← Voltar para a nota</a>
-    <span style="font-size:13px;color:#888;">Nova Divisão — {{ $note->title }}</span>
+    <span style="font-size:13px;color:#888;">Editar Divisão — {{ $note->title }}</span>
 </div>
 
-<form id="sectionForm" action="{{ secure_url(route('notes.section', [$note->id], false)) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+<form id="editForm" action="{{ secure_url(route('notes.section.update', [$note->id, $section->id], false)) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
     @csrf
+    @method('PUT')
 
     <div class="ed-card">
 
         {{-- TÍTULO --}}
         <div class="ed-field">
             <label class="ed-label">Título da Divisão</label>
-            <input class="ed-input" type="text" name="section_title" placeholder="Ex: Descrição do Problema" required autocomplete="off"/>
+            <input class="ed-input" type="text" name="section_title" value="{{ $section->section_title }}" required autocomplete="off"/>
         </div>
 
         {{-- CONTEÚDO --}}
         <div class="ed-field">
             <div class="ed-section-title">📄 Conteúdo</div>
-            <textarea class="ed-textarea" id="contentArea" name="section_content" placeholder="Digite o conteúdo da divisão aqui..."></textarea>
+            <textarea class="ed-textarea" name="section_content">{{ $section->section_content }}</textarea>
         </div>
 
         <hr class="ed-divider"/>
 
-        {{-- IMAGENS --}}
+        {{-- IMAGENS EXISTENTES --}}
+        @if($section->images && count($section->images) > 0)
         <div class="ed-field">
-            <div class="ed-section-title">🖼️ Imagens</div>
+            <div class="ed-section-title">🖼️ Imagens Existentes</div>
+            <div class="ed-preview-imgs" id="existingImgs">
+                @foreach($section->images as $i => $img)
+                <div class="ed-img-wrap" id="existing-{{ $i }}">
+                    <img src="{{ asset('storage/' . $img) }}" alt="imagem"/>
+                    <button type="button" class="ed-img-del" onclick="removerImagemExistente({{ $i }}, '{{ $img }}')">✕</button>
+                </div>
+                @endforeach
+            </div>
+            <input type="hidden" name="existing_images" id="existingImagesInput" value="{{ json_encode($section->images) }}"/>
+        </div>
+        <hr class="ed-divider"/>
+        @endif
+
+        {{-- NOVAS IMAGENS --}}
+        <div class="ed-field">
+            <div class="ed-section-title">🖼️ Adicionar Imagens</div>
             <div class="ed-upload-box" onclick="document.getElementById('imgInput').click()">
                 <div style="font-size:32px;margin-bottom:8px;">📤</div>
                 <div style="font-size:13px;color:#666;">Clique ou arraste imagens aqui</div>
@@ -69,11 +87,11 @@
 
         {{-- ARQUIVOS --}}
         <div class="ed-field">
-            <div class="ed-section-title">📎 Arquivos (PDF, DOC, XLS, etc)</div>
+            <div class="ed-section-title">📎 Arquivos (PDF, DOC, etc)</div>
             <div class="ed-upload-box" onclick="document.getElementById('fileInput').click()">
                 <div style="font-size:32px;margin-bottom:8px;">📎</div>
                 <div style="font-size:13px;color:#666;">Clique para anexar arquivos</div>
-                <div style="font-size:11px;color:#aaa;margin-top:4px;">PDF, DOC, DOCX, XLS, XLSX, TXT até 20MB</div>
+                <div style="font-size:11px;color:#aaa;margin-top:4px;">PDF, DOC, DOCX, XLS, XLSX até 20MB</div>
                 <input type="file" id="fileInput" name="files[]" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" onchange="previewArquivos(this)"/>
             </div>
             <div class="ed-file-list" id="filePreview"></div>
@@ -81,13 +99,21 @@
 
         <div class="ed-actions">
             <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="ed-btn-cancel">Cancelar</a>
-            <button type="submit" class="ed-btn-confirm">✅ Confirmar Divisão</button>
+            <button type="submit" class="ed-btn-confirm">✅ Salvar Alterações</button>
         </div>
 
     </div>
 </form>
 
 <script>
+let existingImages = @json($section->images ?? []);
+
+function removerImagemExistente(index, path) {
+    document.getElementById('existing-' + index).remove();
+    existingImages = existingImages.filter(img => img !== path);
+    document.getElementById('existingImagesInput').value = JSON.stringify(existingImages);
+}
+
 function previewImagens(input) {
     const preview = document.getElementById('imgPreview');
     preview.innerHTML = '';
