@@ -93,8 +93,8 @@ class NoteController extends Controller
             'note_id'         => $id,
             'section_title'   => $request->section_title,
             'section_content' => $request->section_content,
-            'images'          => json_encode($imagePaths),
-            'files'           => json_encode($filePaths),
+            'images'          => $imagePaths,
+            'files'           => $filePaths,
         ]);
 
         return redirect()->route('notes.show', $id)->with('success', 'Divisão adicionada com sucesso!');
@@ -125,7 +125,7 @@ class NoteController extends Controller
             }
         }
 
-        $filePaths = json_decode($section->files ?? '[]', true) ?? [];
+        $filePaths = $section->files ?? [];
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
                 $path = $file->store('section_files', 'public');
@@ -136,8 +136,8 @@ class NoteController extends Controller
         $section->update([
             'section_title'   => $request->section_title,
             'section_content' => $request->section_content,
-            'images'          => json_encode($imagePaths),
-            'files'           => json_encode($filePaths),
+            'images'          => $imagePaths,
+            'files'           => $filePaths,
         ]);
 
         return redirect()->route('notes.show', $id)->with('success', 'Divisão atualizada!');
