@@ -59,7 +59,7 @@
             <label>Resposta Secreta</label>
             <input type="text" name="secret_answer" placeholder="Sua resposta" required autocomplete="off"/>
         </div>
-        <button type="submit" class="btn">Criar Conta →</button>
+        <button type="submit" class="btn">Criar Conta</button>
     </form>
 </div>
 

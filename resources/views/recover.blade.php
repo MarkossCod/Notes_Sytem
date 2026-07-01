@@ -39,10 +39,10 @@
             <label>Seu Nome</label>
             <input type="text" name="user_name" placeholder="Ex: João Silva" required autocomplete="off"/>
         </div>
-        <button type="submit" class="btn">Continuar →</button>
+        <button type="submit" class="btn">Continuar</button>
     </form>
 
-    <a href="{{ secure_url(route('login', [], false)) }}" class="btn-back">← Voltar ao login</a>
+    <a href="{{ secure_url(route('login', [], false)) }}" class="btn-back">Voltar ao login</a>
 </div>
 
 <script>

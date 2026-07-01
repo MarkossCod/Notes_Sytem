@@ -40,11 +40,11 @@
             <label>Senha</label>
             <input type="password" name="password" id="passwordInput" placeholder="Digite sua senha" required autocomplete="off"/>
         </div>
-        <button type="button" class="btn" id="enterBtn" onclick="handleEnter()">Entrar →</button>
+        <button type="button" class="btn" id="enterBtn" onclick="handleEnter()">Entrar</button>
     </form>
 
     <a href="{{ secure_url(route('recover', [], false)) }}" class="btn-link">🔑 Esqueci minha senha</a>
-    <a href="{{ secure_url(route('login', [], false)) }}" class="btn-back">← Voltar</a>
+    <a href="{{ secure_url(route('login', [], false)) }}" class="btn-back">Voltar</a>
 </div>
 
 <div class="overlay" id="overlay">
