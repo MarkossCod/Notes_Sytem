@@ -1338,6 +1338,7 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     background: white;
 }
 
+/*--Botão de "Voltar ao login"--*/
 .recover-page .btn-back {
     display: block;
     text-align: center;
@@ -1359,6 +1360,29 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     background: #e06300;
     transform: translateY(-2px);
     color: white;
+}
+
+/*--Botão de "Continuar da tela de Recuperar senha"--*/
+.recover-page .btn {
+    display: block;
+    text-align: center;
+    margin-top: 0;
+    padding: 14px;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    width: 100%;
+    background: #FF6D00;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(255,109,0,0.3);
+    transition: background .2s, transform .15s;
+    cursor: pointer;
+}
+
+.recover-page .btn:hover {
+    background: #e06300;
+    transform: translateY(-2px);
 }
 
 @media (max-width: 480px) {
