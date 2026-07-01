@@ -1343,21 +1343,22 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     text-align: center;
     margin-top: 10px;
     padding: 14px;
-    color: #FF6D00;
+    color: white;
     font-size: 15px;
     font-weight: 700;
     text-decoration: none;
     width: 100%;
-    background: white;
-    border: 2px solid #FF6D00;
+    background: #FF6D00;
+    border: none;
     border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(255,109,0,0.15);
-    transition: background .2s, color .2s;
+    box-shadow: 0 4px 16px rgba(255,109,0,0.3);
+    transition: background .2s, transform .15s;
 }
 
 .recover-page .btn-back:hover {
-    background: #FFF3E0;
-    color: #FF6D00;
+    background: #e06300;
+    transform: translateY(-2px);
+    color: white;
 }
 
 @media (max-width: 480px) {
