@@ -1366,7 +1366,7 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 .recover-page .btn {
     display: block;
     text-align: center;
-    margin-top: 0;
+    margin-top: 24px;
     padding: 14px;
     color: white;
     font-size: 15px;
