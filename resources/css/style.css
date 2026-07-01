@@ -1341,13 +1341,24 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 .recover-page .btn-back {
     display: block;
     text-align: center;
-    margin-top: 16px;
-    color: #aaa;
-    font-size: 13px;
+    margin-top: 10px;
+    padding: 14px;
+    color: #FF6D00;
+    font-size: 15px;
+    font-weight: 700;
     text-decoration: none;
+    width: 100%;
+    background: white;
+    border: 2px solid #FF6D00;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(255,109,0,0.15);
+    transition: background .2s, color .2s;
 }
 
-.recover-page .btn-back:hover { color: #555; }
+.recover-page .btn-back:hover {
+    background: #FFF3E0;
+    color: #FF6D00;
+}
 
 @media (max-width: 480px) {
     .recover-page .card { margin: 20px; padding: 28px 20px; }
