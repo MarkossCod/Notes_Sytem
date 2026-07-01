@@ -1342,7 +1342,7 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 .recover-page .btn-back {
     display: block;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 14px;
     padding: 14px;
     color: white;
     font-size: 15px;
@@ -1366,7 +1366,7 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 .recover-page .btn {
     display: block;
     text-align: center;
-    margin-top: 24px;
+    margin-top: 32px;
     padding: 14px;
     color: white;
     font-size: 15px;
