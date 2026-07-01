@@ -31,9 +31,15 @@ class LoginController extends Controller
             return redirect()->route('register');
         }
 
-        // Usuário existe — redireciona para digitar senha
-        session(['pending_user' => $userName]);
-        return redirect()->route('password');
+        // Usuário existe — valida senha direto aqui
+        if (!$request->filled('password') || !Hash::check($request->password, $noteUser->password)) {
+            return back()->withInput()->withErrors(['password' => 'Senha incorreta.']);
+        }
+
+        session(['user_name' => $userName]);
+        session()->forget('pending_user');
+
+        return redirect()->route('notes.index');
     }
 
     public function showRegister()

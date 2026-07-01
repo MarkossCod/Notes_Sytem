@@ -8,41 +8,8 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#FF6D00">
     <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #FF6D00; min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-        .floating { position: fixed; border-radius: 50%; background: rgba(255,255,255,0.08); animation: float 4s ease-in-out infinite; }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
-        .card { background: white; border-radius: 24px; padding: 40px 36px; width: 100%; max-width: 380px; z-index: 2; position: relative; transition: opacity .4s, transform .4s; }
-        .logo-wrap { width: 80px; height: 80px; background: #FF6D00; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
-        .login-title { text-align: center; font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
-        .login-sub { text-align: center; font-size: 13px; color: #888; margin-bottom: 28px; }
-        .field label { font-size: 12px; font-weight: 600; color: #FF6D00; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; display: block; }
-        .field input { width: 100%; padding: 13px 16px; border: 2px solid #FFE0B2; border-radius: 12px; font-size: 15px; color: #1a1a1a; outline: none; transition: border .2s, background .2s; background: #FFF8F0; }
-        .field input:focus { border-color: #FF6D00; background: white; }
-        .login-btn { width: 100% !important; padding: 14px !important; background: #FF6D00 !important; color: white !important; border: none !important; border-radius: 12px !important; font-size: 15px !important; font-weight: 700 !important; cursor: pointer !important; margin-top: 20px !important; letter-spacing: .5px; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 4px 16px rgba(255,109,0,0.3); }
-        .login-btn:hover { background: #e06300 !important; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,109,0,0.4); }
-        .login-btn:active { transform: scale(0.98) !important; }
-        .login-btn.loading { background: #FF8F00 !important; pointer-events: none; }
-        .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
-        .divider span { font-size: 12px; color: #ccc; }
-        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #FFE0B2; }
-        .error-msg { background: #fdecea; color: #c62828; border-left: 4px solid #e53935; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
-        .overlay { position: fixed; inset: 0; background: #FF6D00; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .5s; }
-        .overlay.show { opacity: 1; pointer-events: all; }
-        .check-circle { width: 72px; height: 72px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transform: scale(0); transition: transform .4s .2s cubic-bezier(.34,1.56,.64,1); }
-        .check-circle.show { transform: scale(1); }
-        .overlay-text { color: white; font-size: 20px; font-weight: 700; opacity: 0; transform: translateY(10px); transition: opacity .4s .4s, transform .4s .4s; }
-        .overlay-text.show { opacity: 1; transform: translateY(0); }
-        .overlay-sub { color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 8px; opacity: 0; transition: opacity .4s .5s; }
-        .overlay-sub.show { opacity: 1; }
-        @media (max-width: 480px) {
-            .card { margin: 20px; padding: 28px 20px; }
-        }
-    </style>
 </head>
-<body>
+<body class="login-page">
 <canvas id="bg"></canvas>
 <div class="floating" style="width:120px;height:120px;top:-30px;left:-20px;animation-delay:0s"></div>
 <div class="floating" style="width:80px;height:80px;bottom:20px;right:30px;animation-delay:1.5s"></div>
@@ -63,10 +30,14 @@
         </svg>
     </div>
     <div class="login-title">NOTESSYTEM</div>
-    <div class="login-sub">Digite seu nome para continuar</div>
+    <div class="login-sub">Entre com seu nome e senha para continuar</div>
 
     @if($errors->any())
         <div class="error-msg">{{ $errors->first() }}</div>
+    @endif
+
+    @if(session('success'))
+        <div class="success-msg">{{ session('success') }}</div>
     @endif
 
     <form id="loginForm" action="{{ secure_url(route('login.store', [], false)) }}" method="POST" autocomplete="off">
@@ -75,8 +46,22 @@
             <label>Seu nome</label>
             <input type="text" name="user_name" id="nameInput" placeholder="Ex: José Silva" value="{{ old('user_name') }}" required autocomplete="off"/>
         </div>
+        <div class="field">
+            <label>Senha</label>
+            <div class="password-wrap">
+                <input type="password" name="password" id="passwordInput" placeholder="Digite sua senha" autocomplete="off"/>
+                <button type="button" class="toggle-pass" onclick="toggleSenha()" aria-label="Mostrar/ocultar senha">
+                    <svg id="iconOlho" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
         <button type="button" class="login-btn" id="enterBtn" onclick="handleEnter()">Entrar →</button>
     </form>
+
+    <a href="{{ secure_url(route('recover', [], false)) }}" class="btn-link">🔑 Esqueci minha senha</a>
 </div>
 
 <div class="overlay" id="overlay">
@@ -95,13 +80,6 @@ const ctx = canvas.getContext('2d');
 function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
-
-document.getElementById('nameInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        handleEnter();
-    }
-});
 
 let pts = Array.from({length: 30}, () => ({
     x: Math.random() * canvas.width, y: Math.random() * canvas.height,
@@ -128,6 +106,11 @@ function draw() {
     requestAnimationFrame(draw);
 }
 draw();
+
+function toggleSenha() {
+    const input = document.getElementById('passwordInput');
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
 
 function handleEnter() {
     const name = document.getElementById('nameInput').value.trim();
@@ -163,6 +146,10 @@ function handleEnter() {
         document.getElementById('loginForm').submit();
     }, 1500);
 }
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); handleEnter(); }
+});
 </script>
 </body>
 </html>
