@@ -3,73 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @vite(['resources/css/style.css', 'resources/js/app.js'])
     <title>NOTESSYTEM</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #FF6D00;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-        #splash-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-        .splash-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-            z-index: 2;
-        }
-        .logo-wrap { position: relative; width: 120px; height: 120px; }
-        .logo-bg {
-            width: 120px; height: 120px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 28px;
-            position: absolute;
-            transform: scale(0);
-            opacity: 0;
-        }
-        .logo-svg { position: absolute; inset: 0; opacity: 0; }
-        .brand-text {
-            font-family: Arial, sans-serif;
-            font-size: 32px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: 6px;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        .brand-sub {
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            font-weight: 400;
-            color: rgba(255,255,255,0.75);
-            letter-spacing: 3px;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        .progress-bar {
-            width: 160px; height: 3px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 2px;
-            overflow: hidden;
-            opacity: 0;
-        }
-        .progress-fill {
-            height: 100%; width: 0%;
-            background: #fff;
-            border-radius: 2px;
-        }
-    </style>
 </head>
-<body>
+<body class="splash-page">
 <canvas id="splash-canvas"></canvas>
 <div class="splash-inner">
-    <div class="logo-wrap">
+    <div class="splash-logo-wrap">
         <div class="logo-bg" id="logoBg"></div>
         <svg class="logo-svg" id="logoSvg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
             <rect id="body" x="20" y="28" width="80" height="74" rx="8" fill="white" opacity="0"/>

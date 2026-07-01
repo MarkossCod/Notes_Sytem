@@ -1084,3 +1084,421 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 @media (max-width: 480px) {
     .login-page .card { margin: 20px; padding: 28px 20px; }
 }
+
+/* ========== TELA DE SENHA ========== */
+.password-page {
+    background: #FF6D00;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.password-page .card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 380px;
+    z-index: 2;
+    position: relative;
+    transition: opacity .4s, transform .4s;
+    border: none;
+    box-shadow: none;
+}
+
+.password-page .card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.card-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+}
+
+.card-sub {
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 24px;
+}
+
+.user-badge {
+    text-align: center;
+    background: #FFF3E0;
+    color: #FF6D00;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: inline-block;
+    width: 100%;
+}
+
+.password-page .field { margin-bottom: 16px; }
+
+.password-page .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FF6D00;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.password-page .field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #FFE0B2;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1a1a1a;
+    outline: none;
+    background: #FFF8F0;
+    transition: border .2s;
+}
+
+.password-page .field input:focus {
+    border-color: #FF6D00;
+    background: white;
+}
+
+.password-page .btn-link {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    color: #FF6D00;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.password-page .btn-link:hover { text-decoration: underline; }
+
+.password-page .btn-back {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #aaa;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.password-page .btn-back:hover { color: #555; }
+
+@media (max-width: 480px) {
+    .password-page .card { margin: 20px; padding: 28px 20px; }
+}
+
+/* ========== TELA DE RECUPERAR SENHA (RESPOSTA) ========== */
+.recover-answer-page {
+    background: #FF6D00;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.recover-answer-page .card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    z-index: 2;
+    position: relative;
+    border: none;
+    box-shadow: none;
+}
+
+.recover-answer-page .card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.question-box {
+    background: #FFF3E0;
+    border-left: 4px solid #FF6D00;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.recover-answer-page .field { margin-bottom: 16px; }
+
+.recover-answer-page .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FF6D00;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.recover-answer-page .field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #FFE0B2;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1a1a1a;
+    outline: none;
+    background: #FFF8F0;
+    transition: border .2s;
+}
+
+.recover-answer-page .field input:focus {
+    border-color: #FF6D00;
+    background: white;
+}
+
+.recover-answer-page .btn-back {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    color: #aaa;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.recover-answer-page .btn-back:hover { color: #555; }
+
+@media (max-width: 480px) {
+    .recover-answer-page .card { margin: 20px; padding: 28px 20px; }
+}
+
+/* ========== TELA DE RECUPERAR SENHA (NOME) ========== */
+.recover-page {
+    background: #FF6D00;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.recover-page .card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 380px;
+    z-index: 2;
+    position: relative;
+    border: none;
+    box-shadow: none;
+}
+
+.recover-page .card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.recover-page .field { margin-bottom: 16px; }
+
+.recover-page .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FF6D00;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.recover-page .field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #FFE0B2;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1a1a1a;
+    outline: none;
+    background: #FFF8F0;
+    transition: border .2s;
+}
+
+.recover-page .field input:focus {
+    border-color: #FF6D00;
+    background: white;
+}
+
+.recover-page .btn-back {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    color: #aaa;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.recover-page .btn-back:hover { color: #555; }
+
+@media (max-width: 480px) {
+    .recover-page .card { margin: 20px; padding: 28px 20px; }
+}
+
+/* ========== TELA DE CRIAR SENHA (REGISTRO) ========== */
+.register-page {
+    background: #FF6D00;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.register-page .card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+    z-index: 2;
+    position: relative;
+    border: none;
+    box-shadow: none;
+}
+
+.register-page .card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.register-page .field { margin-bottom: 16px; }
+
+.register-page .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FF6D00;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.register-page .field input,
+.register-page .field select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #FFE0B2;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1a1a1a;
+    outline: none;
+    background: #FFF8F0;
+    transition: border .2s;
+}
+
+.register-page .field input:focus,
+.register-page .field select:focus {
+    border-color: #FF6D00;
+    background: white;
+}
+
+.register-page .field select { cursor: pointer; }
+
+@media (max-width: 480px) {
+    .register-page .card { margin: 20px; padding: 28px 20px; }
+}
+
+/* ========== TELA DE SPLASH ========== */
+.splash-page {
+    background: #FF6D00;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+#splash-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.splash-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    z-index: 2;
+}
+
+.splash-logo-wrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.logo-bg {
+    width: 120px;
+    height: 120px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 28px;
+    position: absolute;
+    transform: scale(0);
+    opacity: 0;
+}
+
+.logo-svg {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+}
+
+.brand-text {
+    font-family: Arial, sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 6px;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.brand-sub {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 3px;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.progress-bar {
+    width: 160px;
+    height: 3px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    border-radius: 2px;
+}

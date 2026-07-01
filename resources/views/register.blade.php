@@ -6,29 +6,8 @@
     <title>NOTESSYTEM — Criar Senha</title>
     @vite(['resources/css/style.css', 'resources/js/app.js'])
     <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #FF6D00; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-        .floating { position: fixed; border-radius: 50%; background: rgba(255,255,255,0.08); animation: float 4s ease-in-out infinite; }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
-        .card { background: white; border-radius: 24px; padding: 40px 36px; width: 100%; max-width: 420px; z-index: 2; position: relative; }
-        .logo-wrap { width: 64px; height: 64px; background: #FF6D00; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
-        .card-title { text-align: center; font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
-        .card-sub { text-align: center; font-size: 13px; color: #888; margin-bottom: 24px; }
-        .user-badge { text-align: center; background: #FFF3E0; color: #FF6D00; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 20px; display: inline-block; width: 100%; }
-        .field { margin-bottom: 16px; }
-        .field label { font-size: 12px; font-weight: 600; color: #FF6D00; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; display: block; }
-        .field input, .field select { width: 100%; padding: 12px 14px; border: 2px solid #FFE0B2; border-radius: 10px; font-size: 14px; color: #1a1a1a; outline: none; background: #FFF8F0; transition: border .2s; }
-        .field input:focus, .field select:focus { border-color: #FF6D00; background: white; }
-        .field select { cursor: pointer; }
-        .btn { width: 100%; padding: 14px; background: #FF6D00; color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; box-shadow: 0 4px 16px rgba(255,109,0,0.3); transition: background .2s, transform .15s; }
-        .btn:hover { background: #e06300; transform: translateY(-2px); }
-        .error-msg { background: #fdecea; color: #c62828; border-left: 4px solid #e53935; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
-        @media (max-width: 480px) { .card { margin: 20px; padding: 28px 20px; } }
-    </style>
 </head>
-<body>
+<body class="register-page">
 <canvas id="bg"></canvas>
 <div class="floating" style="width:120px;height:120px;top:-30px;left:-20px;animation-delay:0s"></div>
 <div class="floating" style="width:80px;height:80px;bottom:20px;right:30px;animation-delay:1.5s"></div>

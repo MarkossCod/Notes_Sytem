@@ -58,7 +58,7 @@
                 </button>
             </div>
         </div>
-        <button type="button" class="login-btn" id="enterBtn" onclick="handleEnter()">Entrar →</button>
+        <button type="button" class="login-btn" id="enterBtn" onclick="handleEnter()">Entrar</button>
     </form>
 
     <a href="{{ secure_url(route('recover', [], false)) }}" class="btn-link">🔑 Esqueci minha senha</a>
