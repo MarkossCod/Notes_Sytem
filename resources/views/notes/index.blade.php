@@ -30,7 +30,7 @@
         </div>
 
         <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn">
-            Abrir Nota →
+            Abrir Nota
         </a>
 
     </div>

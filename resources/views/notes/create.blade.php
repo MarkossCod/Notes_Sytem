@@ -4,7 +4,7 @@
 
 <div class="form-container fadeIn">
 
-    <a href="{{ secure_url(route('notes.index', [], false)) }}" class="btn-back">← Voltar</a>
+    <a href="{{ secure_url(route('notes.index', [], false)) }}" class="btn-back">Voltar</a>
 
     <h1>Nova Nota</h1>
     <div class="title-underline"></div>
