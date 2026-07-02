@@ -1385,6 +1385,53 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     transform: translateY(-2px);
 }
 
+/*--Botão "Redefinir Senha"--*/
+.recover-answer-page .btn {
+    display: block;
+    text-align: center;
+    margin-top: 32px;
+    padding: 14px;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    width: 100%;
+    background: #FF6D00;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(255,109,0,0.3);
+    transition: background .2s, transform .15s;
+    cursor: pointer;
+}
+
+.recover-answer-page .btn:hover {
+    background: #e06300;
+    transform: translateY(-2px);
+}
+
+/*--Botão "Voltar"--*/
+.recover-answer-page .btn-back {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    padding: 14px;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    width: 100%;
+    background: #FF6D00;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(255,109,0,0.3);
+    transition: background .2s, transform .15s;
+}
+
+.recover-answer-page .btn-back:hover {
+    background: #e06300;
+    transform: translateY(-2px);
+    color: white;
+}
+
 @media (max-width: 480px) {
     .recover-page .card { margin: 20px; padding: 28px 20px; }
 }
