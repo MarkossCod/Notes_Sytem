@@ -2284,6 +2284,7 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 /* ========== CALENDAR WIDGET (seletor de data customizado) ========== */
 .calendar-field {
     position: relative;
+    margin-top: -6px;
 }
 
 .calendar-field-input {
