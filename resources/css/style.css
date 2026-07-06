@@ -2302,7 +2302,7 @@ canvas#bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     text-align: left;
 }
 
-.calendar-field-input:hover { border-color: #ffcb99; }
+.calendar-field-input:hover { border-color: #ffcb99; background: white; }
 .calendar-field-input:focus,
 .calendar-field-input[aria-expanded="true"] {
     outline: none;
