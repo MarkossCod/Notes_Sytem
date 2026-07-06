@@ -72,36 +72,119 @@
     @yield('content')
 </div>
 
-{{-- MODAL SOBRE --}}
+{{-- MODAL SOBRE — CAROUSEL --}}
 <div id="sobreModal" class="modal-overlay" onclick="closeSobreModal()">
-    <div class="modal-box sobre-box" onclick="event.stopPropagation()">
-        <div class="modal-header">
-            <h2>👤 Sobre o Sistema</h2>
-            <button class="modal-close" onclick="closeSobreModal()">✕</button>
+    <div class="sobre-modal-box" onclick="event.stopPropagation()">
+
+        {{-- Slide 1: Desenvolvedor --}}
+        <div class="sobre-slide active" id="sobre-slide-0">
+            <div class="sobre-visual">
+                <div class="sobre-visual-icon">👨‍💻</div>
+                <span class="sobre-visual-label">Desenvolvedor</span>
+            </div>
+            <div class="sobre-info-card">
+                <button class="sobre-close" onclick="closeSobreModal()">✕</button>
+                <span class="sobre-tag">Criador do Sistema</span>
+                <h2 class="sobre-name">Markos Samuell</h2>
+                <p class="sobre-role">Desenvolvedor Full Stack & IoT</p>
+                <p class="sobre-desc">
+                    Estudante de Desenvolvimento Web e IoT no SENAI-CTTI-MG,
+                    apaixonado por criar sistemas práticos e funcionais que
+                    resolvem problemas reais do dia a dia.
+                </p>
+                <div class="sobre-social">
+                    <a href="https://github.com/MarkossCod" target="_blank" class="sobre-social-btn" title="GitHub">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com" target="_blank" class="sobre-social-btn" title="LinkedIn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="sobre-content">
-            <div class="sobre-item">
-                <span class="sobre-icon">🧑‍💻</span>
-                <div>
-                    <p class="sobre-label">Desenvolvedor</p>
-                    <p class="sobre-value">Markos Samuell</p>
-                </div>
+
+        {{-- Slide 2: Instituição --}}
+        <div class="sobre-slide" id="sobre-slide-1">
+            <div class="sobre-visual" style="background: linear-gradient(145deg, #BF360C, #e64a19);">
+                <div class="sobre-visual-icon">🏫</div>
+                <span class="sobre-visual-label">Instituição</span>
             </div>
-            <div class="sobre-item">
-                <span class="sobre-icon">🏫</span>
-                <div>
-                    <p class="sobre-label">Instituição de Ensino</p>
-                    <p class="sobre-value">SENAI-CTTI-MG</p>
-                </div>
-            </div>
-            <div class="sobre-item">
-                <span class="sobre-icon">💡</span>
-                <div>
-                    <p class="sobre-label">Motivo da Criação</p>
-                    <p class="sobre-value">Sistema desenvolvido para organizar e gerenciar chamados de forma prática, permitindo criar notas e dividi-las em seções para melhor controle das atividades.</p>
+            <div class="sobre-info-card">
+                <button class="sobre-close" onclick="closeSobreModal()">✕</button>
+                <span class="sobre-tag">Ensino Técnico</span>
+                <h2 class="sobre-name">SENAI-CTTI-MG</h2>
+                <p class="sobre-role">Centro de Tecnologia da Informação</p>
+                <p class="sobre-desc">
+                    O SENAI-CTTI-MG forma profissionais qualificados em tecnologia
+                    da informação, com foco em desenvolvimento web, redes e IoT,
+                    preparando os alunos para o mercado de trabalho com excelência.
+                </p>
+                <div class="sobre-social">
+                    <a href="https://www.senaiminas.com.br" target="_blank" class="sobre-social-btn" title="Site SENAI">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
+
+        {{-- Slide 3: Sistema --}}
+        <div class="sobre-slide" id="sobre-slide-2">
+            <div class="sobre-visual" style="background: linear-gradient(145deg, #FF6D00, #FF8F00);">
+                <svg viewBox="0 0 80 80" width="72" height="72">
+                    <rect x="8" y="16" width="64" height="54" rx="7" fill="white" opacity="0.95"/>
+                    <rect x="6" y="10" width="68" height="16" rx="6" fill="rgba(255,255,255,0.25)"/>
+                    <circle cx="20" cy="18" r="4" fill="white"/>
+                    <circle cx="34" cy="18" r="4" fill="white"/>
+                    <circle cx="48" cy="18" r="4" fill="white"/>
+                    <rect x="18" y="32" width="44" height="4" rx="2" fill="#FFE0B2"/>
+                    <rect x="18" y="42" width="34" height="4" rx="2" fill="#FFE0B2"/>
+                    <rect x="18" y="52" width="38" height="4" rx="2" fill="#FFE0B2"/>
+                    <text x="40" y="66" text-anchor="middle" font-family="Arial" font-weight="900" font-size="13" fill="#FF6D00">NS</text>
+                </svg>
+                <span class="sobre-visual-label">NotesSytem</span>
+            </div>
+            <div class="sobre-info-card">
+                <button class="sobre-close" onclick="closeSobreModal()">✕</button>
+                <span class="sobre-tag">Sobre o Sistema</span>
+                <h2 class="sobre-name">NotesSytem</h2>
+                <p class="sobre-role">Gerenciador de Notas & Chamados</p>
+                <p class="sobre-desc">
+                    Sistema desenvolvido para organizar e gerenciar chamados de
+                    forma prática, permitindo criar notas e dividi-las em seções
+                    para melhor controle das atividades diárias.
+                </p>
+                <div class="sobre-social">
+                    <a href="https://github.com/MarkossCod/Notes_Sytem" target="_blank" class="sobre-social-btn" title="Repositório">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="https://notes-sytem.onrender.com" target="_blank" class="sobre-social-btn" title="Ver Online">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {{-- Navegação --}}
+        <div class="sobre-nav">
+            <button class="sobre-nav-btn" onclick="sobreAnterior()" aria-label="Anterior">&#8249;</button>
+            <div class="sobre-dots">
+                <button class="sobre-dot active" onclick="sobreGoTo(0)" aria-label="Slide 1"></button>
+                <button class="sobre-dot" onclick="sobreGoTo(1)" aria-label="Slide 2"></button>
+                <button class="sobre-dot" onclick="sobreGoTo(2)" aria-label="Slide 3"></button>
+            </div>
+            <button class="sobre-nav-btn" onclick="sobreProximo()" aria-label="Próximo">&#8250;</button>
+        </div>
+
     </div>
 </div>
 
@@ -169,7 +252,27 @@
         });
     }
 
+    let sobreSlideAtual = 0;
+    const sobreTotalSlides = 3;
+
+    function sobreGoTo(index) {
+        document.getElementById('sobre-slide-' + sobreSlideAtual).classList.remove('active');
+        document.querySelectorAll('.sobre-dot')[sobreSlideAtual].classList.remove('active');
+        sobreSlideAtual = index;
+        document.getElementById('sobre-slide-' + sobreSlideAtual).classList.add('active');
+        document.querySelectorAll('.sobre-dot')[sobreSlideAtual].classList.add('active');
+    }
+
+    function sobreProximo() {
+        sobreGoTo((sobreSlideAtual + 1) % sobreTotalSlides);
+    }
+
+    function sobreAnterior() {
+        sobreGoTo((sobreSlideAtual - 1 + sobreTotalSlides) % sobreTotalSlides);
+    }
+
     function openSobreModal() {
+        sobreGoTo(0);
         document.getElementById('sobreModal').classList.add('modal-active');
     }
 
