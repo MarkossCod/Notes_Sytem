@@ -18,8 +18,18 @@ class NoteController extends Controller
         if (!session('user_name')) {
             return redirect()->route('login');
         }
-        $notes = Note::where('user_name', $this->getUserName())->latest()->get();
-        return view('notes.index', compact('notes'));
+        $notes = Note::with('sections')
+            ->where('user_name', $this->getUserName())
+            ->latest()
+            ->get();
+
+        $totalNotes = $notes->count();
+        $totalSections = $notes->sum(fn($n) => $n->sections->count());
+        $recentNotesCount = $notes->filter(function ($n) {
+            return \Carbon\Carbon::parse($n->created_day)->gte(now()->subDays(7));
+        })->count();
+
+        return view('notes.index', compact('notes', 'totalNotes', 'totalSections', 'recentNotesCount'));
     }
 
     public function create()

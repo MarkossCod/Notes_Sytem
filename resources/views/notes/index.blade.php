@@ -4,7 +4,32 @@
 
 <div class="page-header">
     <div>
-        <h1 class="title">Gerenciamento de Notas</h1>
+        <h1 class="title">Olá, {{ session('user_name') }}! 👋</h1>
+        <div class="title-underline"></div>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">📄</div>
+        <div class="stat-value">{{ $totalNotes }}</div>
+        <div class="stat-label">Total de notas</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">🧩</div>
+        <div class="stat-value">{{ $totalSections }}</div>
+        <div class="stat-label">Total de seções</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-value">{{ $recentNotesCount }}</div>
+        <div class="stat-label">Notas nos últimos 7 dias</div>
+    </div>
+</div>
+
+<div class="page-header" style="margin-top:8px;">
+    <div>
+        <h2 class="title" style="font-size:18px;">Suas Notas</h2>
         <div class="title-underline"></div>
     </div>
     <div class="search-box">
@@ -38,12 +63,22 @@
 </div>
 
 <script>
-    document.getElementById('searchInput').addEventListener('input', function () {
-        const query = this.value.toLowerCase();
+    function filterNotes(query) {
+        query = query.toLowerCase();
         document.querySelectorAll('#notesGrid .card').forEach(card => {
             card.style.display = card.dataset.title.includes(query) ? '' : 'none';
         });
+    }
+    document.getElementById('searchInput').addEventListener('input', function () {
+        filterNotes(this.value);
     });
+    const topSearch = document.getElementById('topSearchInput');
+    if (topSearch) {
+        topSearch.addEventListener('input', function () {
+            document.getElementById('searchInput').value = this.value;
+            filterNotes(this.value);
+        });
+    }
 </script>
 
 @endsection

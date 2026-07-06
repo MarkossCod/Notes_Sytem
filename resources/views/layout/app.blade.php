@@ -29,44 +29,58 @@
 </head>
 <body>
 
-<nav class="navbar">
-    <div class="logo">NOTESSYTEM</div>
-    <ul>
-        <li>
-            <a href="{{ secure_url(route('notes.index', [], false)) }}">
-                <span>📋</span> Gerenciar Notas
-            </a>
-        </li>
-        <li>
-            <a href="{{ secure_url(route('notes.create', [], false)) }}">
-                <span>➕</span> Nova Nota
-            </a>
-        </li>
-        <li>
-            <a href="#" onclick="openModelosModal(); return false;">
-                <span>📝</span> Modelos
-            </a>
-        </li>
-        <li>
-            <a href="#" onclick="openSobreModal(); return false;">
-                <span>👤</span> Sobre
-            </a>
-        </li>
-        <li>
-            <span style="color:rgba(255,255,255,0.8); font-size:13px; padding:8px 10px; display:flex; align-items:center; gap:6px;">
-                👋 {{ session('user_name') }}
-            </span>
-        </li>
-        <li>
-            <form action="{{ secure_url(route('logout', [], false)) }}" method="POST" style="margin:0;">
-                @csrf
-                <button type="submit" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); color:white; padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; margin-top:0; width:auto;">
-                    Sair
-                </button>
-            </form>
-        </li>
-    </ul>
-</nav>
+@include('layout.sidebar')
+
+<div class="app-shell">
+    <header class="topbar">
+        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Abrir menu">
+            <span></span><span></span><span></span>
+        </button>
+
+        <div class="topbar-search" id="topbarSearch">
+            <button class="search-toggle-btn" id="searchToggleBtn" onclick="toggleSearch()" aria-label="Buscar">
+                <span class="search-icon">🔍</span>
+            </button>
+            <input type="text" id="topSearchInput" placeholder="Buscar notas...">
+        </div>
+
+        <div class="topbar-user">
+            <span>👋 {{ session('user_name') }}</span>
+        </div>
+    </header>
+
+    <div class="container page-transition">
+        @yield('content')
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('sidebar-open');
+        document.getElementById('sidebarBackdrop').classList.toggle('active');
+        document.getElementById('hamburgerBtn').classList.toggle('open');
+    }
+
+    function toggleSearch() {
+        const wrapper = document.getElementById('topbarSearch');
+        const input = document.getElementById('topSearchInput');
+        const isOpen = wrapper.classList.toggle('search-open');
+        if (isOpen) {
+            setTimeout(() => input.focus(), 150);
+        } else {
+            input.value = '';
+            const evt = new Event('input');
+            input.dispatchEvent(evt);
+        }
+    }
+
+    document.addEventListener('click', function (e) {
+        const wrapper = document.getElementById('topbarSearch');
+        if (wrapper.classList.contains('search-open') && !wrapper.contains(e.target)) {
+            wrapper.classList.remove('search-open');
+        }
+    });
+</script>
 
 <div class="container page-transition">
     @yield('content')
