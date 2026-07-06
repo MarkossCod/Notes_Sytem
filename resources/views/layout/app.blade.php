@@ -37,15 +37,17 @@
             <span></span><span></span><span></span>
         </button>
 
-        <div class="topbar-search" id="topbarSearch">
-            <button class="search-toggle-btn" id="searchToggleBtn" onclick="toggleSearch()" aria-label="Buscar">
-                <span class="search-icon">🔍</span>
-            </button>
-            <input type="text" id="topSearchInput" placeholder="Buscar notas...">
-        </div>
+        <div class="topbar-right">
+            <div class="topbar-search" id="topbarSearch">
+                <button class="search-toggle-btn" id="searchToggleBtn" onclick="toggleSearch()" aria-label="Buscar">
+                    <span class="search-icon">🔍</span>
+                </button>
+                <input type="text" id="topSearchInput" placeholder="Buscar notas...">
+            </div>
 
-        <div class="topbar-user">
-            <span>👋 {{ session('user_name') }}</span>
+            <div class="topbar-user">
+                <span>👋 {{ session('user_name') }}</span>
+            </div>
         </div>
     </header>
 
@@ -81,10 +83,6 @@
         }
     });
 </script>
-
-<div class="container page-transition">
-    @yield('content')
-</div>
 
 {{-- MODAL SOBRE — CAROUSEL --}}
 <div id="sobreModal" class="modal-overlay" onclick="closeSobreModal()">
@@ -140,46 +138,31 @@
                 <div class="sobre-social">
                     <a href="https://www.fiemg.com.br/unidades/senai-centro-de-treinamento-da-tecnologia-da-informacao-ctti" target="_blank" class="sobre-social-btn" title="Site SENAI">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
                         </svg>
                     </a>
                 </div>
             </div>
         </div>
 
-        {{-- Slide 3: Sistema --}}
+        {{-- Slide 3: Ferramentas --}}
         <div class="sobre-slide" id="sobre-slide-2">
-            <div class="sobre-visual" style="background: linear-gradient(145deg, #FF6D00, #FF8F00);">
-                <svg viewBox="0 0 80 80" width="72" height="72">
-                    <rect x="8" y="16" width="64" height="54" rx="7" fill="white" opacity="0.95"/>
-                    <rect x="6" y="10" width="68" height="16" rx="6" fill="rgba(255,255,255,0.25)"/>
-                    <circle cx="20" cy="18" r="4" fill="white"/>
-                    <circle cx="34" cy="18" r="4" fill="white"/>
-                    <circle cx="48" cy="18" r="4" fill="white"/>
-                    <rect x="18" y="32" width="44" height="4" rx="2" fill="#FFE0B2"/>
-                    <rect x="18" y="42" width="34" height="4" rx="2" fill="#FFE0B2"/>
-                    <rect x="18" y="52" width="38" height="4" rx="2" fill="#FFE0B2"/>
-                    <text x="40" y="66" text-anchor="middle" font-family="Arial" font-weight="900" font-size="13" fill="#FF6D00">NS</text>
-                </svg>
-                <span class="sobre-visual-label">NotesSytem</span>
+            <div class="sobre-visual" style="background: linear-gradient(145deg, #E65100, #FF6D00);">
+                <div class="sobre-visual-icon">🛠️</div>
+                <span class="sobre-visual-label">Tecnologias</span>
             </div>
             <div class="sobre-info-card">
                 <button class="sobre-close" onclick="closeSobreModal()">✕</button>
-                <span class="sobre-tag">Sobre o Sistema</span>
-                <h2 class="sobre-name">NotesSytem</h2>
-                <p class="sobre-role">Gerenciador de Notas & Chamados</p>
+                <span class="sobre-tag">Stack Utilizada</span>
+                <h2 class="sobre-name">Laravel + Vite</h2>
+                <p class="sobre-role">Backend PHP & Frontend Moderno</p>
                 <p class="sobre-desc">
-                    Sistema desenvolvido para organizar e gerenciar chamados de
-                    forma prática, permitindo criar notas e dividi-las em seções
-                    para melhor controle das atividades diárias.
+                    Sistema construído com Laravel para o backend, Vite para
+                    build dos assets, banco de dados SQLite e hospedagem em
+                    ambiente containerizado.
                 </p>
                 <div class="sobre-social">
-                    <a href="https://github.com/MarkossCod/Notes_Sytem" target="_blank" class="sobre-social-btn" title="Repositório">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
-                        </svg>
-                    </a>
-                    <a href="https://notes-sytem.onrender.com" target="_blank" class="sobre-social-btn" title="Ver Online">
+                    <a href="https://laravel.com" target="_blank" class="sobre-social-btn" title="Laravel">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                         </svg>

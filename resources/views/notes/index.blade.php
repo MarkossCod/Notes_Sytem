@@ -32,10 +32,6 @@
         <h2 class="title" style="font-size:18px;">Suas Notas</h2>
         <div class="title-underline"></div>
     </div>
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Buscar notas...">
-        <span class="search-icon">🔍</span>
-    </div>
 </div>
 
 <div class="notes-grid" id="notesGrid">
@@ -69,13 +65,9 @@
             card.style.display = card.dataset.title.includes(query) ? '' : 'none';
         });
     }
-    document.getElementById('searchInput').addEventListener('input', function () {
-        filterNotes(this.value);
-    });
     const topSearch = document.getElementById('topSearchInput');
     if (topSearch) {
         topSearch.addEventListener('input', function () {
-            document.getElementById('searchInput').value = this.value;
             filterNotes(this.value);
         });
     }
