@@ -66,7 +66,9 @@
     function toggleSearch() {
         const wrapper = document.getElementById('topbarSearch');
         const input = document.getElementById('topSearchInput');
+        const toggleBtn = document.getElementById('searchToggleBtn');
         const isOpen = wrapper.classList.toggle('search-open');
+        toggleBtn.classList.toggle('active', isOpen);
         if (isOpen) {
             setTimeout(() => input.focus(), 150);
         } else {
@@ -75,6 +77,14 @@
             input.dispatchEvent(evt);
         }
     }
+
+    document.addEventListener('click', function (e) {
+        const wrapper = document.getElementById('topbarSearch');
+        if (wrapper.classList.contains('search-open') && !wrapper.contains(e.target)) {
+            wrapper.classList.remove('search-open');
+            document.getElementById('searchToggleBtn').classList.remove('active');
+        }
+    });
 
     document.addEventListener('click', function (e) {
         const wrapper = document.getElementById('topbarSearch');
