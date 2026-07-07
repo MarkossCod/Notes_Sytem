@@ -1,5 +1,44 @@
+/* ======================================================================
+   NOTESSYTEM — FOLHA DE ESTILOS PRINCIPAL
+   ======================================================================
+   Projeto: Laravel Blade + CSS puro (sem framework/Tailwind) + JS vanilla.
+   Paleta base: laranja (#FF6D00 / #ff7b00) sobre fundo bege claro (#fdf3eb).
+
+   ÍNDICE (Ctrl+F pelo título da seção):
+     1.  Reset & Base
+     2.  Navbar (legado — ver observação na seção)
+     3.  Container & Page Header
+     4.  Grid de Notas & Card
+     5.  Botões genéricos & Back Link
+     6.  Formulário de criação (Nova Nota)
+     7.  Layout da página de nota (Show): grid, Note Sidebar, Main Content
+     8.  Section Card (divisões da nota)
+     9.  Right Panel (painel lateral direito)
+     10. Editor de texto (toolbar + textarea)
+     11. Tela de criar/editar Divisão (.ed-*)
+     12. Animações genéricas
+     13. Modais (genérico + "Sobre" carrossel)
+     14. Responsivo: mobile / tablet / telas muito pequenas
+     15. Telas de autenticação: Login, Senha, Recuperar Senha, Registro
+     16. Splash screen
+     17. Sidebar de navegação principal (app) + Topbar (hambúrguer + busca)
+     18. Stats cards (cards de estatística da Início)
+     19. Blank layout (páginas sem sidebar/topbar, ex: Nova Nota)
+     20. Calendar Widget (seletor de data customizado)
+
+   ATENÇÃO — CLASSES COM NOMES PARECIDOS MAS FUNÇÕES DIFERENTES:
+     - ".sidebar"      → sidebar de NAVEGAÇÃO do app (fixa, laranja, 260px).
+                          Vem de resources/views/layout/sidebar.blade.php.
+     - ".note-sidebar"  → sidebar de SEÇÕES dentro da página de uma nota
+                          (branca, estática/sticky). Vem de notes/show.blade.php.
+     Antes essas duas usavam a MESMA classe ".sidebar", o que fazia a regra
+     mais abaixo no arquivo (a sidebar de navegação) sobrescrever a outra.
+     Foram separadas para evitar esse conflito — não renomeie de volta.
+   ====================================================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* ---------- 1. RESET & BASE ---------- */
 * {
     margin: 0;
     padding: 0;
@@ -11,7 +50,11 @@ body {
     background: #fdf3eb;
 }
 
-/* NAVBAR */
+/* ---------- 2. NAVBAR ----------
+   Navbar horizontal "clássica" (topo laranja com links). Mantida por
+   compatibilidade, mas a navegação atual do app usa a Sidebar (seção 17)
+   + Topbar, não esta navbar. Se nenhuma view mais usa ".navbar", pode ser
+   removida com segurança. */
 .navbar {
     width: 100%;
     background: #ff7b00;
@@ -79,35 +122,6 @@ body {
     background: #ff7b00;
     margin-top: 6px;
     border-radius: 2px;
-}
-
-/* SEARCH */
-.search-box {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.search-box input {
-    width: 220px;
-    padding: 10px 36px 10px 14px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 14px;
-    background: white;
-    margin-top: 0;
-}
-
-.search-box input:focus {
-    outline: none;
-    border-color: #ff7b00;
-}
-
-.search-icon {
-    position: absolute;
-    right: 12px;
-    font-size: 14px;
-    color: #aaa;
 }
 
 /* GRID DE NOTAS */
@@ -281,8 +295,8 @@ button:hover {
     align-items: start;
 }
 
-/* SIDEBAR */
-.sidebar {
+/* NOTE SIDEBAR (navegação de seções dentro da página de nota — notes/show.blade.php) */
+.note-sidebar {
     background: white;
     border-radius: 12px;
     padding: 20px;
@@ -291,7 +305,7 @@ button:hover {
     top: 20px;
 }
 
-.sidebar .back-link {
+.note-sidebar .back-link {
     display: block;
     margin-bottom: 16px;
 }
@@ -1266,14 +1280,6 @@ button:hover {
         margin-bottom: 20px;
     }
 
-    .search-box {
-        width: 100%;
-    }
-
-    .search-box input {
-        width: 100%;
-    }
-
     .notes-grid {
         grid-template-columns: 1fr !important;
         gap: 14px;
@@ -1294,7 +1300,7 @@ button:hover {
         gap: 16px;
     }
 
-    .sidebar {
+    .note-sidebar {
         position: static;
         padding: 16px;
     }
@@ -1367,7 +1373,7 @@ button:hover {
         position: static;
     }
 
-    .sidebar {
+    .note-sidebar {
         position: sticky;
         top: 20px;
     }
@@ -2435,6 +2441,18 @@ canvas#bg {
 .hamburger-btn.open span:nth-child(2) { opacity: 0; }
 .hamburger-btn.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+}
+
+.topbar-search {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
 
 .search-toggle-btn {
     display: flex;
@@ -2526,12 +2544,9 @@ canvas#bg {
 
 /* ========== MOBILE ========== */
 @media (max-width: 900px) {
-    .sidebar-backdrop.active {
-        display: block;
-    }
-
-    .topbar-search {
-        max-width: none;
+    /* Em telas pequenas, o campo de busca aberto não deve ultrapassar a viewport */
+    .topbar-search.search-open input {
+        width: min(260px, calc(100vw - 140px));
     }
 }
 

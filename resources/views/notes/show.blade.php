@@ -5,7 +5,7 @@
 <div class="show-layout" style="grid-template-columns: 220px 1fr;">
 
     {{-- SIDEBAR --}}
-    <aside class="sidebar">
+    <aside class="note-sidebar">
 
         <a href="{{ secure_url(route('notes.index', [], false)) }}" class="btn-back">← Voltar para notas</a>
 
