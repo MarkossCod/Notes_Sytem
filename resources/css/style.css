@@ -2516,7 +2516,8 @@ canvas#bg {
 
 .search-toggle-btn:hover { background: #ffe4c2; transform: translateY(-1px); }
 .search-toggle-btn:active { transform: translateY(0) scale(.9); }
-.search-toggle-btn.active { background: #ff7b00; color: white; transform: rotate(-8deg); }
+.search-toggle-btn.active { background: #ff7b00; color: white; }
+.search-toggle-btn.active:hover { background: #ff7b00; transform: translateY(-1px); }
 
 .search-toggle-btn .search-icon { display: block; }
 
