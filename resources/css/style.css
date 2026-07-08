@@ -1585,6 +1585,49 @@ canvas#bg {
     text-decoration: underline;
 }
 
+/* Divisor "ou" entre login e criação de conta */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 14px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.auth-divider span {
+    font-size: 11px;
+    color: #aaa;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+/* Link "Criar uma conta nova" na tela de login */
+.create-account-link {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border: 2px solid #FFE0B2;
+    border-radius: 12px;
+    color: #FF6D00;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s, border-color .2s;
+}
+
+.create-account-link:hover {
+    background: #FFF3E0;
+    border-color: #FF6D00;
+}
+
 .error-msg {
     background: #fdecea;
     color: #c62828;

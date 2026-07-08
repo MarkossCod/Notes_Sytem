@@ -26,9 +26,12 @@
             <text x="32" y="50" text-anchor="middle" font-family="Arial" font-weight="900" font-size="13" fill="#FF6D00">NS</text>
         </svg>
     </div>
-    <div class="card-title">Criar Senha</div>
-    <div class="card-sub">Primeiro acesso — configure sua senha</div>
-    <div class="user-badge">👋 {{ session('pending_user') }}</div>
+    <div class="card-title">Criar Conta</div>
+    <div class="card-sub">{{ $pendingUser ? 'Primeiro acesso — configure sua senha' : 'Preencha os dados para começar' }}</div>
+
+    @if($pendingUser)
+        <div class="user-badge">👋 {{ $pendingUser }}</div>
+    @endif
 
     @if($errors->any())
         <div class="error-msg">{{ $errors->first() }}</div>
@@ -36,6 +39,12 @@
 
     <form action="{{ secure_url(route('register.store', [], false)) }}" method="POST" autocomplete="off">
         @csrf
+        @if(!$pendingUser)
+            <div class="field">
+                <label>Seu nome</label>
+                <input type="text" name="user_name" placeholder="Ex: José Silva" value="{{ old('user_name') }}" required autocomplete="off"/>
+            </div>
+        @endif
         <div class="field">
             <label>Senha</label>
             <input type="password" name="password" placeholder="Mínimo 4 caracteres" required autocomplete="off"/>

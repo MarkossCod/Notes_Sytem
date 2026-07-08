@@ -36,14 +36,13 @@
         <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Abrir menu">
             <span></span><span></span><span></span>
         </button>
-
         <div class="topbar-right">
-            <div class="topbar-search" id="topbarSearch">
-                <button class="search-toggle-btn" id="searchToggleBtn" onclick="toggleSearch()" aria-label="Buscar">
-                    <span class="search-icon">🔍</span>
-                </button>
-                <input type="text" id="topSearchInput" placeholder="Buscar notas...">
-            </div>
+            <button class="search-toggle-btn" id="searchToggleBtn" onclick="toggleSearch()" aria-label="Buscar">
+                <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="m21 21-4.3-4.3"/>
+                </svg>
+            </button>
 
             <div class="topbar-user">
                 <span>👋 {{ session('user_name') }}</span>

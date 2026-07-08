@@ -44,21 +44,32 @@ class LoginController extends Controller
 
     public function showRegister()
     {
-        if (!session('pending_user')) {
-            return redirect()->route('login');
-        }
-        return view('register');
+        // Acesso direto (link "Criar conta" no login): sem pending_user, mostra
+        // o formulário com o campo de nome. Acesso vindo do login (nome novo
+        // digitado lá): pending_user já está setado, nome vem pré-preenchido.
+        return view('register', [
+            'pendingUser' => session('pending_user'),
+        ]);
     }
 
     public function register(Request $request)
     {
-        $request->validate([
+        $pendingUser = session('pending_user');
+
+        $rules = [
             'password'        => 'required|min:4|confirmed',
             'secret_question' => 'required',
             'secret_answer'   => 'required|min:2',
-        ]);
+        ];
 
-        $userName = session('pending_user');
+        // Sem pending_user (cadastro direto): também exige e valida o nome.
+        if (!$pendingUser) {
+            $rules['user_name'] = 'required|min:2|max:30|unique:note_users,user_name';
+        }
+
+        $request->validate($rules);
+
+        $userName = $pendingUser ?: trim($request->user_name);
 
         NoteUser::create([
             'user_name'       => $userName,

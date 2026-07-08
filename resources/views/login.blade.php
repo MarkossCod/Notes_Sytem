@@ -62,6 +62,10 @@
     </form>
 
     <a href="{{ secure_url(route('recover', [], false)) }}" class="btn-link">🔑 Esqueci minha senha</a>
+
+    <div class="auth-divider"><span>ou</span></div>
+
+    <a href="{{ secure_url(route('register', [], false)) }}" class="create-account-link">✨ Criar uma conta nova</a>
 </div>
 
 <div class="overlay" id="overlay">
