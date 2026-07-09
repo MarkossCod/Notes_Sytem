@@ -38,10 +38,11 @@
             <span class="sidebar-arrow">›</span>
         </a>
 
-        <span class="sidebar-link disabled" title="Em breve">
+        <a href="{{ secure_url(route('categories.index', [], false)) }}"
+           class="sidebar-link {{ request()->routeIs('categories.index') ? 'active' : '' }}">
             <span class="sidebar-icon">📁</span> Categorias
-            <span class="sidebar-soon">em breve</span>
-        </span>
+            <span class="sidebar-arrow">›</span>
+        </a>
         <span class="sidebar-link disabled" title="Em breve">
             <span class="sidebar-icon">⭐</span> Favoritos
             <span class="sidebar-soon">em breve</span>

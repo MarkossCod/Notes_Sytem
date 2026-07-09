@@ -10,11 +10,17 @@ class Note extends Model
         'user_name',
         'title',
         'created_day',
-        'content'
+        'content',
+        'category_id',
     ];
 
     public function sections()
     {
         return $this->hasMany(Section::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

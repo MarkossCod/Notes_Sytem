@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return view('splash');
@@ -39,3 +40,9 @@ Route::delete('/notes/{id}', [NoteController::class, 'destroy'])->name('notes.de
 Route::get('/notes/{id}/section/{sectionId}/edit', [NoteController::class, 'editSection'])->name('notes.section.edit');
 Route::put('/notes/{id}/section/{sectionId}', [NoteController::class, 'updateSection'])->name('notes.section.update');
 Route::patch('/notes/{id}/section/{sectionId}/complete', [NoteController::class, 'completeSection'])->name('notes.section.complete');
+
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+Route::patch('/categories/{id}/toggle', [CategoryController::class, 'toggle'])->name('categories.toggle');
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
