@@ -63,7 +63,7 @@
     <div class="sidebar-footer">
         <form action="{{ secure_url(route('logout', [], false)) }}" method="POST">
             @csrf
-            <button type="submit" class="sidebar-logout">🚪 Sair</button>
+            <button type="submit" class="sidebar-logout">Sair</button>
         </form>
     </div>
 </aside>
