@@ -123,53 +123,6 @@
     @endif
 </div>
 
-{{-- MODAL NOVA/EDITAR CATEGORIA --}}
-<div id="catModal" class="modal-overlay" onclick="closeCatModal()">
-    <div class="modal-box" style="max-width:480px;" onclick="event.stopPropagation()">
-        <div class="modal-header">
-            <h2 id="catModalTitle">Nova Categoria</h2>
-            <button class="modal-close" onclick="closeCatModal()">✕</button>
-        </div>
-
-        <form id="catForm" method="POST" action="{{ secure_url(route('categories.store', [], false)) }}">
-            @csrf
-            <input type="hidden" name="_method" id="catFormMethod" value="POST">
-
-            <div class="form-group">
-                <label>Nome <span class="required">*</span></label>
-                <input type="text" name="name" id="catName" required maxlength="255" placeholder="Ex: Trabalho">
-            </div>
-
-            <div class="form-group">
-                <label>Descrição</label>
-                <textarea name="description" id="catDescription" style="min-height:70px" placeholder="Uma breve descrição da categoria..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Ícone</label>
-                <div class="cat-icon-picker" id="catIconPicker">
-                    @foreach(['📁','💼','🎓','💰','❤️','✈️','📌','🏠','🛒','🎯','📚','⚙️'] as $ic)
-                        <div class="cat-icon-option" data-icon="{{ $ic }}" onclick="selectCatIcon('{{ $ic }}')">{{ $ic }}</div>
-                    @endforeach
-                </div>
-                <input type="hidden" name="icon" id="catIcon" value="📁">
-            </div>
-
-            <div class="form-group">
-                <label>Cor</label>
-                <div class="cat-color-swatches" id="catColorPicker">
-                    @foreach(['#ff7b00','#8B5CF6','#22C55E','#EC4899','#3B82F6','#EF4444','#14B8A6','#F59E0B'] as $col)
-                        <div class="cat-color-swatch" style="background: {{ $col }};" data-color="{{ $col }}" onclick="selectCatColor('{{ $col }}')"></div>
-                    @endforeach
-                </div>
-                <input type="hidden" name="color" id="catColor" value="#ff7b00">
-            </div>
-
-            <button type="submit">Salvar Categoria</button>
-        </form>
-    </div>
-</div>
-
 <script>
     function toggleCatSort() {
         const label = document.getElementById('catSortLabel');
@@ -252,4 +205,53 @@
     selectCatColor('#ff7b00');
 </script>
 
+@endsection
+
+@section('modals')
+{{-- MODAL NOVA/EDITAR CATEGORIA --}}
+<div id="catModal" class="modal-overlay" onclick="closeCatModal()">
+    <div class="modal-box" style="max-width:480px;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2 id="catModalTitle">Nova Categoria</h2>
+            <button class="modal-close" onclick="closeCatModal()">✕</button>
+        </div>
+
+        <form id="catForm" method="POST" action="{{ secure_url(route('categories.store', [], false)) }}">
+            @csrf
+            <input type="hidden" name="_method" id="catFormMethod" value="POST">
+
+            <div class="form-group">
+                <label>Nome <span class="required">*</span></label>
+                <input type="text" name="name" id="catName" required maxlength="255" placeholder="Ex: Trabalho">
+            </div>
+
+            <div class="form-group">
+                <label>Descrição</label>
+                <textarea name="description" id="catDescription" style="min-height:70px" placeholder="Uma breve descrição da categoria..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Ícone</label>
+                <div class="cat-icon-picker" id="catIconPicker">
+                    @foreach(['📁','💼','🎓','💰','❤️','✈️','📌','🏠','🛒','🎯','📚','⚙️'] as $ic)
+                        <div class="cat-icon-option" data-icon="{{ $ic }}" onclick="selectCatIcon('{{ $ic }}')">{{ $ic }}</div>
+                    @endforeach
+                </div>
+                <input type="hidden" name="icon" id="catIcon" value="📁">
+            </div>
+
+            <div class="form-group">
+                <label>Cor</label>
+                <div class="cat-color-swatches" id="catColorPicker">
+                    @foreach(['#ff7b00','#8B5CF6','#22C55E','#EC4899','#3B82F6','#EF4444','#14B8A6','#F59E0B'] as $col)
+                        <div class="cat-color-swatch" style="background: {{ $col }};" data-color="{{ $col }}" onclick="selectCatColor('{{ $col }}')"></div>
+                    @endforeach
+                </div>
+                <input type="hidden" name="color" id="catColor" value="#ff7b00">
+            </div>
+
+            <button type="submit">Salvar Categoria</button>
+        </form>
+    </div>
+</div>
 @endsection
