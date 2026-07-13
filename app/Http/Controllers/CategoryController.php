@@ -33,7 +33,7 @@ class CategoryController extends Controller
         });
         $colorsUsed = $categories->pluck('color')->unique()->count();
 
-        return view('categories.categories', compact(
+        return view('layout.categories', compact(
             'categories',
             'totalCategories',
             'notesCategorized',
