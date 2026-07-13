@@ -2441,8 +2441,8 @@ canvas#bg {
     align-items: center;
     gap: 16px;
     padding: 14px 28px;
-    background: white;
-    border-bottom: 1px solid #eee;
+    background: #fdf3eb;
+    border-bottom: 1px solid #f5e6d8;
     position: sticky;
     top: 0;
     z-index: 500;
