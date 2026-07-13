@@ -1,7 +1,7 @@
 @extends('layout.app')
 @section('content')
 <div class="ed-header">
-    <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn-back" style="margin-bottom:0;">← Voltar para a nota</a>
+    <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn-back" style="margin-bottom:0;">Voltar para a nota</a>
     <span style="font-size:13px;color:#888;">Nova Divisão — {{ $note->title }}</span>
 </div>
 
