@@ -37,6 +37,7 @@
             <span></span><span></span><span></span>
         </button>
 
+        @unless(request()->routeIs('categories.index'))
         <div class="topbar-right">
             <div class="topbar-search" id="topbarSearch">
                 <button class="search-toggle-btn" id="searchToggleBtn" onclick="toggleSearch()" aria-label="Buscar">
@@ -52,6 +53,7 @@
                 <span>👋 {{ session('user_name') }}</span>
             </div>
         </div>
+        @endunless
     </header>
 
     <div class="container page-transition">
@@ -98,7 +100,7 @@
 
     document.addEventListener('click', function (e) {
         const wrapper = document.getElementById('topbarSearch');
-        if (wrapper.classList.contains('search-open') && !wrapper.contains(e.target)) {
+        if (wrapper && wrapper.classList.contains('search-open') && !wrapper.contains(e.target)) {
             closeSearch();
         }
     });
