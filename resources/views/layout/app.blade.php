@@ -19,11 +19,11 @@
         .page-transition { animation: pageEnter .5s cubic-bezier(.34,1.56,.64,1) both; }
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-20px); }
-            to   { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: none; }
         }
         @keyframes pageEnter {
             from { opacity: 0; transform: translateY(24px) scale(0.97); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
+            to   { opacity: 1; transform: none; }
         }
     </style>
 </head>
