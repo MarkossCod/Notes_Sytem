@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
-use App\Models\Section;
 use Illuminate\Http\Request;
 
 class NoteController extends Controller
@@ -18,18 +17,16 @@ class NoteController extends Controller
         if (!session('user_name')) {
             return redirect()->route('login');
         }
-        $notes = Note::with('sections')
-            ->where('user_name', $this->getUserName())
+        $notes = Note::where('user_name', $this->getUserName())
             ->latest()
             ->get();
 
         $totalNotes = $notes->count();
-        $totalSections = $notes->sum(fn($n) => $n->sections->count());
         $recentNotesCount = $notes->filter(function ($n) {
             return \Carbon\Carbon::parse($n->created_day)->gte(now()->subDays(7));
         })->count();
 
-        return view('notes.index', compact('notes', 'totalNotes', 'totalSections', 'recentNotesCount'));
+        return view('notes.index', compact('notes', 'totalNotes', 'recentNotesCount'));
     }
 
     public function create()
@@ -96,103 +93,6 @@ class NoteController extends Controller
             'tags' => $request->tags ? json_decode($request->tags, true) : [],
         ]);
         return redirect()->route('notes.show', $note->id)->with('success', 'Nota atualizada!');
-    }
-
-    public function complete($id)
-    {
-        $note = Note::where('user_name', $this->getUserName())->findOrFail($id);
-        $note->update(['status' => $note->status === 'concluida' ? 'em_andamento' : 'concluida']);
-        return redirect()->route('notes.show', $note->id);
-    }
-
-    public function createSection($id)
-    {
-        if (!session('user_name')) {
-            return redirect()->route('login');
-        }
-        $note = Note::with('sections')
-            ->where('user_name', $this->getUserName())
-            ->findOrFail($id);
-        return view('notes.section_create', compact('note'));
-    }
-
-    public function addSection(Request $request, $id)
-    {
-        $imagePaths = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('section_images', 'public');
-                $imagePaths[] = $path;
-            }
-        }
-
-        $filePaths = [];
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
-                $path = $file->store('section_files', 'public');
-                $filePaths[] = ['name' => $file->getClientOriginalName(), 'path' => $path];
-            }
-        }
-
-        Section::create([
-            'note_id'         => $id,
-            'section_title'   => $request->section_title,
-            'section_content' => $request->section_content,
-            'images'          => $imagePaths,
-            'files'           => $filePaths,
-        ]);
-
-        return redirect()->route('notes.show', $id)->with('success', 'Divisão adicionada com sucesso!');
-    }
-
-    public function editSection($id, $sectionId)
-    {
-        if (!session('user_name')) {
-            return redirect()->route('login');
-        }
-        $note = Note::with('sections')
-            ->where('user_name', $this->getUserName())
-            ->findOrFail($id);
-        $section = Section::findOrFail($sectionId);
-        return view('notes.section_edit', compact('note', 'section'));
-    }
-
-    public function updateSection(Request $request, $id, $sectionId)
-    {
-        $section = Section::findOrFail($sectionId);
-
-        $imagePaths = json_decode($request->existing_images ?? '[]', true) ?? [];
-
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('section_images', 'public');
-                $imagePaths[] = $path;
-            }
-        }
-
-        $filePaths = $section->files ?? [];
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
-                $path = $file->store('section_files', 'public');
-                $filePaths[] = ['name' => $file->getClientOriginalName(), 'path' => $path];
-            }
-        }
-
-        $section->update([
-            'section_title'   => $request->section_title,
-            'section_content' => $request->section_content,
-            'images'          => $imagePaths,
-            'files'           => $filePaths,
-        ]);
-
-        return redirect()->route('notes.show', $id)->with('success', 'Divisão atualizada!');
-    }
-
-    public function completeSection($id, $sectionId)
-    {
-        $section = Section::findOrFail($sectionId);
-        $section->update(['completed' => !$section->completed]);
-        return back();
     }
 
     public function destroy($id)

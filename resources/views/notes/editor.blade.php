@@ -1,4 +1,7 @@
-@php $isSaved = isset($note) && $note; @endphp
+@php
+    $isSaved = isset($note) && $note;
+    $startEditing = $isSaved && request()->query('edit') === '1';
+@endphp
 
 <div class="note-editor-wrap">
 
@@ -12,25 +15,21 @@
                        value="{{ old('title', $isSaved ? $note->title : '') }}" placeholder="Nova Nota" required>
             </div>
 
+            @if($isSaved)
             <div class="ne-actions">
-                <button type="button" class="ne-btn" id="neViewBtn" @disabled(!$isSaved)>
-                    👁️ Visualizar
-                </button>
-                <button type="button" class="ne-btn" id="neEditBtn" @disabled(!$isSaved)>
+                <button type="button" class="ne-btn" id="neEditBtn">
                     ✏️ Editar
                 </button>
-                <button type="submit" class="ne-btn" form="completeNoteForm" @disabled(!$isSaved)>
-                    {{ $isSaved && $note->status === 'concluida' ? '🔄 Reabrir nota' : '⭕ Marcar como concluída' }}
-                </button>
             </div>
+            @endif
         </div>
 
         <div class="ne-meta">
-            <div class="ne-meta-pill" id="calendarField">
-                📅
+            <div class="ne-meta-pill ne-calendar-status" id="calendarField">
                 <button type="button" class="calendar-field-input" id="calendarFieldBtn"
                         style="border:none;background:none;padding:0;font-size:12.5px;color:#666;display:flex;align-items:center;gap:6px;">
-                    Criada em: <span id="calendarFieldText">selecione a data</span>
+                    <span aria-hidden="true">📅</span>
+                    <span>Criada em: <strong id="calendarFieldText">selecione a data</strong></span>
                 </button>
 
                 <div class="calendar-popover" id="calendarPopover">
@@ -83,7 +82,6 @@
                     <p class="ne-side-label">Status</p>
                     <select name="status" id="neStatus" class="ne-select">
                         <option value="em_andamento" @selected(!$isSaved || $note->status === 'em_andamento')>🟠 Em andamento</option>
-                        <option value="concluida" @selected($isSaved && $note->status === 'concluida')>🟢 Concluída</option>
                         <option value="pendente" @selected($isSaved && $note->status === 'pendente')>⚪ Pendente</option>
                     </select>
                 </div>
@@ -155,12 +153,6 @@
 
         </div>
     </form>
-    @if($isSaved)
-        <form id="completeNoteForm" action="{{ secure_url(route('notes.complete', [$note->id], false)) }}" method="POST">
-            @csrf
-            @method('PATCH')
-        </form>
-    @endif
 </div>
 
 <script>
@@ -417,9 +409,8 @@
         document.querySelector('.note-editor-wrap').classList.toggle('ne-view-mode', !editing);
         if (editing) document.getElementById('title').focus();
     }
-    document.getElementById('neViewBtn').addEventListener('click', () => setEditMode(false));
     document.getElementById('neEditBtn').addEventListener('click', () => setEditMode(true));
-    setEditMode(false);
+    setEditMode(@json($startEditing));
     @endif
 })();
 </script>

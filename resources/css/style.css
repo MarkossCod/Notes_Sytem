@@ -198,6 +198,11 @@ body {
     background: #e06e00;
 }
 
+.card-actions { display: flex; gap: 10px; margin-top: auto; }
+.card-actions .btn { flex: 1; margin-top: 0; text-align: center; }
+.btn-secondary { color: #e06e00; background: #fff3e6; border: 1px solid #ffc58f; }
+.btn-secondary:hover { color: white; background: #e06e00; }
+
 /* BACK LINK */
 .back-link {
     display: inline-block;
@@ -3208,7 +3213,7 @@ canvas#bg {
 }
 
 .ne-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
-.ne-meta-save { min-width: 165px; justify-content: center; padding: 9px 18px; }
+.ne-meta-save { min-width: 165px; justify-content: center; margin-left: auto; padding: 9px 18px; }
 .ne-view-mode .ne-title-input { background: #fff8f1; }
 .ne-view-mode .ne-content-area { background: #fffdfb; }
 .ne-view-mode .ne-toolbar { opacity: .55; }
@@ -3220,6 +3225,14 @@ canvas#bg {
     border: 1px solid #eee; border-radius: 10px; padding: 9px 14px; font-size: 12.5px; color: #666;
 }
 .ne-meta-pill .calendar-field-input { line-height: 1.2; white-space: nowrap; }
+.ne-calendar-status { position: relative; }
+.ne-calendar-status .calendar-field-input { font-weight: 400; }
+.ne-calendar-status .calendar-field-input strong { color: #666; font-weight: 600; }
+
+@media (max-width: 600px) {
+    .ne-meta-save { width: 100%; margin-left: 0; }
+    .card-actions { flex-direction: column; }
+}
 
 .ne-grid { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
 

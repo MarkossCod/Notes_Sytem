@@ -16,11 +16,6 @@
         <div class="stat-label">Total de notas</div>
     </div>
     <div class="stat-card">
-        <div class="stat-icon">🧩</div>
-        <div class="stat-value">{{ $totalSections }}</div>
-        <div class="stat-label">Total de seções</div>
-    </div>
-    <div class="stat-card">
         <div class="stat-icon">📅</div>
         <div class="stat-value">{{ $recentNotesCount }}</div>
         <div class="stat-label">Notas nos últimos 7 dias</div>
@@ -45,14 +40,12 @@
             <span class="card-date">
                 📅 {{ \Carbon\Carbon::parse($note->created_day)->format('d/m/Y') }}
             </span>
-            <span class="card-badge">
-                👥 {{ $note->sections->count() }} divisões
-            </span>
         </div>
 
-        <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn">
-            Abrir Nota
-        </a>
+        <div class="card-actions">
+            <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn btn-secondary">Visualizar</a>
+            <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}?edit=1" class="btn">Editar nota</a>
+        </div>
 
     </div>
     @endforeach

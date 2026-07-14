@@ -30,18 +30,12 @@ Route::post('/recover', [LoginController::class, 'recoverQuestion'])->name('reco
 Route::get('/recover/answer', function() { return redirect()->route('recover'); });
 Route::post('/recover/answer', [LoginController::class, 'recoverReset'])->name('recover.reset');
 
-Route::get('/notes/{id}/section/create', [NoteController::class, 'createSection'])->name('notes.section.create');
 Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
 Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
 Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
 Route::get('/notes/{id}', [NoteController::class, 'show'])->name('notes.show');
 Route::put('/notes/{id}', [NoteController::class, 'update'])->name('notes.update');
-Route::patch('/notes/{id}/complete', [NoteController::class, 'complete'])->name('notes.complete');
-Route::post('/notes/{id}/section', [NoteController::class, 'addSection'])->name('notes.section');
 Route::delete('/notes/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');
-Route::get('/notes/{id}/section/{sectionId}/edit', [NoteController::class, 'editSection'])->name('notes.section.edit');
-Route::put('/notes/{id}/section/{sectionId}', [NoteController::class, 'updateSection'])->name('notes.section.update');
-Route::patch('/notes/{id}/section/{sectionId}/complete', [NoteController::class, 'completeSection'])->name('notes.section.complete');
 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
