@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class NoteController extends Controller
 {
@@ -52,19 +53,33 @@ class NoteController extends Controller
         }
         $request->validate([
             'title'       => 'required',
-            'created_day' => 'required'
+            'created_day' => 'required',
+            'sections' => 'nullable|array',
+            'sections.*.title' => 'required|string|max:255',
+            'sections.*.content' => 'nullable|string',
         ]);
 
-        $note = Note::create([
-            'user_name'   => $this->getUserName(),
-            'title'       => $request->title,
-            'created_day' => $request->created_day,
-            'content'     => $request->content,
-            'category_id' => $request->category_id ?: null,
-            'status'      => $request->status ?: 'em_andamento',
-            'priority'    => $request->priority ?: 'media',
-            'tags'        => $request->tags ? json_decode($request->tags, true) : [],
-        ]);
+        $note = DB::transaction(function () use ($request) {
+            $note = Note::create([
+                'user_name'   => $this->getUserName(),
+                'title'       => $request->title,
+                'created_day' => $request->created_day,
+                'content'     => $request->content,
+                'category_id' => $request->category_id ?: null,
+                'status'      => $request->status ?: 'em_andamento',
+                'priority'    => $request->priority ?: 'media',
+                'tags'        => $request->tags ? json_decode($request->tags, true) : [],
+            ]);
+
+            foreach ($request->input('sections', []) as $section) {
+                $note->sections()->create([
+                    'section_title' => $section['title'],
+                    'section_content' => $section['content'] ?? '',
+                ]);
+            }
+
+            return $note;
+        });
 
         return redirect()->route('notes.show', $note->id);
     }

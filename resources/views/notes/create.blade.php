@@ -11,7 +11,6 @@
             <div class="ne-title-row">
                 <input type="text" id="title" name="title" class="ne-title-input"
                        placeholder="Nova Nota" required>
-                <button type="button" class="ne-title-icon-btn" title="Favoritar">＋</button>
             </div>
 
             <div class="ne-actions">
@@ -23,9 +22,6 @@
                 </button>
                 <button type="button" class="ne-btn" disabled title="Disponível após salvar a nota">
                     ⭕ Marcar como concluída
-                </button>
-                <button type="submit" class="ne-btn ne-btn-primary">
-                    💾 Salvar Nota <span class="ne-caret">▾</span>
                 </button>
             </div>
         </div>
@@ -56,9 +52,13 @@
             </div>
 
             <span class="ne-meta-pill">✏️ Nova nota — ainda não salva</span>
-            <span class="ne-meta-pill">📋 Divisões: 0 (adicione após salvar)</span>
+            <span class="ne-meta-pill">📋 Divisões: <strong id="neSectionCount">0</strong></span>
 
             <input type="hidden" id="created_day" name="created_day" required>
+        </div>
+
+        <div class="ne-save-row">
+            <button type="submit" class="ne-btn ne-btn-primary">💾 Salvar Nota</button>
         </div>
 
         <div class="ne-grid">
@@ -154,6 +154,18 @@
 
                 <div class="ne-tip">
                     💡 <strong>Dica:</strong> Use Ctrl + S para salvar rapidamente sua nota.
+                </div>
+
+                <div class="ne-sections-builder">
+                    <div class="ne-sections-heading">
+                        <div>
+                            <p class="ne-editor-title">Divisões da Nota</p>
+                            <span>Crie e edite as divisões antes de salvar a nota.</span>
+                        </div>
+                        <button type="button" class="ne-section-add" id="neSectionAddBtn">+ Nova divisão</button>
+                    </div>
+                    <div id="neSectionsList" class="ne-sections-list"></div>
+                    <div id="neSectionsEmpty" class="ne-sections-empty">Nenhuma divisão adicionada.</div>
                 </div>
             </section>
 
@@ -402,6 +414,55 @@
     });
 
     document.getElementById('noteForm').addEventListener('submit', updateCount);
+
+    /* ===== Divisões da nota ===== */
+    const sectionsList = document.getElementById('neSectionsList');
+    const sectionsEmpty = document.getElementById('neSectionsEmpty');
+    const sectionCount = document.getElementById('neSectionCount');
+    let sections = [];
+
+    function escapeHtml(value) {
+        const div = document.createElement('div');
+        div.textContent = value || '';
+        return div.innerHTML;
+    }
+
+    function renderSections() {
+        sectionsList.innerHTML = '';
+        sections.forEach((section, index) => {
+            const card = document.createElement('div');
+            card.className = 'ne-section-card';
+            card.innerHTML = `
+                <div class="ne-section-card-head">
+                    <strong>Divisão ${index + 1}</strong>
+                    <button type="button" class="ne-section-remove" data-index="${index}" aria-label="Remover divisão">Remover</button>
+                </div>
+                <label>Título</label>
+                <input type="text" name="sections[${index}][title]" value="${escapeHtml(section.title)}" placeholder="Nome da divisão" required>
+                <label>Conteúdo</label>
+                <textarea name="sections[${index}][content]" placeholder="Digite o conteúdo da divisão...">${escapeHtml(section.content)}</textarea>`;
+            card.querySelector('input').addEventListener('input', e => { sections[index].title = e.target.value; });
+            card.querySelector('textarea').addEventListener('input', e => { sections[index].content = e.target.value; });
+            sectionsList.appendChild(card);
+        });
+        sectionCount.textContent = sections.length;
+        sectionsEmpty.hidden = sections.length > 0;
+    }
+
+    document.getElementById('neSectionAddBtn').addEventListener('click', function () {
+        sections.push({ title: '', content: '' });
+        renderSections();
+        sectionsList.lastElementChild.querySelector('input').focus();
+    });
+
+    sectionsList.addEventListener('click', function (e) {
+        const removeBtn = e.target.closest('.ne-section-remove');
+        if (!removeBtn) return;
+        sections.splice(Number(removeBtn.dataset.index), 1);
+        renderSections();
+    });
+
+    renderSections();
 })();
 </script>
 
