@@ -12,6 +12,13 @@ class Note extends Model
         'created_day',
         'content',
         'category_id',
+        'status',
+        'priority',
+        'tags',
+    ];
+
+    protected $casts = [
+        'tags' => 'array',
     ];
 
     public function sections()

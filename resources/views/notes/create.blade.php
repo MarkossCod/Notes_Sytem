@@ -1,33 +1,41 @@
-@extends('layout.blank')
+@extends('layout.app')
 
 @section('content')
 
-<div class="form-container fadeIn">
+<div class="note-editor-wrap">
 
-    <a href="{{ secure_url(route('notes.index', [], false)) }}" class="btn-back">Voltar</a>
-
-    <h1>Nova Nota</h1>
-    <div class="title-underline"></div>
-
-    <form action="{{ secure_url(route('notes.store', [], false)) }}" method="POST" autocomplete="off">
+    <form id="noteForm" action="{{ secure_url(route('notes.store', [], false)) }}" method="POST" autocomplete="off">
         @csrf
 
-        <div class="form-group">
-            <label for="title">Título da Nota <span class="required">*</span></label>
-            <input type="text"
-                   id="title"
-                   name="title"
-                   placeholder="Digite o título da nota"
-                   required>
+        <div class="ne-top">
+            <div class="ne-title-row">
+                <input type="text" id="title" name="title" class="ne-title-input"
+                       placeholder="Nova Nota" required>
+                <button type="button" class="ne-title-icon-btn" title="Favoritar">＋</button>
+            </div>
+
+            <div class="ne-actions">
+                <button type="button" class="ne-btn" disabled title="Disponível após salvar a nota">
+                    👁️ Visualizar
+                </button>
+                <button type="button" class="ne-btn" disabled title="Disponível após salvar a nota">
+                    ✏️ Editar
+                </button>
+                <button type="button" class="ne-btn" disabled title="Disponível após salvar a nota">
+                    ⭕ Marcar como concluída
+                </button>
+                <button type="submit" class="ne-btn ne-btn-primary">
+                    💾 Salvar Nota <span class="ne-caret">▾</span>
+                </button>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="created_day_display">Dia da Criação <span class="required">*</span></label>
-
-            <div class="calendar-field" id="calendarField">
-                <button type="button" class="calendar-field-input" id="calendarFieldBtn">
-                    <span id="calendarFieldText">Selecione uma data</span>
-                    <span class="calendar-field-icon">📅</span>
+        <div class="ne-meta">
+            <div class="ne-meta-pill" id="calendarField">
+                📅
+                <button type="button" class="calendar-field-input" id="calendarFieldBtn"
+                        style="border:none;background:none;padding:0;font-size:12.5px;color:#666;display:flex;align-items:center;gap:6px;">
+                    Criada em: <span id="calendarFieldText">selecione a data</span>
                 </button>
 
                 <div class="calendar-popover" id="calendarPopover">
@@ -40,26 +48,122 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
                         </button>
                     </header>
-
                     <div class="calendar-weekdays">
                         <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
                     </div>
-
                     <div class="calendar-grid" id="calendarGrid"></div>
                 </div>
             </div>
 
+            <span class="ne-meta-pill">✏️ Nova nota — ainda não salva</span>
+            <span class="ne-meta-pill">📋 Divisões: 0 (adicione após salvar)</span>
+
             <input type="hidden" id="created_day" name="created_day" required>
         </div>
 
-        <button type="submit">Criar Nota</button>
+        <div class="ne-grid">
 
+            {{-- COLUNA ESQUERDA --}}
+            <aside class="ne-panel">
+
+                <div class="ne-side-block">
+                    <p class="ne-side-label">📁 Categoria</p>
+                    <select name="category_id" class="ne-select">
+                        <option value="">Selecione...</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->icon }} {{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="ne-side-block">
+                    <p class="ne-side-label">🏷️ Etiquetas</p>
+                    <div class="ne-tags" id="neTags"></div>
+                    <button type="button" class="ne-tag-add" id="neTagAddBtn">➕ Nova etiqueta</button>
+                    <input type="text" class="ne-tag-input" id="neTagInput" placeholder="Digite e pressione Enter">
+                    <input type="hidden" name="tags" id="neTagsHidden" value="[]">
+                </div>
+
+                <div class="ne-side-block">
+                    <p class="ne-side-label">Status</p>
+                    <select name="status" id="neStatus" class="ne-select">
+                        <option value="em_andamento">🟠 Em andamento</option>
+                        <option value="concluida">🟢 Concluída</option>
+                        <option value="pendente">⚪ Pendente</option>
+                    </select>
+                </div>
+
+                <div class="ne-side-block">
+                    <p class="ne-side-label">Prioridade</p>
+                    <select name="priority" id="nePriority" class="ne-select">
+                        <option value="baixa">🟢 Baixa</option>
+                        <option value="media" selected>🟠 Média</option>
+                        <option value="alta">🔴 Alta</option>
+                    </select>
+                </div>
+
+                <div class="ne-side-block">
+                    <p class="ne-side-label">Anexos</p>
+                    <div class="ne-dropzone" id="neDropzone">
+                        <div class="ne-dropzone-icon">☁️</div>
+                        Arraste arquivos aqui<br>ou
+                        <br>
+                        <button type="button" class="ne-dropzone-btn" id="neSelectFilesBtn">Selecionar Arquivos</button>
+                        <input type="file" id="neFileInput" multiple style="display:none;">
+                    </div>
+                    <div class="ne-file-list" id="neFileList"></div>
+                </div>
+
+            </aside>
+
+            {{-- COLUNA DIREITA — EDITOR --}}
+            <section class="ne-panel ne-editor-panel">
+                <p class="ne-editor-title">Conteúdo da Nota</p>
+
+                <div class="ne-toolbar">
+                    <button type="button" class="ne-toolbar-btn" data-cmd="undo" title="Desfazer">↶</button>
+                    <button type="button" class="ne-toolbar-btn" data-cmd="redo" title="Refazer">↷</button>
+                    <span class="ne-toolbar-sep"></span>
+                    <button type="button" class="ne-toolbar-btn" data-cmd="bold" title="Negrito"><b>B</b></button>
+                    <button type="button" class="ne-toolbar-btn" data-cmd="italic" title="Itálico"><i>I</i></button>
+                    <button type="button" class="ne-toolbar-btn" data-cmd="underline" title="Sublinhado"><u>U</u></button>
+                    <button type="button" class="ne-toolbar-btn" data-cmd="strikeThrough" title="Tachado"><s>S</s></button>
+                    <button type="button" class="ne-toolbar-btn" data-cmd="formatBlock" data-value="H1" title="Título">H1 ▾</button>
+                    <span class="ne-toolbar-sep"></span>
+                    <button type="button" class="ne-toolbar-btn" data-cmd="insertUnorderedList" title="Lista">≡</button>
+                    <button type="button" class="ne-toolbar-btn" data-cmd="insertOrderedList" title="Lista numerada">1.</button>
+                    <button type="button" class="ne-toolbar-btn" id="neChecklistBtn" title="Checklist">☑</button>
+                    <button type="button" class="ne-toolbar-btn" data-cmd="formatBlock" data-value="BLOCKQUOTE" title="Citação">❝</button>
+                    <span class="ne-toolbar-sep"></span>
+                    <button type="button" class="ne-toolbar-btn" id="neLinkBtn" title="Link">🔗</button>
+                    <button type="button" class="ne-toolbar-btn" id="neImageBtn" title="Imagem">🖼️</button>
+                    <button type="button" class="ne-toolbar-btn" id="neTableBtn" title="Tabela">▦</button>
+                    <button type="button" class="ne-toolbar-btn" title="Mais opções">⋯</button>
+                    <span style="flex:1;"></span>
+                    <button type="button" class="ne-toolbar-btn" id="neFullscreenBtn" title="Tela cheia">⛶</button>
+                </div>
+
+                <div class="ne-content-area" id="neContent" contenteditable="true"
+                     data-placeholder="Digite o conteúdo da sua nota aqui..."></div>
+
+                <input type="hidden" name="content" id="neContentHidden">
+
+                <div class="ne-footer-row">
+                    <span id="neWordCount">0 palavras • 0 caracteres</span>
+                </div>
+
+                <div class="ne-tip">
+                    💡 <strong>Dica:</strong> Use Ctrl + S para salvar rapidamente sua nota.
+                </div>
+            </section>
+
+        </div>
     </form>
-
 </div>
 
 <script>
 (function () {
+    /* ===== Calendário (data de criação) ===== */
     const field = document.getElementById('calendarField');
     const fieldBtn = document.getElementById('calendarFieldBtn');
     const fieldText = document.getElementById('calendarFieldText');
@@ -129,7 +233,6 @@
                 selectedDate = cellDate;
                 hiddenInput.value = formatISO(cellDate);
                 fieldText.textContent = formatDisplay(cellDate);
-                fieldText.classList.add('has-value');
                 if (outOfMonth) {
                     viewDate = new Date(cellDate.getFullYear(), cellDate.getMonth(), 1);
                 }
@@ -141,40 +244,164 @@
         }
     }
 
-    function openPopover() {
-        popover.classList.add('open');
-        fieldBtn.setAttribute('aria-expanded', 'true');
-    }
-
-    function closePopover() {
-        popover.classList.remove('open');
-        fieldBtn.setAttribute('aria-expanded', 'false');
-    }
+    function openPopover() { popover.classList.add('open'); }
+    function closePopover() { popover.classList.remove('open'); }
 
     fieldBtn.addEventListener('click', function (e) {
         e.stopPropagation();
-        if (popover.classList.contains('open')) {
-            closePopover();
-        } else {
-            openPopover();
+        popover.classList.contains('open') ? closePopover() : openPopover();
+    });
+    prevBtn.addEventListener('click', () => { viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1); renderCalendar(); });
+    nextBtn.addEventListener('click', () => { viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1); renderCalendar(); });
+    document.addEventListener('click', function (e) { if (!field.contains(e.target)) closePopover(); });
+
+    // pré-seleciona hoje
+    selectedDate = today;
+    hiddenInput.value = formatISO(today);
+    fieldText.textContent = formatDisplay(today);
+    renderCalendar();
+
+    /* ===== Etiquetas ===== */
+    const tagsWrap = document.getElementById('neTags');
+    const tagAddBtn = document.getElementById('neTagAddBtn');
+    const tagInput = document.getElementById('neTagInput');
+    const tagsHidden = document.getElementById('neTagsHidden');
+    let tags = [];
+
+    function renderTags() {
+        tagsWrap.innerHTML = '';
+        tags.forEach((tag, idx) => {
+            const chip = document.createElement('span');
+            chip.className = 'ne-tag-chip';
+            chip.innerHTML = `${tag} <button type="button" data-idx="${idx}">✕</button>`;
+            tagsWrap.appendChild(chip);
+        });
+        tagsHidden.value = JSON.stringify(tags);
+    }
+
+    tagsWrap.addEventListener('click', function (e) {
+        if (e.target.tagName === 'BUTTON') {
+            tags.splice(Number(e.target.dataset.idx), 1);
+            renderTags();
         }
     });
 
-    prevBtn.addEventListener('click', function () {
-        viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
-        renderCalendar();
+    tagAddBtn.addEventListener('click', function () {
+        tagAddBtn.style.display = 'none';
+        tagInput.style.display = 'inline-block';
+        tagInput.value = '';
+        tagInput.focus();
     });
 
-    nextBtn.addEventListener('click', function () {
-        viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
-        renderCalendar();
+    function commitTag() {
+        const val = tagInput.value.trim();
+        if (val) { tags.push(val); renderTags(); }
+        tagInput.style.display = 'none';
+        tagAddBtn.style.display = 'inline-flex';
+    }
+
+    tagInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); commitTag(); }
+        if (e.key === 'Escape') { tagInput.style.display = 'none'; tagAddBtn.style.display = 'inline-flex'; }
+    });
+    tagInput.addEventListener('blur', commitTag);
+
+    /* ===== Status / Prioridade — bolinha colorida ===== */
+    // (mantidos como <select> nativos para acessibilidade; a cor é indicada pelo emoji na option)
+
+    /* ===== Anexos (visual — upload real é o próximo passo no backend) ===== */
+    const dropzone = document.getElementById('neDropzone');
+    const selectFilesBtn = document.getElementById('neSelectFilesBtn');
+    const fileInput = document.getElementById('neFileInput');
+    const fileList = document.getElementById('neFileList');
+
+    function humanSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function addFiles(files) {
+        Array.from(files).forEach(file => {
+            const item = document.createElement('div');
+            item.className = 'ne-file-item';
+            item.innerHTML = `📄 ${file.name} <span class="size">${humanSize(file.size)}</span> <button type="button">✕</button>`;
+            item.querySelector('button').addEventListener('click', () => item.remove());
+            fileList.appendChild(item);
+        });
+    }
+
+    selectFilesBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => addFiles(fileInput.files));
+
+    ['dragenter', 'dragover'].forEach(evt => dropzone.addEventListener(evt, e => {
+        e.preventDefault(); dropzone.classList.add('drag-over');
+    }));
+    ['dragleave', 'drop'].forEach(evt => dropzone.addEventListener(evt, e => {
+        e.preventDefault(); dropzone.classList.remove('drag-over');
+    }));
+    dropzone.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+
+    /* ===== Editor de conteúdo ===== */
+    const content = document.getElementById('neContent');
+    const contentHidden = document.getElementById('neContentHidden');
+    const wordCount = document.getElementById('neWordCount');
+
+    function updateCount() {
+        const text = content.innerText.trim();
+        const words = text ? text.split(/\s+/).length : 0;
+        wordCount.textContent = `${words} palavras • ${text.length} caracteres`;
+        contentHidden.value = content.innerHTML;
+    }
+
+    content.addEventListener('input', updateCount);
+    updateCount();
+
+    document.querySelectorAll('.ne-toolbar-btn[data-cmd]').forEach(btn => {
+        btn.addEventListener('click', function () {
+            content.focus();
+            document.execCommand(this.dataset.cmd, false, this.dataset.value || null);
+            updateCount();
+        });
     });
 
-    document.addEventListener('click', function (e) {
-        if (!field.contains(e.target)) closePopover();
+    document.getElementById('neChecklistBtn').addEventListener('click', function () {
+        content.focus();
+        document.execCommand('insertHTML', false,
+            '<ul class="ne-checklist"><li><input type="checkbox"> Novo item</li></ul>');
+        updateCount();
     });
 
-    renderCalendar();
+    document.getElementById('neLinkBtn').addEventListener('click', function () {
+        const url = prompt('Digite a URL do link:');
+        if (url) { content.focus(); document.execCommand('createLink', false, url); }
+    });
+
+    document.getElementById('neImageBtn').addEventListener('click', function () {
+        const url = prompt('Cole a URL da imagem:');
+        if (url) { content.focus(); document.execCommand('insertImage', false, url); updateCount(); }
+    });
+
+    document.getElementById('neTableBtn').addEventListener('click', function () {
+        content.focus();
+        document.execCommand('insertHTML', false,
+            '<table><tr><td>Célula 1</td><td>Célula 2</td></tr><tr><td>Célula 3</td><td>Célula 4</td></tr></table>');
+        updateCount();
+    });
+
+    document.getElementById('neFullscreenBtn').addEventListener('click', function () {
+        content.classList.toggle('fullscreen');
+    });
+
+    /* Ctrl+S salva rapidamente */
+    document.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+            e.preventDefault();
+            document.getElementById('noteForm').submit();
+        }
+    });
+
+    document.getElementById('noteForm').addEventListener('submit', updateCount);
 })();
 </script>
 

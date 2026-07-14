@@ -37,7 +37,12 @@ class NoteController extends Controller
         if (!session('user_name')) {
             return redirect()->route('login');
         }
-        return view('notes.create');
+        $categories = \App\Models\Category::where('user_name', $this->getUserName())
+            ->where('active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('notes.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -53,7 +58,12 @@ class NoteController extends Controller
         $note = Note::create([
             'user_name'   => $this->getUserName(),
             'title'       => $request->title,
-            'created_day' => $request->created_day
+            'created_day' => $request->created_day,
+            'content'     => $request->content,
+            'category_id' => $request->category_id ?: null,
+            'status'      => $request->status ?: 'em_andamento',
+            'priority'    => $request->priority ?: 'media',
+            'tags'        => $request->tags ? json_decode($request->tags, true) : [],
         ]);
 
         return redirect()->route('notes.show', $note->id);
