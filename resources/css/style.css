@@ -3033,6 +3033,10 @@ canvas#bg {
     font-weight: 700;
     cursor: pointer;
     transition: background .2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
 }
 
 .cat-action-btn:hover {
