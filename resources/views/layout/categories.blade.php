@@ -104,7 +104,7 @@
                 <td class="cat-action">
                     <button class="cat-action-btn" onclick="toggleCatMenu(event, {{ $category->id }})">⋯</button>
                     <div class="cat-action-menu" id="catMenu{{ $category->id }}">
-                        <button type="button" onclick='openCatModal(@json($category))'>✏️ Editar</button>
+                        <button type="button" onclick='openCatModal(@json($category))'>✏️Editar</button>
                         <form action="{{ secure_url(route('categories.toggle', $category->id, false)) }}" method="POST">
                             @csrf @method("PATCH")
                             <button type="submit">{{ $category->active ? '⏸️ Desativar' : '▶️ Ativar' }}</button>
@@ -112,7 +112,7 @@
                         <form action="{{ secure_url(route('categories.destroy', $category->id, false)) }}" method="POST"
                               onsubmit="return confirm('Excluir esta categoria? As notas ligadas a ela ficarão sem categoria.');">
                             @csrf @method("DELETE")
-                            <button type="submit" class="danger">🗑️ Excluir</button>
+                            <button type="submit" class="danger">🗑️Excluir</button>
                         </form>
                     </div>
                 </td>

@@ -2896,13 +2896,18 @@ canvas#bg {
     background: white;
     border-radius: 16px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    overflow: hidden;
+    overflow: visible;
 }
 
 .cat-table {
     width: 100%;
     border-collapse: collapse;
 }
+
+.cat-table thead tr:first-child th:first-child { border-top-left-radius: 16px; }
+.cat-table thead tr:first-child th:last-child { border-top-right-radius: 16px; }
+.cat-table tbody tr:last-child td:first-child { border-bottom-left-radius: 16px; }
+.cat-table tbody tr:last-child td:last-child { border-bottom-right-radius: 16px; }
 
 .cat-table thead th {
     text-align: left;
@@ -2912,6 +2917,10 @@ canvas#bg {
     color: #999;
     padding: 16px 20px;
     border-bottom: 1px solid #f0f0f0;
+}
+
+.cat-table thead th:last-child {
+    text-align: center;
 }
 
 .cat-table tbody td {
@@ -3011,6 +3020,7 @@ canvas#bg {
 
 .cat-action {
     position: relative;
+    text-align: center;
 }
 
 .cat-action-btn {
