@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use App\Models\Section;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class NoteController extends Controller
 {
@@ -54,13 +53,9 @@ class NoteController extends Controller
         $request->validate([
             'title'       => 'required',
             'created_day' => 'required',
-            'sections' => 'nullable|array',
-            'sections.*.title' => 'required|string|max:255',
-            'sections.*.content' => 'nullable|string',
         ]);
 
-        $note = DB::transaction(function () use ($request) {
-            $note = Note::create([
+        $note = Note::create([
                 'user_name'   => $this->getUserName(),
                 'title'       => $request->title,
                 'created_day' => $request->created_day,
@@ -69,17 +64,7 @@ class NoteController extends Controller
                 'status'      => $request->status ?: 'em_andamento',
                 'priority'    => $request->priority ?: 'media',
                 'tags'        => $request->tags ? json_decode($request->tags, true) : [],
-            ]);
-
-            foreach ($request->input('sections', []) as $section) {
-                $note->sections()->create([
-                    'section_title' => $section['title'],
-                    'section_content' => $section['content'] ?? '',
-                ]);
-            }
-
-            return $note;
-        });
+        ]);
 
         return redirect()->route('notes.show', $note->id);
     }
@@ -92,7 +77,32 @@ class NoteController extends Controller
         $note = Note::with('sections')
             ->where('user_name', $this->getUserName())
             ->findOrFail($id);
-        return view('notes.show', compact('note'));
+        $categories = \App\Models\Category::where('user_name', $this->getUserName())
+            ->where('active', true)->orderBy('name')->get();
+        return view('notes.show', compact('note', 'categories'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $note = Note::where('user_name', $this->getUserName())->findOrFail($id);
+        $request->validate(['title' => 'required', 'created_day' => 'required']);
+        $note->update([
+            'title' => $request->title,
+            'created_day' => $request->created_day,
+            'content' => $request->content,
+            'category_id' => $request->category_id ?: null,
+            'status' => $request->status ?: 'em_andamento',
+            'priority' => $request->priority ?: 'media',
+            'tags' => $request->tags ? json_decode($request->tags, true) : [],
+        ]);
+        return redirect()->route('notes.show', $note->id)->with('success', 'Nota atualizada!');
+    }
+
+    public function complete($id)
+    {
+        $note = Note::where('user_name', $this->getUserName())->findOrFail($id);
+        $note->update(['status' => $note->status === 'concluida' ? 'em_andamento' : 'concluida']);
+        return redirect()->route('notes.show', $note->id);
     }
 
     public function createSection($id)
