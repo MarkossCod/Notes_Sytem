@@ -2949,6 +2949,7 @@ canvas#bg {
     display: flex;
     align-items: center;
     gap: 14px;
+    transform: translateY(6px);
 }
 
 .cat-icon-box {
@@ -2987,6 +2988,7 @@ canvas#bg {
 
 .cat-count {
     text-align: center;
+    transform: translateY(6px);
 }
 
 .cat-count strong {
@@ -3006,6 +3008,7 @@ canvas#bg {
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
+    transform: translateY(6px);
 }
 
 .cat-status.active {
