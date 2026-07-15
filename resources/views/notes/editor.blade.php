@@ -3,7 +3,7 @@
     $startEditing = $isSaved && request()->query('edit') === '1';
 @endphp
 
-<div class="note-editor-wrap">
+<div class="note-editor-wrap {{ $isSaved ? 'note-editor-saved' : 'note-editor-create' }}">
 
     <form id="noteForm" action="{{ secure_url($isSaved ? route('notes.update', [$note->id], false) : route('notes.store', [], false)) }}" method="POST" autocomplete="off">
         @csrf
