@@ -3360,8 +3360,7 @@ canvas#bg {
     .ne-sections-heading { align-items: flex-start; flex-direction: column; }
 }
 
-/* ========== REFINO VISUAL — CATEGORIAS E EDITOR DE NOTAS ========== */
-.cat-page,
+/* ========== REFINO VISUAL — EDITOR DE NOTAS ========== */
 .note-editor-wrap {
     --ui-orange: #ff7200;
     --ui-orange-dark: #e86700;
@@ -3370,97 +3369,6 @@ canvas#bg {
     --ui-text: #202020;
     --ui-muted: #8d8d8d;
 }
-
-.cat-page {
-    padding: 10px 0 24px;
-}
-
-.cat-page .cat-header {
-    min-height: 112px;
-    margin: 0 0 20px;
-    padding: 24px 26px;
-    border: 1px solid #f8ede4;
-    border-radius: 0;
-    background: linear-gradient(105deg, #fff8f2 0%, #fff5ec 100%);
-}
-
-.cat-page .cat-header-title { gap: 14px; }
-.cat-page .cat-header-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
-    background: #fff0d6;
-    font-size: 18px;
-}
-.cat-page .cat-header h1 { font-size: 24px; line-height: 1.1; }
-.cat-page .cat-header p { margin-top: 5px; font-size: 12.5px; }
-.cat-page .btn-new-cat {
-    min-width: 142px;
-    justify-content: center;
-    border-radius: 7px;
-    padding: 10px 17px;
-    background: var(--ui-orange);
-    box-shadow: 0 4px 10px rgba(255,114,0,.14);
-}
-
-.cat-page .stats-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-    margin: 0 0 18px;
-}
-.cat-page .stat-card {
-    min-height: 112px;
-    padding: 18px 20px;
-    border: 1px solid #f2ece7;
-    border-radius: 13px;
-    box-shadow: 0 3px 12px rgba(105,72,44,.07);
-}
-.cat-page .stat-card .stat-icon { width: 34px; height: 34px; margin-bottom: 8px; border-radius: 9px; }
-.cat-page .stat-card .stat-value { font-size: 22px; line-height: 1; }
-.cat-page .stat-card .stat-label { margin-top: 6px; font-size: 11.5px; }
-
-.cat-page .cat-toolbar { gap: 10px; margin-bottom: 18px; }
-.cat-page .cat-search,
-.cat-page .cat-sort {
-    min-height: 43px;
-    border-color: #f0e8e2;
-    border-radius: 9px;
-    box-shadow: 0 2px 8px rgba(105,72,44,.04);
-}
-.cat-page .cat-table-wrap {
-    border: 1px solid #f1e8e1;
-    border-radius: 13px;
-    box-shadow: 0 3px 14px rgba(105,72,44,.06);
-}
-.cat-page .cat-table thead th { padding: 14px 20px; font-size: 10px; }
-.cat-page .cat-table tbody td { padding: 17px 20px; }
-.cat-page .cat-icon-box { width: 40px; height: 40px; border-radius: 10px; }
-.cat-page .cat-action-btn { border-radius: 9px; }
-
-.cat-modal-box {
-    --ui-orange: #ff7200;
-    width: min(520px, calc(100vw - 32px));
-    max-width: 520px;
-    padding: 0;
-    border: 1px solid #f0e5dc;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 24px 70px rgba(71,43,21,.22);
-}
-.cat-modal-box .modal-header { align-items: flex-start; padding: 22px 24px 18px; background: #fff8f2; border-bottom: 1px solid #f3e8df; }
-.cat-modal-heading { display: flex; align-items: center; gap: 12px; }
-.cat-modal-heading h2 { margin: 0; font-size: 19px; color: #222; }
-.cat-modal-heading p { margin: 3px 0 0; color: #929292; font-size: 11.5px; }
-.cat-modal-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: #ffecd5; }
-.cat-modal-box form { padding: 22px 24px 24px; }
-.cat-modal-box .form-group { margin-bottom: 17px; }
-.cat-modal-box .form-group label { margin-bottom: 7px; color: #666; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .035em; }
-.cat-modal-box .form-group input,
-.cat-modal-box .form-group textarea { border-color: #e8ded6; border-radius: 9px; background: #fffdfa; }
-.cat-modal-actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 4px; }
-.cat-modal-actions button { width: auto; margin: 0; padding: 10px 17px; border-radius: 8px; }
-.cat-modal-cancel { color: #666; background: white; border: 1px solid #e4dad2; }
-.cat-modal-save { color: white; background: var(--ui-orange); border: 1px solid var(--ui-orange); }
 
 .note-editor-wrap {
     padding: 8px;
@@ -3520,13 +3428,9 @@ canvas#bg {
 .note-editor-wrap .ne-dropzone { padding: 19px 10px; }
 
 @media (max-width: 900px) {
-    .cat-page .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .note-editor-wrap .ne-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
-    .cat-page .cat-header { align-items: stretch; padding: 20px; }
-    .cat-page .btn-new-cat { width: 100%; }
-    .cat-page .stats-grid { grid-template-columns: 1fr; }
     .note-editor-wrap { padding: 0; }
     .note-editor-wrap .ne-title-input { font-size: 20px; }
     .note-editor-wrap .ne-meta { gap: 9px; }

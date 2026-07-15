@@ -2,7 +2,6 @@
 
 @section('content')
 
-<div class="cat-page">
 <div class="cat-header">
     <div class="cat-header-title">
         <div class="cat-header-icon">📁</div>
@@ -123,7 +122,6 @@
     </table>
     @endif
 </div>
-</div>
 
 <script>
     function toggleCatSort() {
@@ -212,15 +210,9 @@
 @section('modals')
 {{-- MODAL NOVA/EDITAR CATEGORIA --}}
 <div id="catModal" class="modal-overlay" onclick="closeCatModal()">
-    <div class="modal-box cat-modal-box" onclick="event.stopPropagation()">
+    <div class="modal-box" style="max-width:480px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="cat-modal-heading">
-                <span class="cat-modal-icon">📁</span>
-                <div>
-                    <h2 id="catModalTitle">Nova Categoria</h2>
-                    <p>Organize suas notas com uma categoria personalizada.</p>
-                </div>
-            </div>
+            <h2 id="catModalTitle">Nova Categoria</h2>
             <button class="modal-close" onclick="closeCatModal()">✕</button>
         </div>
 
@@ -258,10 +250,7 @@
                 <input type="hidden" name="color" id="catColor" value="#ff7b00">
             </div>
 
-            <div class="cat-modal-actions">
-                <button type="button" class="cat-modal-cancel" onclick="closeCatModal()">Cancelar</button>
-                <button type="submit" class="cat-modal-save">Salvar Categoria</button>
-            </div>
+            <button type="submit">Salvar Categoria</button>
         </form>
     </div>
 </div>
