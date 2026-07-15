@@ -111,29 +111,12 @@
 
             {{-- COLUNA DIREITA — EDITOR --}}
             <section class="ne-panel ne-editor-panel">
-                <p class="ne-editor-title">Conteúdo da Nota</p>
-
-                <div class="ne-toolbar">
-                    <button type="button" class="ne-toolbar-btn" data-cmd="undo" title="Desfazer">↶</button>
-                    <button type="button" class="ne-toolbar-btn" data-cmd="redo" title="Refazer">↷</button>
-                    <span class="ne-toolbar-sep"></span>
-                    <button type="button" class="ne-toolbar-btn" data-cmd="bold" title="Negrito"><b>B</b></button>
-                    <button type="button" class="ne-toolbar-btn" data-cmd="italic" title="Itálico"><i>I</i></button>
-                    <button type="button" class="ne-toolbar-btn" data-cmd="underline" title="Sublinhado"><u>U</u></button>
-                    <button type="button" class="ne-toolbar-btn" data-cmd="strikeThrough" title="Tachado"><s>S</s></button>
-                    <button type="button" class="ne-toolbar-btn" data-cmd="formatBlock" data-value="H1" title="Título">H1 ▾</button>
-                    <span class="ne-toolbar-sep"></span>
-                    <button type="button" class="ne-toolbar-btn" data-cmd="insertUnorderedList" title="Lista">≡</button>
-                    <button type="button" class="ne-toolbar-btn" data-cmd="insertOrderedList" title="Lista numerada">1.</button>
-                    <button type="button" class="ne-toolbar-btn" id="neChecklistBtn" title="Checklist">☑</button>
-                    <button type="button" class="ne-toolbar-btn" data-cmd="formatBlock" data-value="BLOCKQUOTE" title="Citação">❝</button>
-                    <span class="ne-toolbar-sep"></span>
-                    <button type="button" class="ne-toolbar-btn" id="neLinkBtn" title="Link">🔗</button>
-                    <button type="button" class="ne-toolbar-btn" id="neImageBtn" title="Imagem">🖼️</button>
-                    <button type="button" class="ne-toolbar-btn" id="neTableBtn" title="Tabela">▦</button>
-                    <button type="button" class="ne-toolbar-btn" title="Mais opções">⋯</button>
-                    <span style="flex:1;"></span>
-                    <button type="button" class="ne-toolbar-btn" id="neFullscreenBtn" title="Tela cheia">⛶</button>
+                <div class="ne-plain-editor-header">
+                    <div>
+                        <p class="ne-editor-title">Conteúdo da Nota</p>
+                        <span>Registre as informações principais da nota.</span>
+                    </div>
+                    <span class="ne-plain-editor-badge">Texto simples</span>
                 </div>
 
                 <div class="ne-content-area" id="neContent" contenteditable="{{ $isSaved ? 'false' : 'true' }}"
@@ -352,42 +335,6 @@
 
     content.addEventListener('input', updateCount);
     updateCount();
-
-    document.querySelectorAll('.ne-toolbar-btn[data-cmd]').forEach(btn => {
-        btn.addEventListener('click', function () {
-            content.focus();
-            document.execCommand(this.dataset.cmd, false, this.dataset.value || null);
-            updateCount();
-        });
-    });
-
-    document.getElementById('neChecklistBtn').addEventListener('click', function () {
-        content.focus();
-        document.execCommand('insertHTML', false,
-            '<ul class="ne-checklist"><li><input type="checkbox"> Novo item</li></ul>');
-        updateCount();
-    });
-
-    document.getElementById('neLinkBtn').addEventListener('click', function () {
-        const url = prompt('Digite a URL do link:');
-        if (url) { content.focus(); document.execCommand('createLink', false, url); }
-    });
-
-    document.getElementById('neImageBtn').addEventListener('click', function () {
-        const url = prompt('Cole a URL da imagem:');
-        if (url) { content.focus(); document.execCommand('insertImage', false, url); updateCount(); }
-    });
-
-    document.getElementById('neTableBtn').addEventListener('click', function () {
-        content.focus();
-        document.execCommand('insertHTML', false,
-            '<table><tr><td>Célula 1</td><td>Célula 2</td></tr><tr><td>Célula 3</td><td>Célula 4</td></tr></table>');
-        updateCount();
-    });
-
-    document.getElementById('neFullscreenBtn').addEventListener('click', function () {
-        content.classList.toggle('fullscreen');
-    });
 
     /* Ctrl+S salva rapidamente */
     document.addEventListener('keydown', function (e) {
