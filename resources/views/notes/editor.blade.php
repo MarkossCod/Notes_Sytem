@@ -29,7 +29,7 @@
                 <button type="button" class="calendar-field-input" id="calendarFieldBtn"
                         style="border:none;background:none;padding:0;font-size:12.5px;color:#666;display:flex;align-items:center;gap:6px;">
                     <span aria-hidden="true">📅</span>
-                    <span>Criada em: <strong id="calendarFieldText">selecione a data</strong></span>
+                    <span>Criado em: <strong id="calendarFieldText">selecione a data</strong></span>
                 </button>
 
                 <div class="calendar-popover" id="calendarPopover">

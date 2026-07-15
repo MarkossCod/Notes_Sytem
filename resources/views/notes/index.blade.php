@@ -35,15 +35,22 @@
 
         <h2>{{ $note->title }}</h2>
 
-        <p class="card-label">Criado em:</p>
         <div class="card-meta">
             <span class="card-date">
-                📅 {{ \Carbon\Carbon::parse($note->created_day)->format('d/m/Y') }}
+                📅 Criado em: {{ \Carbon\Carbon::parse($note->created_day)->format('d/m/Y') }}
             </span>
         </div>
 
         <div class="card-actions">
-            <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}" class="btn btn-secondary">Visualizar</a>
+            <button type="button" class="btn btn-secondary note-preview-btn"
+                    data-title="{{ $note->title }}"
+                    data-date="{{ \Carbon\Carbon::parse($note->created_day)->format('d/m/Y') }}"
+                    data-category="{{ optional($note->category)->name ?: 'Sem categoria' }}"
+                    data-status="{{ $note->status }}"
+                    data-priority="{{ $note->priority }}"
+                    data-tags="{{ implode(', ', $note->tags ?? []) }}"
+                    data-content="{{ strip_tags($note->content ?? '') }}"
+                    onclick="openNotePreview(this)">Visualizar</button>
             <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}?edit=1" class="btn">Editar nota</a>
         </div>
 
@@ -51,7 +58,72 @@
     @endforeach
 </div>
 
+<div id="notePreviewModal" class="modal-overlay note-preview-overlay" onclick="closeNotePreview()">
+    <div class="modal-box note-preview-modal" onclick="event.stopPropagation()">
+        <div class="note-preview-header">
+            <div>
+                <span class="note-preview-kicker">Visualização da nota</span>
+                <h2 id="notePreviewTitle"></h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeNotePreview()" aria-label="Fechar">✕</button>
+        </div>
+
+        <div class="note-preview-meta-grid">
+            <div class="note-preview-info"><span>📅 Criado em</span><strong id="notePreviewDate"></strong></div>
+            <div class="note-preview-info"><span>📁 Categoria</span><strong id="notePreviewCategory"></strong></div>
+            <div class="note-preview-info"><span>● Status</span><strong id="notePreviewStatus"></strong></div>
+            <div class="note-preview-info"><span>⚑ Prioridade</span><strong id="notePreviewPriority"></strong></div>
+        </div>
+
+        <div class="note-preview-section">
+            <span class="note-preview-label">Etiquetas</span>
+            <div id="notePreviewTags" class="note-preview-tags"></div>
+        </div>
+
+        <div class="note-preview-section">
+            <span class="note-preview-label">Conteúdo da nota</span>
+            <p id="notePreviewContent" class="note-preview-content"></p>
+        </div>
+    </div>
+</div>
+
 <script>
+    const noteStatusLabels = {
+        em_andamento: 'Em andamento',
+        pendente: 'Pendente',
+        concluida: 'Concluída'
+    };
+    const notePriorityLabels = { baixa: 'Baixa', media: 'Média', alta: 'Alta' };
+
+    function openNotePreview(button) {
+        document.getElementById('notePreviewTitle').textContent = button.dataset.title;
+        document.getElementById('notePreviewDate').textContent = button.dataset.date;
+        document.getElementById('notePreviewCategory').textContent = button.dataset.category;
+        document.getElementById('notePreviewStatus').textContent = noteStatusLabels[button.dataset.status] || button.dataset.status;
+        document.getElementById('notePreviewPriority').textContent = notePriorityLabels[button.dataset.priority] || button.dataset.priority;
+        document.getElementById('notePreviewContent').textContent = button.dataset.content || 'Nenhum conteúdo informado.';
+
+        const tagsContainer = document.getElementById('notePreviewTags');
+        const tags = button.dataset.tags.split(',').map(tag => tag.trim()).filter(Boolean);
+        tagsContainer.innerHTML = '';
+        if (tags.length === 0) {
+            tagsContainer.innerHTML = '<span class="note-preview-empty">Nenhuma etiqueta</span>';
+        } else {
+            tags.forEach(tag => {
+                const chip = document.createElement('span');
+                chip.className = 'note-preview-tag';
+                chip.textContent = tag;
+                tagsContainer.appendChild(chip);
+            });
+        }
+
+        document.getElementById('notePreviewModal').classList.add('modal-active');
+    }
+
+    function closeNotePreview() {
+        document.getElementById('notePreviewModal').classList.remove('modal-active');
+    }
+
     function filterNotes(query) {
         query = query.toLowerCase();
         document.querySelectorAll('#notesGrid .card').forEach(card => {
@@ -64,6 +136,9 @@
             filterNotes(this.value);
         });
     }
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeNotePreview();
+    });
 </script>
 
 @endsection

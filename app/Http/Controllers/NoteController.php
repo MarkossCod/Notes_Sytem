@@ -17,7 +17,8 @@ class NoteController extends Controller
         if (!session('user_name')) {
             return redirect()->route('login');
         }
-        $notes = Note::where('user_name', $this->getUserName())
+        $notes = Note::with('category')
+            ->where('user_name', $this->getUserName())
             ->latest()
             ->get();
 
