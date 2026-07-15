@@ -2848,9 +2848,22 @@ canvas#bg {
     transition: background .2s, transform .2s;
     text-decoration: none;
     white-space: nowrap;
+    width: auto;
+    min-width: 118px;
+    justify-content: center;
 }
 
 .cat-header { align-items: center; }
+
+#catForm > button[type="submit"] {
+    display: block;
+    width: auto;
+    min-width: 138px;
+    margin-left: auto;
+    padding: 8px 14px;
+    border-radius: 7px;
+    font-size: 12px;
+}
 
 .btn-new-cat:hover {
     background: #e06e00;
@@ -3374,7 +3387,7 @@ canvas#bg {
 
 .note-editor-wrap {
     padding: 8px;
-    background: linear-gradient(180deg, #fff7f0 0%, #fffaf6 100%);
+    background: #fdf3eb;
 }
 .note-editor-wrap .ne-top {
     align-items: stretch;
@@ -3399,19 +3412,31 @@ canvas#bg {
     border-color: #f1ebe6;
     border-radius: 9px;
     box-shadow: 0 2px 8px rgba(105,72,44,.04);
+    flex: 0 0 auto;
+    justify-content: center;
+    white-space: nowrap;
 }
 .note-editor-wrap .ne-meta-save {
-    min-width: 142px;
-    min-height: 38px;
+    width: auto !important;
+    min-width: 132px;
+    min-height: 36px;
     margin-left: 0;
-    padding: 8px 15px;
+    padding: 7px 14px;
     border-radius: 7px;
     background: var(--ui-orange);
     font-size: 12px;
+    flex: 0 0 auto;
 }
 
 .note-editor-wrap .ne-meta { flex-wrap: nowrap; }
 .note-editor-wrap .ne-meta-pill { min-height: 38px; padding: 8px 13px; }
+.note-editor-wrap .ne-meta-pill > span,
+.note-editor-wrap .ne-meta-pill .calendar-field-input { display: inline-flex; align-items: center; line-height: 1; }
+.note-editor-wrap .ne-calendar-status .calendar-field-input { gap: 7px !important; }
+
+.app-shell,
+.app-shell .container { background: #fdf3eb; }
+.note-preview-overlay { inset: 0 !important; width: 100vw !important; height: 100vh !important; }
 
 /* Visualização rápida dos cards de nota */
 .note-preview-btn { border: 1px solid #ffc58f; font-family: inherit; cursor: pointer; }

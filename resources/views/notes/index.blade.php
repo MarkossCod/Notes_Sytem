@@ -58,35 +58,6 @@
     @endforeach
 </div>
 
-<div id="notePreviewModal" class="modal-overlay note-preview-overlay" onclick="closeNotePreview()">
-    <div class="modal-box note-preview-modal" onclick="event.stopPropagation()">
-        <div class="note-preview-header">
-            <div>
-                <span class="note-preview-kicker">Visualização da nota</span>
-                <h2 id="notePreviewTitle"></h2>
-            </div>
-            <button type="button" class="modal-close" onclick="closeNotePreview()" aria-label="Fechar">✕</button>
-        </div>
-
-        <div class="note-preview-meta-grid">
-            <div class="note-preview-info"><span>📅 Criado em</span><strong id="notePreviewDate"></strong></div>
-            <div class="note-preview-info"><span>📁 Categoria</span><strong id="notePreviewCategory"></strong></div>
-            <div class="note-preview-info"><span>● Status</span><strong id="notePreviewStatus"></strong></div>
-            <div class="note-preview-info"><span>⚑ Prioridade</span><strong id="notePreviewPriority"></strong></div>
-        </div>
-
-        <div class="note-preview-section">
-            <span class="note-preview-label">Etiquetas</span>
-            <div id="notePreviewTags" class="note-preview-tags"></div>
-        </div>
-
-        <div class="note-preview-section">
-            <span class="note-preview-label">Conteúdo da nota</span>
-            <p id="notePreviewContent" class="note-preview-content"></p>
-        </div>
-    </div>
-</div>
-
 <script>
     const noteStatusLabels = {
         em_andamento: 'Em andamento',
@@ -141,4 +112,35 @@
     });
 </script>
 
+@endsection
+
+@section('modals')
+<div id="notePreviewModal" class="modal-overlay note-preview-overlay" onclick="closeNotePreview()">
+    <div class="modal-box note-preview-modal" onclick="event.stopPropagation()">
+        <div class="note-preview-header">
+            <div>
+                <span class="note-preview-kicker">Visualização da nota</span>
+                <h2 id="notePreviewTitle"></h2>
+            </div>
+            <button type="button" class="modal-close" onclick="closeNotePreview()" aria-label="Fechar">✕</button>
+        </div>
+
+        <div class="note-preview-meta-grid">
+            <div class="note-preview-info"><span>📅 Criado em</span><strong id="notePreviewDate"></strong></div>
+            <div class="note-preview-info"><span>📁 Categoria</span><strong id="notePreviewCategory"></strong></div>
+            <div class="note-preview-info"><span>● Status</span><strong id="notePreviewStatus"></strong></div>
+            <div class="note-preview-info"><span>⚑ Prioridade</span><strong id="notePreviewPriority"></strong></div>
+        </div>
+
+        <div class="note-preview-section">
+            <span class="note-preview-label">Etiquetas</span>
+            <div id="notePreviewTags" class="note-preview-tags"></div>
+        </div>
+
+        <div class="note-preview-section">
+            <span class="note-preview-label">Conteúdo da nota</span>
+            <p id="notePreviewContent" class="note-preview-content"></p>
+        </div>
+    </div>
+</div>
 @endsection
