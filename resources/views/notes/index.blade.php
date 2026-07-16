@@ -9,6 +9,14 @@
     </div>
 </div>
 
+@if(session('success'))
+    <div class="note-page-alert note-page-alert--success" role="status" aria-live="polite">
+        <span aria-hidden="true">✓</span>
+        <span>{{ session('success') }}</span>
+        <a href="{{ secure_url(route('trash.index', [], false)) }}">Abrir Lixeira</a>
+    </div>
+@endif
+
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon">📄</div>
@@ -38,6 +46,13 @@
         <div class="card-meta">
             <span class="card-date">
                 📅 Criado em: {{ \Carbon\Carbon::parse($note->created_day)->format('d/m/Y') }}
+            </span>
+            <span class="note-card-status note-card-status--{{ $note->status }}">
+                {{ match($note->status) {
+                    'concluida' => '✓ Concluída',
+                    'pendente' => '○ Pendente',
+                    default => '● Em andamento',
+                } }}
             </span>
         </div>
 

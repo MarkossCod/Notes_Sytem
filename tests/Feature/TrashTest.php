@@ -21,9 +21,35 @@ class TrashTest extends TestCase
 
         $this->withSession(['user_name' => 'Markos'])
             ->delete(route('notes.destroy', $note->id))
-            ->assertRedirect(route('notes.index'));
+            ->assertRedirect(route('notes.index'))
+            ->assertSessionHas('success', 'A nota "Nota de teste" foi movida para a lixeira.');
 
         $this->assertSoftDeleted('notes', ['id' => $note->id]);
+    }
+
+    /** Verifies that a saved note can be marked as completed. */
+    public function test_user_can_mark_a_note_as_completed(): void
+    {
+        $note = Note::create([
+            'user_name' => 'Markos',
+            'title' => 'Concluir tarefa',
+            'created_day' => now()->toDateString(),
+            'status' => 'em_andamento',
+        ]);
+
+        $this->withSession(['user_name' => 'Markos'])
+            ->put(route('notes.update', $note->id), [
+                'title' => $note->title,
+                'created_day' => $note->created_day,
+                'status' => 'concluida',
+                'priority' => 'media',
+            ])
+            ->assertRedirect(route('notes.show', $note->id));
+
+        $this->assertDatabaseHas('notes', [
+            'id' => $note->id,
+            'status' => 'concluida',
+        ]);
     }
 
     /** Verifies that a deleted note can be restored by its owner. */

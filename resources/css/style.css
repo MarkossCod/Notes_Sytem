@@ -3651,3 +3651,96 @@ canvas#bg {
     .cat-action-menu { right: 0; top: 42px; transform: none; }
     .note-editor-wrap .ne-plain-editor-header { align-items: flex-start; }
 }
+
+/* Mantém os metadados da nota e a ação principal na mesma fileira. */
+.note-editor-wrap .ne-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 12px;
+}
+.note-editor-wrap .ne-meta-pill,
+.note-editor-wrap .ne-meta-save {
+    box-sizing: border-box;
+    min-height: 40px;
+    height: 40px;
+    margin: 0;
+}
+.note-editor-wrap .ne-meta-save {
+    width: auto !important;
+    min-width: 148px;
+    max-width: 210px;
+    padding: 8px 16px;
+    justify-content: center;
+}
+.note-editor-wrap .ne-save-status {
+    min-width: 118px;
+    justify-content: center;
+}
+
+/* Ação destrutiva da edição e diálogo de envio para a Lixeira. */
+.note-editor-wrap .ne-btn-danger {
+    border-color: #f1c6c6;
+    color: #c73535;
+    background: #fff8f8;
+}
+.note-editor-wrap .ne-btn-danger:hover {
+    border-color: #df8888;
+    background: #fff0f0;
+}
+.note-delete-confirm-modal {
+    width: min(440px, calc(100vw - 32px));
+    padding: 28px;
+    border: 1px solid #f0e5de;
+    border-radius: 16px;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0 24px 70px rgba(44, 24, 12, .28);
+}
+.note-delete-confirm-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background: #fff0f0;
+    font-size: 24px;
+}
+.note-delete-confirm-modal h2 { margin: 0 0 9px; color: #252525; font-size: 20px; }
+.note-delete-confirm-modal p { margin: 0; color: #747474; line-height: 1.6; font-size: 13px; }
+.note-delete-confirm-actions { display: flex; justify-content: center; gap: 10px; margin-top: 22px; }
+.note-delete-confirm-actions .ne-btn { width: auto; }
+.ne-btn-danger-solid { border-color: #d94141; color: #fff; background: #d94141; }
+.ne-btn-danger-solid:hover { border-color: #bd3030; color: #fff; background: #bd3030; }
+
+/* Aviso confirma a movimentação e oferece acesso imediato à Lixeira. */
+.note-page-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+.note-page-alert--success { border: 1px solid #bfe2c8; color: #24733a; background: #effaf2; }
+.note-page-alert > a { margin-left: auto; color: #24733a; font-weight: 800; text-decoration: underline; }
+
+/* Identifica visualmente o andamento da nota nos cards da página inicial. */
+.card-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.note-card-status { padding: 5px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 700; }
+.note-card-status--em_andamento { color: #a65514; background: #fff2e5; }
+.note-card-status--pendente { color: #666; background: #f1f1f1; }
+.note-card-status--concluida { color: #24743b; background: #eaf7ed; }
+
+@media (max-width: 720px) {
+    .note-editor-wrap .ne-meta { flex-wrap: wrap; }
+    .note-editor-wrap .ne-meta-pill,
+    .note-editor-wrap .ne-meta-save { flex: 1 1 180px; max-width: none; }
+    .note-delete-confirm-actions { flex-direction: column; }
+    .note-delete-confirm-actions .ne-btn { width: 100%; justify-content: center; }
+    .note-page-alert { align-items: flex-start; flex-wrap: wrap; }
+    .note-page-alert > a { width: 100%; margin-left: 25px; }
+}

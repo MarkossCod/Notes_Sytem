@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class NoteController extends Controller
 {
@@ -51,6 +52,7 @@ class NoteController extends Controller
         $request->validate([
             'title'       => 'required',
             'created_day' => 'required',
+            'status'      => ['nullable', Rule::in(['em_andamento', 'pendente', 'concluida'])],
         ]);
 
         $note = Note::create([
@@ -83,7 +85,11 @@ class NoteController extends Controller
     public function update(Request $request, $id)
     {
         $note = Note::where('user_name', $this->getUserName())->findOrFail($id);
-        $request->validate(['title' => 'required', 'created_day' => 'required']);
+        $request->validate([
+            'title' => 'required',
+            'created_day' => 'required',
+            'status' => ['nullable', Rule::in(['em_andamento', 'pendente', 'concluida'])],
+        ]);
         $note->update([
             'title' => $request->title,
             'created_day' => $request->created_day,
@@ -98,7 +104,16 @@ class NoteController extends Controller
 
     public function destroy($id)
     {
-        Note::where('user_name', $this->getUserName())->findOrFail($id)->delete();
-        return redirect()->route('notes.index');
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
+
+        $note = Note::where('user_name', $this->getUserName())->findOrFail($id);
+        $noteTitle = $note->title;
+        $note->delete();
+
+        return redirect()
+            ->route('notes.index')
+            ->with('success', "A nota \"{$noteTitle}\" foi movida para a lixeira.");
     }
 }

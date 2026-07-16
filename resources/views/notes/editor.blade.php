@@ -20,6 +20,9 @@
                 <button type="button" class="ne-btn" id="neEditBtn">
                     ✏️ Editar
                 </button>
+                <button type="button" class="ne-btn ne-btn-danger" id="neDeleteBtn" aria-controls="noteDeleteModal">
+                    🗑️ Excluir nota
+                </button>
             </div>
             @endif
         </div>
@@ -49,7 +52,7 @@
                 </div>
             </div>
 
-            <span class="ne-meta-pill">✏️ {{ $isSaved ? 'Nota salva' : 'Nova nota — ainda não salva' }}</span>
+            <span class="ne-meta-pill ne-save-status">✏️ {{ $isSaved ? 'Nota salva' : 'Nova nota — ainda não salva' }}</span>
             <button type="submit" class="ne-btn ne-btn-primary ne-meta-save">💾 {{ $isSaved ? 'Salvar alterações' : 'Salvar Nota' }}</button>
 
             <input type="hidden" id="created_day" name="created_day" required>
@@ -83,6 +86,7 @@
                     <select name="status" id="neStatus" class="ne-select">
                         <option value="em_andamento" @selected(!$isSaved || $note->status === 'em_andamento')>🟠 Em andamento</option>
                         <option value="pendente" @selected($isSaved && $note->status === 'pendente')>⚪ Pendente</option>
+                        <option value="concluida" @selected($isSaved && $note->status === 'concluida')>🟢 Concluída</option>
                     </select>
                 </div>
 
@@ -136,6 +140,26 @@
 
         </div>
     </form>
+
+    @if($isSaved)
+        {{-- Formulário independente evita formulários aninhados e envia a nota para a Lixeira. --}}
+        <form id="noteDeleteForm" action="{{ secure_url(route('notes.destroy', [$note->id], false)) }}" method="POST" hidden>
+            @csrf
+            @method('DELETE')
+        </form>
+
+        <div id="noteDeleteModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="noteDeleteTitle" onclick="closeNoteDeleteModal()">
+            <div class="note-delete-confirm-modal" onclick="event.stopPropagation()">
+                <span class="note-delete-confirm-icon" aria-hidden="true">🗑️</span>
+                <h2 id="noteDeleteTitle">Mover nota para a Lixeira?</h2>
+                <p>A nota <strong>“{{ $note->title }}”</strong> será removida da sua lista e poderá ser restaurada pela página Lixeira.</p>
+                <div class="note-delete-confirm-actions">
+                    <button type="button" class="ne-btn" onclick="closeNoteDeleteModal()">Cancelar</button>
+                    <button type="button" class="ne-btn ne-btn-danger-solid" id="noteDeleteConfirmBtn">Mover para a Lixeira</button>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 <script>
@@ -357,6 +381,18 @@
         if (editing) document.getElementById('title').focus();
     }
     document.getElementById('neEditBtn').addEventListener('click', () => setEditMode(true));
+
+    // Controla a confirmação antes de mover a nota para a Lixeira.
+    const deleteModal = document.getElementById('noteDeleteModal');
+    document.getElementById('neDeleteBtn').addEventListener('click', () => deleteModal.classList.add('modal-active'));
+    document.getElementById('noteDeleteConfirmBtn').addEventListener('click', () => document.getElementById('noteDeleteForm').submit());
+    window.closeNoteDeleteModal = function () {
+        deleteModal.classList.remove('modal-active');
+    };
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') window.closeNoteDeleteModal();
+    });
+
     setEditMode(@json($startEditing));
     @endif
 })();
