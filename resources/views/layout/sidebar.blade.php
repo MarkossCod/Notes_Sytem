@@ -47,10 +47,11 @@
             <span class="sidebar-icon">⭐</span> Favoritos
             <span class="sidebar-soon">em breve</span>
         </span>
-        <span class="sidebar-link disabled" title="Em breve">
+        <a href="{{ secure_url(route('trash.index', [], false)) }}"
+           class="sidebar-link {{ request()->routeIs('trash.*') ? 'active' : '' }}">
             <span class="sidebar-icon">🗑️</span> Lixeira
-            <span class="sidebar-soon">em breve</span>
-        </span>
+            <span class="sidebar-arrow">›</span>
+        </a>
 
         <div class="sidebar-separator"></div>
 

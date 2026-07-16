@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TrashController;
 
 Route::get('/', function () {
     return view('splash');
@@ -36,6 +37,11 @@ Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
 Route::get('/notes/{id}', [NoteController::class, 'show'])->name('notes.show');
 Route::put('/notes/{id}', [NoteController::class, 'update'])->name('notes.update');
 Route::delete('/notes/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');
+
+Route::get('/trash', [TrashController::class, 'index'])->name('trash.index');
+Route::patch('/trash/{id}/restore', [TrashController::class, 'restore'])->name('trash.restore');
+Route::delete('/trash/{id}', [TrashController::class, 'destroy'])->name('trash.destroy');
+Route::delete('/trash', [TrashController::class, 'empty'])->name('trash.empty');
 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');

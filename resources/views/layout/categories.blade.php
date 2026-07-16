@@ -102,7 +102,7 @@
                     </span>
                 </td>
                 <td class="cat-action">
-                    <button class="cat-action-btn" onclick="toggleCatMenu(event, {{ $category->id }})">⋯</button>
+                    <button class="cat-action-btn" onclick="toggleCatMenu(event, {{ $category->id }})"> ⋯ </button>
                     <div class="cat-action-menu" id="catMenu{{ $category->id }}">
                         <button type="button" onclick='openCatModal(@json($category))'>✏️Editar</button>
                         <form action="{{ secure_url(route('categories.toggle', $category->id, false)) }}" method="POST">
