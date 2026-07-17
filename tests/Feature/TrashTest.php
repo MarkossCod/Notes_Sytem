@@ -85,4 +85,52 @@ class TrashTest extends TestCase
 
         $this->assertSoftDeleted('notes', ['id' => $note->id]);
     }
+
+    /** Verifies that the owner can permanently delete one trashed note. */
+    public function test_user_can_permanently_delete_a_trashed_note(): void
+    {
+        $note = Note::create([
+            'user_name' => 'Markos',
+            'title' => 'Excluir definitivamente',
+            'created_day' => now()->toDateString(),
+        ]);
+        $note->delete();
+
+        $this->withSession(['user_name' => 'Markos'])
+            ->delete(route('trash.destroy', $note->id))
+            ->assertSessionHas('success', 'Nota excluída permanentemente.');
+
+        $this->assertDatabaseMissing('notes', ['id' => $note->id]);
+    }
+
+    /** Verifies that emptying the trash permanently deletes only the owner's notes. */
+    public function test_user_can_empty_their_trash(): void
+    {
+        $firstNote = Note::create([
+            'user_name' => 'Markos',
+            'title' => 'Primeira nota',
+            'created_day' => now()->toDateString(),
+        ]);
+        $secondNote = Note::create([
+            'user_name' => 'Markos',
+            'title' => 'Segunda nota',
+            'created_day' => now()->toDateString(),
+        ]);
+        $otherUsersNote = Note::create([
+            'user_name' => 'Outro usuário',
+            'title' => 'Nota protegida',
+            'created_day' => now()->toDateString(),
+        ]);
+        $firstNote->delete();
+        $secondNote->delete();
+        $otherUsersNote->delete();
+
+        $this->withSession(['user_name' => 'Markos'])
+            ->delete(route('trash.empty'))
+            ->assertSessionHas('success', 'Lixeira esvaziada com sucesso.');
+
+        $this->assertDatabaseMissing('notes', ['id' => $firstNote->id]);
+        $this->assertDatabaseMissing('notes', ['id' => $secondNote->id]);
+        $this->assertSoftDeleted('notes', ['id' => $otherUsersNote->id]);
+    }
 }

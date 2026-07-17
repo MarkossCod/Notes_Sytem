@@ -64,6 +64,10 @@ class TrashController extends Controller
     /** Restores one deleted note owned by the current user. */
     public function restore(int $id): RedirectResponse
     {
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
+
         try {
             $this->findOwnedDeletedNote($id)->restore();
             return back()->with('success', 'Nota restaurada com sucesso.');
@@ -76,6 +80,10 @@ class TrashController extends Controller
     /** Permanently removes one deleted note after user confirmation. */
     public function destroy(int $id): RedirectResponse
     {
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
+
         try {
             $this->findOwnedDeletedNote($id)->forceDelete();
             return back()->with('success', 'Nota excluída permanentemente.');
@@ -88,12 +96,15 @@ class TrashController extends Controller
     /** Permanently removes all deleted notes owned by the current user. */
     public function empty(): RedirectResponse
     {
+        if (!session('user_name')) {
+            return redirect()->route('login');
+        }
+
         try {
             DB::transaction(function (): void {
                 Note::onlyTrashed()
                     ->where('user_name', session('user_name'))
-                    ->get()
-                    ->each->forceDelete();
+                    ->forceDelete();
             });
 
             return back()->with('success', 'Lixeira esvaziada com sucesso.');

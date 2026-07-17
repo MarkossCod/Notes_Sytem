@@ -136,38 +136,6 @@
     </section>
 </div>
 
-<script>
-    // Hides the loading state when the server-rendered content is ready.
-    window.addEventListener('load', () => document.getElementById('trashLoading')?.classList.add('hidden'));
-
-    // Switches between the table and compact card layouts without changing data.
-    document.getElementById('trashViewToggle')?.addEventListener('click', function () {
-        document.getElementById('trashResults')?.classList.toggle('trash-table-wrap--grid');
-        this.classList.toggle('active');
-    });
-
-    let pendingDeleteForm = null;
-
-    // Opens one reusable confirmation dialog for permanent deletion actions.
-    document.querySelectorAll('.js-confirm-delete').forEach(form => {
-        form.addEventListener('submit', event => {
-            event.preventDefault();
-            pendingDeleteForm = form;
-            document.getElementById('trashConfirmTitle').textContent = form.dataset.confirmTitle;
-            document.getElementById('trashConfirmMessage').textContent = form.dataset.confirmMessage;
-            document.getElementById('trashConfirmModal').classList.add('modal-active');
-        });
-    });
-
-    function closeTrashConfirm() {
-        pendingDeleteForm = null;
-        document.getElementById('trashConfirmModal').classList.remove('modal-active');
-    }
-
-    document.getElementById('trashConfirmButton')?.addEventListener('click', () => {
-        if (pendingDeleteForm) pendingDeleteForm.submit();
-    });
-</script>
 @endsection
 
 @section('modals')
@@ -183,4 +151,48 @@
         </div>
     </div>
 </div>
+
+<script>
+(function () {
+    // Inicializa as interações somente depois que o modal existe no documento.
+    const modal = document.getElementById('trashConfirmModal');
+    const confirmButton = document.getElementById('trashConfirmButton');
+    let pendingDeleteForm = null;
+
+    window.addEventListener('load', () => document.getElementById('trashLoading')?.classList.add('hidden'));
+
+    document.getElementById('trashViewToggle')?.addEventListener('click', function () {
+        document.getElementById('trashResults')?.classList.toggle('trash-table-wrap--grid');
+        this.classList.toggle('active');
+    });
+
+    // Um único diálogo confirma tanto a exclusão individual quanto o esvaziamento.
+    document.querySelectorAll('.js-confirm-delete').forEach(form => {
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            pendingDeleteForm = form;
+            document.getElementById('trashConfirmTitle').textContent = form.dataset.confirmTitle;
+            document.getElementById('trashConfirmMessage').textContent = form.dataset.confirmMessage;
+            modal.classList.add('modal-active');
+        });
+    });
+
+    window.closeTrashConfirm = function () {
+        pendingDeleteForm = null;
+        modal.classList.remove('modal-active');
+    };
+
+    confirmButton.addEventListener('click', () => {
+        if (!pendingDeleteForm) return;
+
+        confirmButton.disabled = true;
+        confirmButton.textContent = 'Excluindo...';
+        pendingDeleteForm.submit();
+    });
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') window.closeTrashConfirm();
+    });
+})();
+</script>
 @endsection
