@@ -18,11 +18,33 @@ class AdminUserController extends Controller
     {
         $search = trim($request->string('search')->value());
 
+        $metrics = [
+            'total' => NoteUser::count(),
+            'active' => NoteUser::where('active', true)->count(),
+            'blocked' => NoteUser::where('active', false)->count(),
+            'admins' => NoteUser::where('role', 'admin')->where('active', true)->count(),
+        ];
+
         $users = NoteUser::query()
             ->addSelect([
                 'notes_count' => DB::table('notes')
                     ->selectRaw('COUNT(*)')
-                    ->whereColumn('notes.user_name', 'note_users.user_name'),
+                    ->whereColumn('notes.user_name', 'note_users.user_name')
+                    ->whereNull('notes.deleted_at'),
+                'completed_notes_count' => DB::table('notes')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('notes.user_name', 'note_users.user_name')
+                    ->whereNull('notes.deleted_at')
+                    ->where('notes.status', 'concluida'),
+                'trashed_notes_count' => DB::table('notes')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('notes.user_name', 'note_users.user_name')
+                    ->whereNotNull('notes.deleted_at'),
+                'recent_notes_count' => DB::table('notes')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('notes.user_name', 'note_users.user_name')
+                    ->whereNull('notes.deleted_at')
+                    ->where('notes.created_at', '>=', now()->subDays(30)),
                 'categories_count' => DB::table('categories')
                     ->selectRaw('COUNT(*)')
                     ->whereColumn('categories.user_name', 'note_users.user_name'),
@@ -33,7 +55,7 @@ class AdminUserController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'metrics'));
     }
 
     /** Creates an account without exposing public self-registration. */
@@ -63,6 +85,13 @@ class AdminUserController extends Controller
     public function update(Request $request, NoteUser $user): RedirectResponse
     {
         $validated = $request->validate([
+            'user_name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:30',
+                Rule::unique('note_users', 'user_name')->ignore($user->id),
+            ],
             'role' => ['required', Rule::in(['admin', 'user'])],
             'active' => ['required', 'boolean'],
         ]);
@@ -78,10 +107,28 @@ class AdminUserController extends Controller
             return back()->withErrors(['users' => 'Você não pode remover o próprio acesso administrativo.']);
         }
 
-        $user->update([
-            'role' => $validated['role'],
-            'active' => (bool) $validated['active'],
-        ]);
+        $oldUserName = $user->user_name;
+        $newUserName = trim($validated['user_name']);
+
+        DB::transaction(function () use ($user, $oldUserName, $newUserName, $validated): void {
+            if ($oldUserName !== $newUserName) {
+                DB::table('notes')->where('user_name', $oldUserName)->update(['user_name' => $newUserName]);
+                DB::table('categories')->where('user_name', $oldUserName)->update(['user_name' => $newUserName]);
+            }
+
+            $user->update([
+                'user_name' => $newUserName,
+                'role' => $validated['role'],
+                'active' => (bool) $validated['active'],
+            ]);
+        });
+
+        if ($user->id === (int) $request->session()->get('user_id')) {
+            $request->session()->put([
+                'user_name' => $newUserName,
+                'user_role' => $validated['role'],
+            ]);
+        }
 
         return back()->with('success', 'Permissões do usuário atualizadas.');
     }

@@ -3877,3 +3877,48 @@ canvas#bg {
     .user-admin-table td:first-child::before { display: none; }
     .user-access-form { flex-direction: column; align-items: stretch; min-width: min(210px, 65vw); }
 }
+
+/* Indicadores gerais e desempenho individual do painel administrativo. */
+.user-performance-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+.user-performance-summary article {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 17px;
+    border: 1px solid #eee5de;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 3px 14px rgba(68, 42, 22, .04);
+}
+.user-performance-summary article div { display: flex; flex-direction: column; gap: 4px; }
+.user-performance-summary strong { color: #222; font-size: 22px; line-height: 1; }
+.user-performance-summary small { color: #888; font-size: 10.5px; }
+.user-performance-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 10px; color: #d2630b; background: #fff0e4; font-size: 18px; font-weight: 800; }
+.user-performance-icon.is-green { color: #28763d; background: #edf8f0; }
+.user-performance-icon.is-red { color: #b53a3a; background: #fff0f0; }
+.user-performance-icon.is-purple { color: #7046b2; background: #f2edfb; }
+.user-performance-data { display: grid; grid-template-columns: repeat(2, max-content); gap: 5px 12px; min-width: 230px; }
+.user-performance-data span { color: #777; font-size: 10px; }
+.user-performance-data span strong { color: #333; }
+.user-performance-rate { grid-column: 1 / -1; overflow: hidden; height: 5px; margin-top: 4px; border-radius: 999px; background: #f1ebe6; }
+.user-performance-rate i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #ff7200, #ff9b4a); }
+.user-performance-data small { grid-column: 1 / -1; color: #a36b3f; font-size: 9.5px; }
+.user-access-form { display: grid; grid-template-columns: 1.2fr 1fr 1fr auto; }
+.user-access-form input,
+.user-access-form select { width: 100%; min-height: 34px; padding: 6px 8px; border: 1px solid #ddd; border-radius: 7px; background: #fff; font-size: 10.5px; }
+
+@media (max-width: 1100px) {
+    .user-performance-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .user-access-form { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+    .user-performance-summary { grid-template-columns: 1fr; }
+    .user-performance-data { min-width: min(220px, 60vw); }
+    .user-access-form { display: flex; }
+}

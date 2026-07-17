@@ -15,6 +15,7 @@ class LoginController extends Controller
 {
     private const MAX_LOGIN_ATTEMPTS = 5;
     private const LOGIN_DECAY_SECONDS = 60;
+    private const MAX_REGISTRATIONS_PER_HOUR = 3;
 
     public function show(Request $request): View|RedirectResponse
     {
@@ -37,7 +38,7 @@ class LoginController extends Controller
     {
         $credentials = $request->validate([
             'user_name' => ['required', 'string', 'min:2', 'max:30'],
-            'password' => ['required', 'string'],
+            'password' => ['nullable', 'string'],
         ]);
 
         $userName = trim($credentials['user_name']);
@@ -53,7 +54,12 @@ class LoginController extends Controller
 
         $user = NoteUser::where('user_name', $userName)->first();
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+        if (!$user) {
+            $request->session()->put('pending_user', $userName);
+            return redirect()->route('register');
+        }
+
+        if (empty($credentials['password']) || !Hash::check($credentials['password'], $user->password)) {
             RateLimiter::hit($throttleKey, self::LOGIN_DECAY_SECONDS);
 
             return back()->withInput($request->only('user_name'))->withErrors([
@@ -79,6 +85,64 @@ class LoginController extends Controller
         $user->update(['last_login_at' => now()]);
 
         return redirect()->route('notes.index');
+    }
+
+    public function showRegister(Request $request): View
+    {
+        return view('register', [
+            'pendingUser' => $request->session()->get('pending_user'),
+        ]);
+    }
+
+    /** Creates a public user account with the strong-password policy and no elevated privileges. */
+    public function register(Request $request): RedirectResponse
+    {
+        $pendingUser = $request->session()->get('pending_user');
+        $registrationKey = 'registration|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($registrationKey, self::MAX_REGISTRATIONS_PER_HOUR)) {
+            return back()->withErrors([
+                'user_name' => 'Limite de cadastros atingido. Tente novamente mais tarde.',
+            ]);
+        }
+
+        $rules = [
+            'password' => ['required', 'confirmed', StrongPassword::rule()],
+            'secret_question' => ['required', 'string', 'max:255'],
+            'secret_answer' => ['required', 'string', 'min:2', 'max:255'],
+        ];
+
+        if (!$pendingUser) {
+            $rules['user_name'] = ['required', 'string', 'min:2', 'max:30', 'unique:note_users,user_name'];
+        }
+
+        $validated = $request->validate($rules);
+        $userName = trim($pendingUser ?: $validated['user_name']);
+
+        if (NoteUser::where('user_name', $userName)->exists()) {
+            $request->session()->forget('pending_user');
+            return redirect()->route('login')->withErrors(['user_name' => 'Este usuário já está cadastrado.']);
+        }
+
+        $user = NoteUser::create([
+            'user_name' => $userName,
+            'password' => Hash::make($validated['password']),
+            'secret_question' => $validated['secret_question'],
+            'secret_answer' => Hash::make(strtolower(trim($validated['secret_answer']))),
+            'role' => 'user',
+            'active' => true,
+        ]);
+
+        RateLimiter::hit($registrationKey, 3600);
+        $request->session()->regenerate();
+        $request->session()->forget('pending_user');
+        $request->session()->put([
+            'user_id' => $user->id,
+            'user_name' => $user->user_name,
+            'user_role' => $user->role,
+        ]);
+
+        return redirect()->route('notes.index')->with('success', 'Conta criada com sucesso.');
     }
 
     public function showRecover(): View

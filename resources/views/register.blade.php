@@ -47,11 +47,11 @@
         @endif
         <div class="field">
             <label>Senha</label>
-            <input type="password" name="password" placeholder="Mínimo 4 caracteres" required autocomplete="off"/>
+            <input type="password" name="password" placeholder="8+ caracteres, maiúscula, número e símbolo" required autocomplete="new-password"/>
         </div>
         <div class="field">
             <label>Confirmar Senha</label>
-            <input type="password" name="password_confirmation" placeholder="Repita a senha" required autocomplete="off"/>
+            <input type="password" name="password_confirmation" placeholder="Repita a senha" required autocomplete="new-password"/>
         </div>
         <div class="field">
             <label>Pergunta Secreta</label>

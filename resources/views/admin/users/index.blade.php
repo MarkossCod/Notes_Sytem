@@ -18,6 +18,13 @@
         <div class="user-admin-alert user-admin-alert--error">⚠ {{ $errors->first() }}</div>
     @endif
 
+    <section class="user-performance-summary" aria-label="Resumo dos usuários">
+        <article><span class="user-performance-icon">👥</span><div><strong>{{ $metrics['total'] }}</strong><small>Usuários cadastrados</small></div></article>
+        <article><span class="user-performance-icon is-green">✓</span><div><strong>{{ $metrics['active'] }}</strong><small>Contas ativas</small></div></article>
+        <article><span class="user-performance-icon is-red">⊘</span><div><strong>{{ $metrics['blocked'] }}</strong><small>Contas bloqueadas</small></div></article>
+        <article><span class="user-performance-icon is-purple">🛡</span><div><strong>{{ $metrics['admins'] }}</strong><small>Administradores</small></div></article>
+    </section>
+
     <section class="user-create-card" id="userCreateCard" @if(!$errors->any()) hidden @endif>
         <div class="user-create-heading">
             <div><h2>Criar conta</h2><p>A senha deve ter ao menos 8 caracteres, maiúscula, minúscula, número e símbolo.</p></div>
@@ -49,18 +56,30 @@
 
         <div class="user-admin-table-wrap">
             <table class="user-admin-table">
-                <thead><tr><th>Usuário</th><th>Dados</th><th>Último acesso</th><th>Permissão e status</th><th>Segurança</th></tr></thead>
+                <thead><tr><th>Usuário</th><th>Desempenho</th><th>Último acesso</th><th>Editar acesso</th><th>Segurança</th></tr></thead>
                 <tbody>
                 @forelse($users as $user)
                     <tr>
                         <td data-label="Usuário">
                             <div class="user-identity"><span>{{ strtoupper(substr($user->user_name, 0, 1)) }}</span><div><strong>{{ $user->user_name }}</strong>@if($user->id === session('user_id'))<small>Você</small>@endif</div></div>
                         </td>
-                        <td data-label="Dados"><strong>{{ $user->notes_count }}</strong> notas · <strong>{{ $user->categories_count }}</strong> categorias</td>
+                        <td data-label="Desempenho">
+                            @php($completionRate = $user->notes_count > 0 ? round(($user->completed_notes_count / $user->notes_count) * 100) : 0)
+                            <div class="user-performance-data">
+                                <span><strong>{{ $user->notes_count }}</strong> notas</span>
+                                <span><strong>{{ $user->completed_notes_count }}</strong> concluídas</span>
+                                <span><strong>{{ $user->recent_notes_count }}</strong> novas em 30 dias</span>
+                                <span><strong>{{ $user->trashed_notes_count }}</strong> na Lixeira</span>
+                                <span><strong>{{ $user->categories_count }}</strong> categorias</span>
+                                <div class="user-performance-rate"><i style="width: {{ $completionRate }}%"></i></div>
+                                <small>{{ $completionRate }}% de conclusão</small>
+                            </div>
+                        </td>
                         <td data-label="Último acesso">{{ $user->last_login_at?->format('d/m/Y H:i') ?? 'Nunca acessou' }}</td>
                         <td data-label="Permissão e status">
                             <form action="{{ secure_url(route('admin.users.update', [$user->id], false)) }}" method="POST" class="user-access-form">
                                 @csrf @method('PATCH')
+                                <input type="text" name="user_name" value="{{ $user->user_name }}" required maxlength="30" aria-label="Nome de {{ $user->user_name }}">
                                 <select name="role" aria-label="Função de {{ $user->user_name }}"><option value="user" @selected($user->role === 'user')>Usuário</option><option value="admin" @selected($user->role === 'admin')>Administrador</option></select>
                                 <select name="active" class="{{ $user->active ? 'is-active' : 'is-inactive' }}" aria-label="Status de {{ $user->user_name }}"><option value="1" @selected($user->active)>Ativo</option><option value="0" @selected(!$user->active)>Bloqueado</option></select>
                                 <button type="submit">Salvar</button>

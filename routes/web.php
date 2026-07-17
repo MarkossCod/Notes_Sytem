@@ -19,6 +19,8 @@ Route::get('/icons/{file}', function ($file) {
 
 Route::get('/login', [LoginController::class, 'show'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
+Route::get('/register', [LoginController::class, 'showRegister'])->name('register');
+Route::post('/register', [LoginController::class, 'register'])->name('register.store');
 
 Route::get('/recover', [LoginController::class, 'showRecover'])->name('recover');
 Route::post('/recover', [LoginController::class, 'recoverQuestion'])->name('recover.question');
