@@ -4,12 +4,28 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Note;
+use App\Models\NoteUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class HomepageStatsTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        NoteUser::create([
+            'user_name' => 'Markos',
+            'password' => Hash::make('StrongPass1!'),
+            'secret_question' => 'Pergunta',
+            'secret_answer' => Hash::make('resposta'),
+            'role' => 'admin',
+            'active' => true,
+        ]);
+    }
 
     /** Confirms that homepage counters include only the authenticated user's data. */
     public function test_homepage_displays_category_and_trash_totals(): void

@@ -43,11 +43,11 @@
         </div>
         <div class="field">
             <label>Nova Senha</label>
-            <input type="password" name="password" placeholder="Mínimo 4 caracteres" required autocomplete="off"/>
+            <input type="password" name="password" placeholder="8+ caracteres, maiúscula, número e símbolo" required autocomplete="new-password"/>
         </div>
         <div class="field">
             <label>Confirmar Nova Senha</label>
-            <input type="password" name="password_confirmation" placeholder="Repita a nova senha" required autocomplete="off"/>
+            <input type="password" name="password_confirmation" placeholder="Repita a nova senha" required autocomplete="new-password"/>
         </div>
         <button type="submit" class="btn">Redefinir Senha</button>
     </form>

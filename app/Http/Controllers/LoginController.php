@@ -2,160 +2,152 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\NoteUser;
+use App\Support\StrongPassword;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class LoginController extends Controller
 {
-    public function show()
+    private const MAX_LOGIN_ATTEMPTS = 5;
+    private const LOGIN_DECAY_SECONDS = 60;
+
+    public function show(Request $request): View|RedirectResponse
     {
-        if (session('user_name')) {
+        $user = NoteUser::where('user_name', $request->session()->get('user_name'))->first();
+
+        if ($user?->isActive()) {
             return redirect()->route('notes.index');
         }
+
+        if ($request->session()->has('user_name')) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
         return view('login');
     }
 
-    public function store(Request $request)
+    /** Authenticates an active account and throttles repeated failures. */
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'user_name' => 'required|min:2|max:30'
+        $credentials = $request->validate([
+            'user_name' => ['required', 'string', 'min:2', 'max:30'],
+            'password' => ['required', 'string'],
         ]);
 
-        $userName = trim($request->user_name);
-        $noteUser = NoteUser::where('user_name', $userName)->first();
+        $userName = trim($credentials['user_name']);
+        $throttleKey = $this->loginThrottleKey($request, $userName);
 
-        // Usuário novo — redireciona para criar senha
-        if (!$noteUser) {
-            session(['pending_user' => $userName]);
-            return redirect()->route('register');
+        if (RateLimiter::tooManyAttempts($throttleKey, self::MAX_LOGIN_ATTEMPTS)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+
+            return back()->withInput($request->only('user_name'))->withErrors([
+                'password' => "Muitas tentativas. Tente novamente em {$seconds} segundos.",
+            ]);
         }
 
-        // Usuário existe — valida senha direto aqui
-        if (!$request->filled('password') || !Hash::check($request->password, $noteUser->password)) {
-            return back()->withInput()->withErrors(['password' => 'Senha incorreta.']);
+        $user = NoteUser::where('user_name', $userName)->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            RateLimiter::hit($throttleKey, self::LOGIN_DECAY_SECONDS);
+
+            return back()->withInput($request->only('user_name'))->withErrors([
+                'password' => 'Usuário ou senha inválidos.',
+            ]);
         }
 
-        session(['user_name' => $userName]);
-        session()->forget('pending_user');
+        if (!$user->isActive()) {
+            RateLimiter::hit($throttleKey, self::LOGIN_DECAY_SECONDS);
+
+            return back()->withInput($request->only('user_name'))->withErrors([
+                'user_name' => 'Esta conta está inativa. Procure o administrador.',
+            ]);
+        }
+
+        RateLimiter::clear($throttleKey);
+        $request->session()->regenerate();
+        $request->session()->put([
+            'user_id' => $user->id,
+            'user_name' => $user->user_name,
+            'user_role' => $user->role,
+        ]);
+        $user->update(['last_login_at' => now()]);
 
         return redirect()->route('notes.index');
     }
 
-    public function showRegister()
-    {
-        // Acesso direto (link "Criar conta" no login): sem pending_user, mostra
-        // o formulário com o campo de nome. Acesso vindo do login (nome novo
-        // digitado lá): pending_user já está setado, nome vem pré-preenchido.
-        return view('register', [
-            'pendingUser' => session('pending_user'),
-        ]);
-    }
-
-    public function register(Request $request)
-    {
-        $pendingUser = session('pending_user');
-
-        $rules = [
-            'password'        => 'required|min:4|confirmed',
-            'secret_question' => 'required',
-            'secret_answer'   => 'required|min:2',
-        ];
-
-        // Sem pending_user (cadastro direto): também exige e valida o nome.
-        if (!$pendingUser) {
-            $rules['user_name'] = 'required|min:2|max:30|unique:note_users,user_name';
-        }
-
-        $request->validate($rules);
-
-        $userName = $pendingUser ?: trim($request->user_name);
-
-        NoteUser::create([
-            'user_name'       => $userName,
-            'password'        => Hash::make($request->password),
-            'secret_question' => $request->secret_question,
-            'secret_answer'   => strtolower(trim($request->secret_answer)),
-        ]);
-
-        session(['user_name' => $userName]);
-        session()->forget('pending_user');
-
-        return redirect()->route('notes.index');
-    }
-
-    public function showPassword()
-    {
-        if (!session('pending_user')) {
-            return redirect()->route('login');
-        }
-        return view('password');
-    }
-
-    public function checkPassword(Request $request)
-    {
-        $request->validate(['password' => 'required']);
-
-        $userName = session('pending_user');
-        $noteUser = NoteUser::where('user_name', $userName)->first();
-
-        if (!$noteUser || !Hash::check($request->password, $noteUser->password)) {
-            return back()->withErrors(['password' => 'Senha incorreta.']);
-        }
-
-        session(['user_name' => $userName]);
-        session()->forget('pending_user');
-
-        return redirect()->route('notes.index');
-    }
-
-    public function showRecover()
+    public function showRecover(): View
     {
         return view('recover');
     }
 
-    public function recoverQuestion(Request $request)
+    /** Displays the recovery question only for an active registered account. */
+    public function recoverQuestion(Request $request): View|RedirectResponse
     {
-        $request->validate(['user_name' => 'required']);
+        $request->validate(['user_name' => ['required', 'string', 'max:30']]);
 
-        $userName = trim($request->user_name);
-        $noteUser = NoteUser::where('user_name', $userName)->first();
+        $userName = trim($request->string('user_name')->value());
+        $user = NoteUser::where('user_name', $userName)->where('active', true)->first();
 
-        if (!$noteUser) {
-            return back()->withErrors(['user_name' => 'Usuário não encontrado.']);
+        if (!$user) {
+            return back()->withErrors(['user_name' => 'Usuário não encontrado ou conta inativa.']);
         }
 
-        session(['recover_user' => $userName]);
-        return view('recover_answer', ['question' => $noteUser->secret_question]);
+        $request->session()->put('recover_user_id', $user->id);
+
+        return view('recover_answer', ['question' => $user->secret_question]);
     }
 
-    public function recoverReset(Request $request)
+    /** Resets a password after validating the protected recovery answer. */
+    public function recoverReset(Request $request): RedirectResponse
     {
         $request->validate([
-            'secret_answer' => 'required',
-            'password'      => 'required|min:4|confirmed',
+            'secret_answer' => ['required', 'string'],
+            'password' => ['required', 'confirmed', StrongPassword::rule()],
         ]);
 
-        $userName = session('recover_user');
-        $noteUser = NoteUser::where('user_name', $userName)->first();
+        $user = NoteUser::whereKey($request->session()->get('recover_user_id'))
+            ->where('active', true)
+            ->first();
 
-        if (!$noteUser) {
+        if (!$user) {
             return redirect()->route('login');
         }
 
-        if (strtolower(trim($request->secret_answer)) !== $noteUser->secret_answer) {
+        $answer = strtolower(trim($request->string('secret_answer')->value()));
+        $recoveryKey = 'recovery|' . $user->id . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($recoveryKey, self::MAX_LOGIN_ATTEMPTS)) {
+            return back()->withErrors(['secret_answer' => 'Muitas tentativas de recuperação. Aguarde um minuto.']);
+        }
+
+        if (!Hash::check($answer, $user->secret_answer)) {
+            RateLimiter::hit($recoveryKey, self::LOGIN_DECAY_SECONDS);
             return back()->withErrors(['secret_answer' => 'Resposta incorreta.']);
         }
 
-        $noteUser->update(['password' => Hash::make($request->password)]);
-        session()->forget('recover_user');
+        RateLimiter::clear($recoveryKey);
+        $user->update(['password' => Hash::make($request->string('password')->value())]);
+        $request->session()->forget('recover_user_id');
 
         return redirect()->route('login')->with('success', 'Senha redefinida com sucesso!');
     }
 
-    public function logout()
+    public function logout(Request $request): RedirectResponse
     {
-        session()->forget('user_name');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('login');
+    }
+
+    private function loginThrottleKey(Request $request, string $userName): string
+    {
+        return Str::transliterate(Str::lower($userName)) . '|' . $request->ip();
     }
 }

@@ -3,12 +3,28 @@
 namespace Tests\Feature;
 
 use App\Models\Note;
+use App\Models\NoteUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class TrashTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        NoteUser::create([
+            'user_name' => 'Markos',
+            'password' => Hash::make('StrongPass1!'),
+            'secret_question' => 'Pergunta',
+            'secret_answer' => Hash::make('resposta'),
+            'role' => 'admin',
+            'active' => true,
+        ]);
+    }
 
     /** Verifies that deleting a note moves it to the authenticated user's trash. */
     public function test_deleting_a_note_moves_it_to_trash(): void

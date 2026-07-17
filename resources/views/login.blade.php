@@ -49,7 +49,7 @@
         <div class="field">
             <label>Senha</label>
             <div class="password-wrap">
-                <input type="password" name="password" id="passwordInput" placeholder="Digite sua senha" autocomplete="off"/>
+                <input type="password" name="password" id="passwordInput" placeholder="Digite sua senha" required autocomplete="current-password"/>
                 <button type="button" class="toggle-pass" onclick="toggleSenha()" aria-label="Mostrar/ocultar senha">
                     <svg id="iconOlho" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -63,9 +63,7 @@
 
     <a href="{{ secure_url(route('recover', [], false)) }}" class="btn-link">🔑 Esqueci minha senha</a>
 
-    <div class="auth-divider"><span>ou</span></div>
-
-    <a href="{{ secure_url(route('register', [], false)) }}" class="create-account-link">✨ Criar uma conta nova</a>
+    <div class="login-security-note">🔒 Contas são criadas somente pelo administrador.</div>
 </div>
 
 <div class="overlay" id="overlay">
@@ -118,6 +116,7 @@ function toggleSenha() {
 
 function handleEnter() {
     const name = document.getElementById('nameInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
     const btn = document.getElementById('enterBtn');
     const card = document.getElementById('loginCard');
     const overlay = document.getElementById('overlay');
@@ -125,10 +124,11 @@ function handleEnter() {
     const text = document.getElementById('overlayText');
     const sub = document.getElementById('overlaySub');
 
-    if (!name) {
+    if (!name || !password) {
         document.getElementById('nameInput').style.borderColor = '#e53935';
-        document.getElementById('nameInput').placeholder = 'Digite seu nome!';
+        document.getElementById('passwordInput').style.borderColor = '#e53935';
         setTimeout(() => { document.getElementById('nameInput').style.borderColor = '#FFE0B2'; }, 1500);
+        setTimeout(() => { document.getElementById('passwordInput').style.borderColor = '#FFE0B2'; }, 1500);
         return;
     }
 

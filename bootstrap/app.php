@@ -10,6 +10,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'note.auth' => \App\Http\Middleware\EnsureNoteUserAuthenticated::class,
+            'note.admin' => \App\Http\Middleware\EnsureAdministrator::class,
+        ]);
+
         $middleware->trustProxies(at: '*', headers: \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR |
             \Illuminate\Http\Request::HEADER_X_FORWARDED_HOST |
             \Illuminate\Http\Request::HEADER_X_FORWARDED_PORT |

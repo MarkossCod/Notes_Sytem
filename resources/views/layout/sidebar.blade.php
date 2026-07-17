@@ -18,7 +18,7 @@
         <div class="sidebar-avatar">{{ strtoupper(substr(session('user_name', 'U'), 0, 1)) }}</div>
         <div class="sidebar-user-info">
             <span class="sidebar-user-name">{{ session('user_name') }}</span>
-            <span class="sidebar-user-tag">Bem-vindo(a) de volta</span>
+            <span class="sidebar-user-tag">{{ session('user_role') === 'admin' ? 'Administrador' : 'Usuário' }}</span>
         </div>
     </div>
 
@@ -52,6 +52,14 @@
             <span class="sidebar-icon">🗑️</span> Lixeira
             <span class="sidebar-arrow">›</span>
         </a>
+
+        @if(session('user_role') === 'admin')
+        <a href="{{ secure_url(route('admin.users.index', [], false)) }}"
+           class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+            <span class="sidebar-icon">🛡️</span> Usuários
+            <span class="sidebar-arrow">›</span>
+        </a>
+        @endif
 
         <div class="sidebar-separator"></div>
 
