@@ -18,19 +18,17 @@ class CategoryController extends Controller
             return redirect()->route('login');
         }
 
-        $categories = Category::withCount('notes')
-            ->with(['notes.sections'])
+        $categories = Category::withCount([
+                'notes',
+                'notes as completed_notes_count' => fn ($query) => $query->where('status', 'concluida'),
+            ])
             ->where('user_name', $this->getUserName())
             ->orderBy('name')
             ->get();
 
         $totalCategories   = $categories->count();
         $notesCategorized  = $categories->sum('notes_count');
-        $notesConcluded    = $categories->sum(function ($category) {
-            return $category->notes->filter(function ($note) {
-                return $note->sections->count() > 0 && $note->sections->every(fn ($s) => $s->completed);
-            })->count();
-        });
+        $notesConcluded    = $categories->sum('completed_notes_count');
         $colorsUsed = $categories->pluck('color')->unique()->count();
 
         return view('layout.categories', compact(

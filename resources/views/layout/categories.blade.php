@@ -66,11 +66,6 @@
         </thead>
         <tbody>
             @foreach($categories as $category)
-            @php
-                $concluded = $category->notes->filter(function ($note) {
-                    return $note->sections->count() > 0 && $note->sections->every(fn ($s) => $s->completed);
-                })->count();
-            @endphp
             <tr data-name="{{ strtolower($category->name) }}">
                 <td>
                     <div class="cat-row-name">
@@ -93,7 +88,7 @@
                     <small>Notas</small>
                 </td>
                 <td class="cat-count">
-                    <strong>{{ $concluded }}</strong>
+                    <strong>{{ $category->completed_notes_count }}</strong>
                     <small>Concluídas</small>
                 </td>
                 <td>
