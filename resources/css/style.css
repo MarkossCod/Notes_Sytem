@@ -3744,3 +3744,62 @@ canvas#bg {
     .note-page-alert { align-items: flex-start; flex-wrap: wrap; }
     .note-page-alert > a { width: 100%; margin-left: 25px; }
 }
+
+/* Garante fundo uniforme e cobertura total do alerta de exclusão. */
+.note-delete-overlay {
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    background: rgba(34, 27, 22, .66) !important;
+    backdrop-filter: blur(2px);
+}
+.note-delete-confirm-modal { background: #fffdfb; }
+
+/* Neutraliza a margem global dos botões e nivela os controles da Lixeira. */
+.trash-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.trash-toolbar-actions .trash-sort,
+.trash-toolbar-actions .trash-view-toggle {
+    box-sizing: border-box;
+    height: 48px;
+    min-height: 48px;
+    margin: 0 !important;
+    align-self: center;
+}
+.trash-toolbar-actions .trash-view-toggle {
+    flex: 0 0 50px;
+    width: 50px;
+    padding: 0;
+}
+
+/* Cards adicionais transformam os indicadores em atalhos úteis da homepage. */
+.stat-card-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.stat-card-link:hover {
+    color: inherit;
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(72, 44, 24, .10);
+}
+.stat-card--categories .stat-icon { background: #fff3df; }
+.stat-card--trash .stat-icon { background: #fff0f0; }
+.stat-card-action {
+    display: inline-block;
+    margin-top: 11px;
+    color: #d96509;
+    font-size: 10.5px;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+    .trash-toolbar-actions .trash-sort { flex: 1 1 auto; }
+    .trash-toolbar-actions .trash-view-toggle { flex-basis: 48px; width: 48px; }
+}

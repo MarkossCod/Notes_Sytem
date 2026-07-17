@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -27,8 +28,18 @@ class NoteController extends Controller
         $recentNotesCount = $notes->filter(function ($n) {
             return \Carbon\Carbon::parse($n->created_day)->gte(now()->subDays(7));
         })->count();
+        $categoriesCount = Category::where('user_name', $this->getUserName())->count();
+        $trashNotesCount = Note::onlyTrashed()
+            ->where('user_name', $this->getUserName())
+            ->count();
 
-        return view('notes.index', compact('notes', 'totalNotes', 'recentNotesCount'));
+        return view('notes.index', compact(
+            'notes',
+            'totalNotes',
+            'recentNotesCount',
+            'categoriesCount',
+            'trashNotesCount'
+        ));
     }
 
     public function create()

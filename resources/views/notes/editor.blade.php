@@ -141,25 +141,6 @@
         </div>
     </form>
 
-    @if($isSaved)
-        {{-- Formulário independente evita formulários aninhados e envia a nota para a Lixeira. --}}
-        <form id="noteDeleteForm" action="{{ secure_url(route('notes.destroy', [$note->id], false)) }}" method="POST" hidden>
-            @csrf
-            @method('DELETE')
-        </form>
-
-        <div id="noteDeleteModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="noteDeleteTitle" onclick="closeNoteDeleteModal()">
-            <div class="note-delete-confirm-modal" onclick="event.stopPropagation()">
-                <span class="note-delete-confirm-icon" aria-hidden="true">🗑️</span>
-                <h2 id="noteDeleteTitle">Mover nota para a Lixeira?</h2>
-                <p>A nota <strong>“{{ $note->title }}”</strong> será removida da sua lista e poderá ser restaurada pela página Lixeira.</p>
-                <div class="note-delete-confirm-actions">
-                    <button type="button" class="ne-btn" onclick="closeNoteDeleteModal()">Cancelar</button>
-                    <button type="button" class="ne-btn ne-btn-danger-solid" id="noteDeleteConfirmBtn">Mover para a Lixeira</button>
-                </div>
-            </div>
-        </div>
-    @endif
 </div>
 
 <script>
@@ -381,17 +362,6 @@
         if (editing) document.getElementById('title').focus();
     }
     document.getElementById('neEditBtn').addEventListener('click', () => setEditMode(true));
-
-    // Controla a confirmação antes de mover a nota para a Lixeira.
-    const deleteModal = document.getElementById('noteDeleteModal');
-    document.getElementById('neDeleteBtn').addEventListener('click', () => deleteModal.classList.add('modal-active'));
-    document.getElementById('noteDeleteConfirmBtn').addEventListener('click', () => document.getElementById('noteDeleteForm').submit());
-    window.closeNoteDeleteModal = function () {
-        deleteModal.classList.remove('modal-active');
-    };
-    document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') window.closeNoteDeleteModal();
-    });
 
     setEditMode(@json($startEditing));
     @endif

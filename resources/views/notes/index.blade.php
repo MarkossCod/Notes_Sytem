@@ -28,6 +28,18 @@
         <div class="stat-value">{{ $recentNotesCount }}</div>
         <div class="stat-label">Notas nos últimos 7 dias</div>
     </div>
+    <a href="{{ secure_url(route('categories.index', [], false)) }}" class="stat-card stat-card-link stat-card--categories" aria-label="Abrir categorias">
+        <div class="stat-icon">📁</div>
+        <div class="stat-value">{{ $categoriesCount }}</div>
+        <div class="stat-label">Categorias criadas</div>
+        <span class="stat-card-action">Ver categorias →</span>
+    </a>
+    <a href="{{ secure_url(route('trash.index', [], false)) }}" class="stat-card stat-card-link stat-card--trash" aria-label="Abrir Lixeira">
+        <div class="stat-icon">🗑️</div>
+        <div class="stat-value">{{ $trashNotesCount }}</div>
+        <div class="stat-label">Notas na Lixeira</div>
+        <span class="stat-card-action">Abrir Lixeira →</span>
+    </a>
 </div>
 
 <div class="page-header" style="margin-top:8px;">
