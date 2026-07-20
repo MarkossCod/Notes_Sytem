@@ -1,4 +1,5 @@
 //
+// Aplica realce suave somente aos cards genericos renderizados na pagina.
 document.querySelectorAll('.card').forEach(card => {
 
     card.addEventListener('mouseenter', () => {

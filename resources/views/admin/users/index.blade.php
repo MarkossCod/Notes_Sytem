@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="user-admin-page">
+    {{-- Cabecalho e atalho para abrir o cadastro administrativo. --}}
     <header class="user-admin-header">
         <div>
             <span class="user-admin-kicker">🛡️ Administração</span>
@@ -18,6 +19,7 @@
         <div class="user-admin-alert user-admin-alert--error">⚠ {{ $errors->first() }}</div>
     @endif
 
+    {{-- Indicadores consolidados das contas cadastradas. --}}
     <section class="user-performance-summary" aria-label="Resumo dos usuários">
         <article><span class="user-performance-icon">👥</span><div><strong>{{ $metrics['total'] }}</strong><small>Usuários cadastrados</small></div></article>
         <article><span class="user-performance-icon is-green">✓</span><div><strong>{{ $metrics['active'] }}</strong><small>Contas ativas</small></div></article>
@@ -25,6 +27,7 @@
         <article><span class="user-performance-icon is-purple">🛡</span><div><strong>{{ $metrics['admins'] }}</strong><small>Administradores</small></div></article>
     </section>
 
+    {{-- Formulario recolhivel para criacao segura de usuarios. --}}
     <section class="user-create-card" id="userCreateCard" @if(!$errors->any()) hidden @endif>
         <div class="user-create-heading">
             <div><h2>Criar conta</h2><p>A senha deve ter ao menos 8 caracteres, maiúscula, minúscula, número e símbolo.</p></div>
@@ -48,6 +51,7 @@
         </form>
     </section>
 
+    {{-- Busca, desempenho, permissao e redefinicao de senha por usuario. --}}
     <section class="user-list-card">
         <form method="GET" action="{{ secure_url(route('admin.users.index', [], false)) }}" class="user-admin-search">
             <span>⌕</span>
@@ -111,6 +115,7 @@
 </div>
 
 <script>
+// Controla somente a abertura e o foco do formulario de novo usuario.
 (function () {
     const card = document.getElementById('userCreateCard');
     document.querySelector('[data-open-user-form]').addEventListener('click', () => {

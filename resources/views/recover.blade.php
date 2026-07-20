@@ -13,6 +13,7 @@
 <div class="floating" style="width:80px;height:80px;bottom:20px;right:30px;animation-delay:1.5s"></div>
 <div class="floating" style="width:50px;height:50px;top:40%;left:10px;animation-delay:.8s"></div>
 
+<!-- Primeira etapa da recuperacao: identifica a conta do usuario. -->
 <div class="card">
     <div class="logo-wrap">
         <svg viewBox="0 0 64 64" width="64" height="64">
@@ -55,6 +56,7 @@ let pts = Array.from({length: 25}, () => ({
     x: Math.random() * canvas.width, y: Math.random() * canvas.height,
     vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4, r: Math.random() * 3 + 1
 }));
+// Renderiza as particulas decorativas do fundo.
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     pts.forEach(p => {

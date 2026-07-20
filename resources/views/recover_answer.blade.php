@@ -29,12 +29,14 @@
     <div class="card-title">🔑 Recuperar Senha</div>
     <div class="card-sub">Responda a pergunta secreta</div>
 
+    <!-- A pergunta vem da sessao de recuperacao; a resposta nunca e exibida. -->
     <div class="question-box">❓ {{ $question }}</div>
 
     @if($errors->any())
         <div class="error-msg">{{ $errors->first() }}</div>
     @endif
 
+    <!-- Segunda etapa: valida a resposta e aplica a politica de senha forte. -->
     <form action="{{ secure_url(route('recover.reset', [], false)) }}" method="POST" autocomplete="off">
         @csrf
         <div class="field">
@@ -65,6 +67,7 @@ let pts = Array.from({length: 25}, () => ({
     x: Math.random() * canvas.width, y: Math.random() * canvas.height,
     vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4, r: Math.random() * 3 + 1
 }));
+// Renderiza as particulas decorativas do fundo.
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     pts.forEach(p => {

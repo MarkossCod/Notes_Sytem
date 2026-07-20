@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Cria as contas proprias do sistema e os dados de recuperacao de acesso. */
     public function up(): void
     {
         Schema::create('note_users', function (Blueprint $table) {
@@ -17,6 +18,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove a tabela de contas do sistema. */
     public function down(): void
     {
         Schema::dropIfExists('note_users');

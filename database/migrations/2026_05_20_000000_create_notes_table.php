@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Cria a estrutura principal que armazena titulo, data e conteudo das notas. */
     public function up(): void
     {
         Schema::create('notes', function (Blueprint $table) {
@@ -17,6 +18,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove a tabela principal de notas. */
     public function down(): void
     {
         Schema::dropIfExists('notes');

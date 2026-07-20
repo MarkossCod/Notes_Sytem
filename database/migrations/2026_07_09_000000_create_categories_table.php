@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Cria categorias personalizaveis e exclusivas por usuario. */
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
@@ -20,6 +21,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove a tabela de categorias. */
     public function down(): void
     {
         Schema::dropIfExists('categories');

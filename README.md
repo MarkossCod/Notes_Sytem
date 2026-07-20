@@ -1,66 +1,103 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Notes System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicação web para organizar notas pessoais com categorias, etiquetas, prioridade, status, Lixeira, painel de atividades e administração de usuários. O projeto usa Laravel no backend e Blade, JavaScript e CSS no frontend.
 
-## About Laravel
+## Funcionalidades
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- cadastro público e autenticação por sessão;
+- senhas fortes, limitação de tentativas e bloqueio de contas inativas;
+- perfis de usuário e administrador;
+- criação, edição, conclusão e visualização rápida de notas;
+- categorias exclusivas por usuário;
+- exclusão lógica, restauração e exclusão permanente pela Lixeira;
+- painel com indicadores, histórico e gráficos de 7, 30 ou 90 dias;
+- administração de contas, permissões, status e redefinição de senha;
+- instalação como PWA com manifesto, ícones e service worker.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Arquitetura
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Camada | Local | Responsabilidade |
+| --- | --- | --- |
+| Rotas | `routes/web.php` | Separa fluxos públicos, autenticados e administrativos. |
+| Controladores | `app/Http/Controllers` | Valida entradas, aplica regras e prepara as respostas. |
+| Modelos | `app/Models` | Representa contas, notas, categorias, atividades e relações. |
+| Serviços | `app/Services` | Registra movimentações sem acoplar auditoria aos controladores. |
+| Segurança | `app/Http/Middleware` e `app/Support` | Protege rotas, permissões e política de senha. |
+| Banco | `database/migrations` | Versiona a estrutura e preserva a evolução dos dados. |
+| Interface | `resources/views` | Renderiza as páginas Blade e seus componentes reutilizáveis. |
+| Estilos e scripts | `resources/css` e `resources/js` | Mantém identidade visual e interações globais. |
 
-## Learning Laravel
+O detalhamento dos módulos, regras e arquivos está em [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Requisitos
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.3 ou superior;
+- Composer;
+- Node.js 22 ou superior e npm;
+- MySQL/MariaDB para a configuração atual de produção;
+- extensões PHP PDO, PDO MySQL e Mbstring.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalação local
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm run build
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+No Windows, `Copy-Item .env.example .env` pode substituir o comando `cp`. Configure no `.env` a URL da aplicação e as credenciais do banco antes de executar as migrações.
 
-## Contributing
+## Segurança
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- As senhas são armazenadas por hash e nunca serializadas pelos modelos.
+- Cadastro, recuperação e redefinição exigem a política central de senha forte.
+- O login possui limitação de tentativas por usuário e endereço IP.
+- Rotas privadas usam `note.auth`; a gestão de usuários também exige `note.admin`.
+- Contas inativas não iniciam nem mantêm acesso às áreas protegidas.
+- Consultas de notas e categorias são limitadas ao usuário da sessão.
+- Formulários mutáveis usam token CSRF e logout por requisição POST.
 
-## Code of Conduct
+Em produção, use HTTPS, `APP_DEBUG=false`, uma `APP_KEY` exclusiva e credenciais fornecidas por variáveis de ambiente. Não versionar o arquivo `.env`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Banco de dados
 
-## Security Vulnerabilities
+As migrações devem ser executadas na ordem registrada pelo Laravel:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan migrate --force
+```
 
-## License
+Notas usam exclusão lógica. Excluir pela tela de edição apenas preenche `deleted_at`; excluir na Lixeira remove o registro definitivamente. A migração de atividades cria e preenche o histórico necessário ao Painel para instalações existentes.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# NOTES_SYSTEM
->>>>>>> a78ad935f4d2ef935cdfb9ddf99d8e4963dd7b06
-=======
-# Notes_Sytem
->>>>>>> 2a06d07ad8192e72ea9221552200388099b5ca2c
+## Testes e qualidade
+
+```bash
+php artisan test
+npm run build
+```
+
+Os testes de integração cobrem autenticação, autorização administrativa, métricas da página inicial, categorias, Painel e Lixeira.
+
+## Produção com Docker
+
+O `Dockerfile` instala dependências PHP e JavaScript, gera os recursos estáticos e configura o Apache para servir apenas `public`. O `docker-entrypoint.sh` aplica as migrações antes de iniciar o servidor.
+
+Variáveis mínimas de produção:
+
+- `APP_NAME`, `APP_ENV`, `APP_KEY`, `APP_URL` e `APP_DEBUG`;
+- `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD`;
+- configurações de sessão e cache compatíveis com a infraestrutura escolhida.
+
+O `render.yaml` contém apenas valores públicos. Chaves e senhas devem ser cadastradas como segredos no provedor de hospedagem.
+
+## Manutenção
+
+- novas regras de negócio devem permanecer nos controladores, serviços ou classes de suporte;
+- novas páginas privadas devem entrar no grupo `note.auth`;
+- recursos administrativos também devem usar `note.admin`;
+- alterações no banco devem ser feitas por novas migrações, nunca editando uma já aplicada;
+- ao mudar arquivos listados no service worker, atualize a versão de `CACHE_NAME`.

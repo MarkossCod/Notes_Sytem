@@ -17,6 +17,7 @@
     </div>
 @endif
 
+<!-- Indicadores calculados apenas com dados do usuario autenticado. -->
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon">📄</div>
@@ -47,6 +48,7 @@
     </div>
 </div>
 
+<!-- Grade de notas ativas com visualizacao rapida e acesso a edicao. -->
 <div class="notes-grid" id="notesGrid">
     @foreach($notes as $note)
     <div class="card fadeIn" data-title="{{ strtolower($note->title) }}">
@@ -84,6 +86,7 @@
 </div>
 
 <script>
+    // Centraliza a apresentacao dos valores persistidos de status e prioridade.
     const noteStatusLabels = {
         em_andamento: 'Em andamento',
         pendente: 'Pendente',
@@ -91,6 +94,7 @@
     };
     const notePriorityLabels = { baixa: 'Baixa', media: 'Média', alta: 'Alta' };
 
+    // Preenche e abre o modal com os dados codificados no card selecionado.
     function openNotePreview(button) {
         document.getElementById('notePreviewTitle').textContent = button.dataset.title;
         document.getElementById('notePreviewDate').textContent = button.dataset.date;
@@ -116,10 +120,12 @@
         document.getElementById('notePreviewModal').classList.add('modal-active');
     }
 
+    // Fecha a visualizacao sem alterar a nota.
     function closeNotePreview() {
         document.getElementById('notePreviewModal').classList.remove('modal-active');
     }
 
+    // Filtra os cards localmente pelo titulo digitado na busca superior.
     function filterNotes(query) {
         query = query.toLowerCase();
         document.querySelectorAll('#notesGrid .card').forEach(card => {
@@ -140,6 +146,7 @@
 @endsection
 
 @section('modals')
+<!-- Modal somente leitura mantido fora da grade para cobrir toda a viewport. -->
 <div id="notePreviewModal" class="modal-overlay note-preview-overlay" onclick="closeNotePreview()">
     <div class="modal-box note-preview-modal" onclick="event.stopPropagation()">
         <div class="note-preview-header">

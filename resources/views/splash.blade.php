@@ -8,6 +8,7 @@
 </head>
 <body class="splash-page">
 <canvas id="splash-canvas"></canvas>
+<!-- Identidade visual apresentada antes do redirecionamento para o login. -->
 <div class="splash-inner">
     <div class="splash-logo-wrap">
         <div class="logo-bg" id="logoBg"></div>
@@ -34,6 +35,7 @@
 const canvas = document.getElementById('splash-canvas');
 const ctx = canvas.getContext('2d');
 
+// Mantem a animacao proporcional ao tamanho da viewport.
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -41,6 +43,7 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
+// Desenha as particulas decorativas conforme o progresso da abertura.
 function drawParticles(progress) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const count = 18;

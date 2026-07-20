@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Adiciona imagens e tabelas as antigas divisoes de nota. */
     public function up(): void
     {
         Schema::table('sections', function (Blueprint $table) {
@@ -13,6 +14,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove os dados estruturados das antigas divisoes. */
     public function down(): void
     {
         Schema::table('sections', function (Blueprint $table) {

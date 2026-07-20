@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Associa cada nota ao nome usado para isolar os dados do usuario. */
     public function up(): void
     {
         Schema::table('notes', function (Blueprint $table) {
@@ -12,6 +13,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove a associacao da nota ao usuario. */
     public function down(): void
     {
         Schema::table('notes', function (Blueprint $table) {

@@ -1,8 +1,10 @@
+# Servico web construido a partir do Dockerfile do repositorio.
 services:
   - type: web
     name: notessytem
     env: docker
     plan: free
+    # Valores publicos; segredos de aplicacao e banco devem ser definidos no painel.
     envVars:
       - key: APP_NAME
         value: NOTESSYTEM

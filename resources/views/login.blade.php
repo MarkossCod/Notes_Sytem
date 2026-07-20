@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
 </head>
 <body class="login-page">
+<!-- Fundo animado decorativo; o formulario continua utilizavel sem ele. -->
 <canvas id="bg"></canvas>
 <div class="floating" style="width:120px;height:120px;top:-30px;left:-20px;animation-delay:0s"></div>
 <div class="floating" style="width:80px;height:80px;bottom:20px;right:30px;animation-delay:1.5s"></div>
@@ -40,6 +41,7 @@
         <div class="success-msg">{{ session('success') }}</div>
     @endif
 
+    <!-- Envia as credenciais ao fluxo autenticado e protegido por CSRF. -->
     <form id="loginForm" action="{{ secure_url(route('login.store', [], false)) }}" method="POST" autocomplete="off">
         @csrf
         <div class="field">
@@ -81,6 +83,7 @@
 <script>
 const canvas = document.getElementById('bg');
 const ctx = canvas.getContext('2d');
+// Mantem o fundo animado ajustado ao tamanho da janela.
 function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
@@ -111,6 +114,7 @@ function draw() {
 }
 draw();
 
+// Alterna apenas a visibilidade local da senha digitada.
 function toggleSenha() {
     const input = document.getElementById('passwordInput');
     input.type = input.type === 'password' ? 'text' : 'password';

@@ -16,6 +16,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    /** Conversoes do modelo de autenticacao padrao fornecido pelo Laravel. */
     protected function casts(): array
     {
         return [
@@ -24,6 +25,7 @@ class User extends Authenticatable
         ];
     }
 
+    /** Relacao mantida para compatibilidade com o modelo de usuario do framework. */
     public function notes()
     {
         return $this->hasMany(Note::class);

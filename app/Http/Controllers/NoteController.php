@@ -11,13 +11,16 @@ use Illuminate\Validation\Rule;
 
 class NoteController extends Controller
 {
+    /** Coordena o ciclo de vida das notas e registra suas movimentacoes no painel. */
     public function __construct(private readonly ActivityLogger $activityLogger) {}
 
+    /** Retorna a chave usada para isolar as notas do usuario autenticado. */
     private function getUserName()
     {
         return session('user_name');
     }
 
+    /** Lista as notas ativas e calcula os indicadores exibidos na pagina inicial. */
     public function index()
     {
         if (! session('user_name')) {
@@ -46,6 +49,7 @@ class NoteController extends Controller
         ));
     }
 
+    /** Prepara o formulario de criacao com as categorias ativas do usuario. */
     public function create()
     {
         if (! session('user_name')) {
@@ -59,6 +63,7 @@ class NoteController extends Controller
         return view('notes.create', compact('categories'));
     }
 
+    /** Valida, persiste e registra a criacao de uma nova nota. */
     public function store(Request $request)
     {
         if (! session('user_name')) {
@@ -86,6 +91,7 @@ class NoteController extends Controller
         return redirect()->route('notes.show', $note->id);
     }
 
+    /** Carrega uma nota do usuario para visualizacao ou edicao na interface unificada. */
     public function show($id)
     {
         if (! session('user_name')) {
@@ -100,6 +106,7 @@ class NoteController extends Controller
         return view('notes.show', compact('note', 'categories'));
     }
 
+    /** Atualiza a nota e diferencia no historico uma edicao de uma conclusao. */
     public function update(Request $request, $id)
     {
         $note = Note::where('user_name', $this->getUserName())->findOrFail($id);
@@ -129,6 +136,7 @@ class NoteController extends Controller
         return redirect()->route('notes.show', $note->id)->with('success', 'Nota atualizada!');
     }
 
+    /** Aplica exclusao logica para que a nota possa ser restaurada pela Lixeira. */
     public function destroy($id)
     {
         if (! session('user_name')) {

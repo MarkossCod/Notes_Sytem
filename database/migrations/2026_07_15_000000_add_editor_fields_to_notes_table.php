@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Adiciona status, prioridade e etiquetas usados pelo editor unificado. */
     public function up(): void
     {
         Schema::table('notes', function (Blueprint $table) {
@@ -15,6 +16,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove os campos complementares do editor. */
     public function down(): void
     {
         Schema::table('notes', function (Blueprint $table) {

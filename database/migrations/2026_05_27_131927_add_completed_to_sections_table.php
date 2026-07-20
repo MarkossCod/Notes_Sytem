@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Adiciona o estado de conclusao das antigas divisoes. */
     public function up()
     {
         Schema::table('sections', function (Blueprint $table) {
@@ -13,6 +14,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove o estado de conclusao das antigas divisoes. */
     public function down()
     {
         Schema::table('sections', function (Blueprint $table) {

@@ -10,6 +10,7 @@
     <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
     <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
     <script>
+        // Registra os recursos PWA quando o navegador oferece suporte.
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js');
         }
@@ -24,6 +25,7 @@
 </head>
 <body>
 
+<!-- Estrutura minima usada por paginas que nao exibem a navegacao principal. -->
 <div class="blank-shell">
     <div class="container page-transition">
         @yield('content')

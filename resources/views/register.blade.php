@@ -37,6 +37,7 @@
         <div class="error-msg">{{ $errors->first() }}</div>
     @endif
 
+    <!-- Cadastra a conta publica ou conclui um primeiro acesso predefinido. -->
     <form action="{{ secure_url(route('register.store', [], false)) }}" method="POST" autocomplete="off">
         @csrf
         @if(!$pendingUser)
@@ -82,6 +83,7 @@ let pts = Array.from({length: 25}, () => ({
     x: Math.random() * canvas.width, y: Math.random() * canvas.height,
     vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4, r: Math.random() * 3 + 1
 }));
+// Renderiza as particulas decorativas do fundo.
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     pts.forEach(p => {

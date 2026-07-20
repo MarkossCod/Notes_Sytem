@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Cria as divisoes historicas vinculadas a uma nota com exclusao em cascata. */
     public function up(): void
     {
         Schema::create('sections', function (Blueprint $table) {
@@ -17,6 +18,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove a tabela historica de divisoes. */
     public function down(): void
     {
         Schema::dropIfExists('sections');

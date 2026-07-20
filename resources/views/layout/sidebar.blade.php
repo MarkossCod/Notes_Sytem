@@ -1,4 +1,5 @@
 <aside class="sidebar" id="sidebar">
+    {{-- Identidade visual fixa da navegacao principal. --}}
     <div class="sidebar-brand">
         <svg viewBox="0 0 80 80" width="34" height="34">
             <rect x="8" y="16" width="64" height="54" rx="7" fill="white" opacity="0.95"/>
@@ -14,6 +15,7 @@
         <span>NOTESSYTEM</span>
     </div>
 
+    {{-- Resume a conta e a funcao armazenadas na sessao atual. --}}
     <div class="sidebar-user">
         <div class="sidebar-avatar">{{ strtoupper(substr(session('user_name', 'U'), 0, 1)) }}</div>
         <div class="sidebar-user-info">
@@ -22,6 +24,7 @@
         </div>
     </div>
 
+    {{-- Links privados; o item administrativo e renderizado somente para administradores. --}}
     <nav class="sidebar-nav">
         <a href="{{ secure_url(route('notes.index', [], false)) }}"
            class="sidebar-link {{ request()->routeIs('notes.index') ? 'active' : '' }}">
@@ -70,6 +73,7 @@
         </a>
     </nav>
 
+    {{-- O logout usa POST e protecao CSRF para encerrar a sessao. --}}
     <div class="sidebar-footer">
         <form action="{{ secure_url(route('logout', [], false)) }}" method="POST">
             @csrf

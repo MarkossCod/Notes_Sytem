@@ -8,13 +8,16 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    /** Gerencia categorias sempre dentro do escopo do usuario autenticado. */
     public function __construct(private readonly ActivityLogger $activityLogger) {}
 
+    /** Retorna a chave usada para isolar os dados do usuario na sessao atual. */
     private function getUserName()
     {
         return session('user_name');
     }
 
+    /** Exibe as categorias e os indicadores calculados para a pagina de gestao. */
     public function index()
     {
         if (! session('user_name')) {
@@ -43,6 +46,7 @@ class CategoryController extends Controller
         ));
     }
 
+    /** Valida e cria uma categoria pertencente ao usuario autenticado. */
     public function store(Request $request)
     {
         if (! session('user_name')) {
@@ -69,6 +73,7 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Categoria criada com sucesso!');
     }
 
+    /** Atualiza somente uma categoria que pertence ao usuario autenticado. */
     public function update(Request $request, $id)
     {
         $category = Category::where('user_name', $this->getUserName())->findOrFail($id);
@@ -92,6 +97,7 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Categoria atualizada!');
     }
 
+    /** Alterna a disponibilidade da categoria sem remover seu historico. */
     public function toggle($id)
     {
         $category = Category::where('user_name', $this->getUserName())->findOrFail($id);
@@ -102,6 +108,7 @@ class CategoryController extends Controller
         return back();
     }
 
+    /** Remove a categoria; as notas relacionadas permanecem sem categoria. */
     public function destroy($id)
     {
         $category = Category::where('user_name', $this->getUserName())->findOrFail($id);
