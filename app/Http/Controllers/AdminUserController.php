@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use App\Models\NoteUser;
+use App\Services\ActivityLogger;
 use App\Support\StrongPassword;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +15,8 @@ use Illuminate\View\View;
 
 class AdminUserController extends Controller
 {
+    public function __construct(private readonly ActivityLogger $activityLogger) {}
+
     /** Lists accounts with their application data totals. */
     public function index(Request $request): View
     {
@@ -69,13 +73,17 @@ class AdminUserController extends Controller
             'secret_answer' => ['required', 'string', 'min:2', 'max:255'],
         ]);
 
-        NoteUser::create([
+        $user = NoteUser::create([
             'user_name' => trim($validated['user_name']),
             'password' => Hash::make($validated['password']),
             'secret_question' => $validated['secret_question'],
             'secret_answer' => Hash::make(strtolower(trim($validated['secret_answer']))),
             'role' => $validated['role'],
             'active' => true,
+        ]);
+
+        $this->activityLogger->record('user_created', "Cadastrou o usuário \"{$user->user_name}\".", $user, [
+            'managed_user' => $user->user_name,
         ]);
 
         return back()->with('success', 'Usuário criado com segurança.');
@@ -97,7 +105,7 @@ class AdminUserController extends Controller
         ]);
 
         $removesAdminAccess = $user->isAdmin()
-            && ($validated['role'] !== 'admin' || !(bool) $validated['active']);
+            && ($validated['role'] !== 'admin' || ! (bool) $validated['active']);
 
         if ($removesAdminAccess && NoteUser::where('role', 'admin')->where('active', true)->count() <= 1) {
             return back()->withErrors(['users' => 'O sistema precisa manter pelo menos um administrador ativo.']);
@@ -114,6 +122,7 @@ class AdminUserController extends Controller
             if ($oldUserName !== $newUserName) {
                 DB::table('notes')->where('user_name', $oldUserName)->update(['user_name' => $newUserName]);
                 DB::table('categories')->where('user_name', $oldUserName)->update(['user_name' => $newUserName]);
+                Activity::where('user_name', $oldUserName)->update(['user_name' => $newUserName]);
             }
 
             $user->update([
@@ -130,6 +139,10 @@ class AdminUserController extends Controller
             ]);
         }
 
+        $this->activityLogger->record('user_updated', "Atualizou o usuário \"{$newUserName}\".", $user, [
+            'managed_user' => $newUserName,
+        ]);
+
         return back()->with('success', 'Permissões do usuário atualizadas.');
     }
 
@@ -141,6 +154,10 @@ class AdminUserController extends Controller
         ]);
 
         $user->update(['password' => Hash::make($validated['password'])]);
+
+        $this->activityLogger->record('user_password_reset', "Redefiniu a senha de \"{$user->user_name}\".", $user, [
+            'managed_user' => $user->user_name,
+        ]);
 
         return back()->with('success', "Senha de {$user->user_name} redefinida.");
     }

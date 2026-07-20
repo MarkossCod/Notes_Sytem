@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -16,10 +17,12 @@ class TrashController extends Controller
     /** Number of days a note remains available for restoration. */
     private const RETENTION_DAYS = 7;
 
+    public function __construct(private readonly ActivityLogger $activityLogger) {}
+
     /** Displays the current user's deleted notes and trash statistics. */
     public function index(Request $request): View|RedirectResponse
     {
-        if (!session('user_name')) {
+        if (! session('user_name')) {
             return redirect()->route('login');
         }
 
@@ -36,7 +39,7 @@ class TrashController extends Controller
                 ->where('user_name', session('user_name'));
 
             if ($search = trim($request->string('search')->value())) {
-                $query->where('title', 'like', '%' . $search . '%');
+                $query->where('title', 'like', '%'.$search.'%');
             }
 
             $notes = $query->orderBy('deleted_at', $direction)
@@ -64,15 +67,19 @@ class TrashController extends Controller
     /** Restores one deleted note owned by the current user. */
     public function restore(int $id): RedirectResponse
     {
-        if (!session('user_name')) {
+        if (! session('user_name')) {
             return redirect()->route('login');
         }
 
         try {
-            $this->findOwnedDeletedNote($id)->restore();
+            $note = $this->findOwnedDeletedNote($id);
+            $note->restore();
+            $this->activityLogger->record('note_restored', "Restaurou a nota \"{$note->title}\".", $note);
+
             return back()->with('success', 'Nota restaurada com sucesso.');
         } catch (Throwable $exception) {
             Log::error('Falha ao restaurar nota.', ['note_id' => $id, 'exception' => $exception]);
+
             return back()->with('error', 'Não foi possível restaurar a nota.');
         }
     }
@@ -80,15 +87,20 @@ class TrashController extends Controller
     /** Permanently removes one deleted note after user confirmation. */
     public function destroy(int $id): RedirectResponse
     {
-        if (!session('user_name')) {
+        if (! session('user_name')) {
             return redirect()->route('login');
         }
 
         try {
-            $this->findOwnedDeletedNote($id)->forceDelete();
+            $note = $this->findOwnedDeletedNote($id);
+            $noteTitle = $note->title;
+            $note->forceDelete();
+            $this->activityLogger->record('note_permanently_deleted', "Excluiu definitivamente a nota \"{$noteTitle}\".");
+
             return back()->with('success', 'Nota excluída permanentemente.');
         } catch (Throwable $exception) {
             Log::error('Falha ao excluir nota permanentemente.', ['note_id' => $id, 'exception' => $exception]);
+
             return back()->with('error', 'Não foi possível excluir a nota permanentemente.');
         }
     }
@@ -96,20 +108,26 @@ class TrashController extends Controller
     /** Permanently removes all deleted notes owned by the current user. */
     public function empty(): RedirectResponse
     {
-        if (!session('user_name')) {
+        if (! session('user_name')) {
             return redirect()->route('login');
         }
 
         try {
+            $deletedCount = Note::onlyTrashed()->where('user_name', session('user_name'))->count();
             DB::transaction(function (): void {
                 Note::onlyTrashed()
                     ->where('user_name', session('user_name'))
                     ->forceDelete();
             });
 
+            $this->activityLogger->record('trash_emptied', "Esvaziou a lixeira com {$deletedCount} nota(s).", metadata: [
+                'deleted_count' => $deletedCount,
+            ]);
+
             return back()->with('success', 'Lixeira esvaziada com sucesso.');
         } catch (Throwable $exception) {
             Log::error('Falha ao esvaziar a lixeira.', ['exception' => $exception]);
+
             return back()->with('error', 'Não foi possível esvaziar a lixeira.');
         }
     }
@@ -136,13 +154,13 @@ class TrashController extends Controller
     private function formatBytes(int $bytes): string
     {
         if ($bytes < 1024) {
-            return $bytes . ' B';
+            return $bytes.' B';
         }
 
         if ($bytes < 1048576) {
-            return number_format($bytes / 1024, 1, ',', '.') . ' KB';
+            return number_format($bytes / 1024, 1, ',', '.').' KB';
         }
 
-        return number_format($bytes / 1048576, 1, ',', '.') . ' MB';
+        return number_format($bytes / 1048576, 1, ',', '.').' MB';
     }
 }

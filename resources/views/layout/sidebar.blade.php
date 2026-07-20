@@ -43,10 +43,11 @@
             <span class="sidebar-icon">📁</span> Categorias
             <span class="sidebar-arrow">›</span>
         </a>
-        <span class="sidebar-link disabled" title="Em breve">
-            <span class="sidebar-icon">⭐</span> Favoritos
-            <span class="sidebar-soon">em breve</span>
-        </span>
+        <a href="{{ secure_url(route('panel.index', [], false)) }}"
+           class="sidebar-link {{ request()->routeIs('panel.*') ? 'active' : '' }}">
+            <span class="sidebar-icon">📊</span> Painel
+            <span class="sidebar-arrow">›</span>
+        </a>
         <a href="{{ secure_url(route('trash.index', [], false)) }}"
            class="sidebar-link {{ request()->routeIs('trash.*') ? 'active' : '' }}">
             <span class="sidebar-icon">🗑️</span> Lixeira

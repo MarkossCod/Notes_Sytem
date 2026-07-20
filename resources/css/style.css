@@ -3922,3 +3922,101 @@ canvas#bg {
     .user-performance-data { min-width: min(220px, 60vw); }
     .user-access-form { display: flex; }
 }
+
+/* Painel pessoal: indicadores, gráfico e histórico compartilham o padrão visual do sistema. */
+.panel-page { color: #292522; }
+.panel-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 22px; }
+.panel-kicker { display: block; margin-bottom: 6px; color: #e26708; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.panel-header h1 { margin: 0; font-size: 28px; letter-spacing: -.02em; }
+.panel-header p { margin: 7px 0 0; color: #7d7772; font-size: 12.5px; }
+.panel-periods { display: flex; gap: 5px; padding: 4px; border: 1px solid #eadfd6; border-radius: 10px; background: #fff; }
+.panel-periods a { padding: 8px 12px; border-radius: 7px; color: #77716c; font-size: 11px; font-weight: 700; text-decoration: none; }
+.panel-periods a:hover { color: #d96509; background: #fff5ec; }
+.panel-periods a.is-active { color: #fff; background: #ff7200; box-shadow: 0 3px 8px rgba(255, 114, 0, .22); }
+
+/* Reusable summary cards expose the current state of the account. */
+.panel-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px; }
+.panel-stat-card { display: flex; align-items: center; gap: 13px; min-height: 108px; padding: 19px; border: 1px solid #ede4dd; border-radius: 14px; background: #fff; box-shadow: 0 3px 16px rgba(72, 45, 24, .045); }
+.panel-stat-card > div { display: flex; flex-direction: column; min-width: 0; }
+.panel-stat-icon { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; border-radius: 12px; color: #dc6507; background: #fff0e3; font-size: 19px; font-weight: 800; }
+.panel-stat-card strong { color: #24201e; font-size: 24px; line-height: 1; }
+.panel-stat-card span:not(.panel-stat-icon) { margin-top: 6px; color: #4f4a46; font-size: 11.5px; font-weight: 700; }
+.panel-stat-card small { margin-top: 3px; overflow: hidden; color: #96908b; font-size: 9.5px; text-overflow: ellipsis; white-space: nowrap; }
+.panel-stat-card--green .panel-stat-icon { color: #2e8747; background: #eaf7ee; }
+.panel-stat-card--purple .panel-stat-icon { color: #7751ae; background: #f2ecfb; }
+.panel-stat-card--red .panel-stat-icon { color: #c84747; background: #fff0f0; }
+
+/* Dashboard chart and progress indicator use native CSS to avoid runtime dependencies. */
+.panel-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(250px, .72fr); gap: 16px; margin-bottom: 16px; }
+.panel-card { border: 1px solid #ede4dd; border-radius: 14px; background: #fff; box-shadow: 0 3px 16px rgba(72, 45, 24, .045); }
+.panel-chart-card, .panel-progress-card { min-height: 300px; padding: 20px; }
+.panel-card-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.panel-card-heading span { color: #e26708; font-size: 9.5px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+.panel-card-heading h2 { margin: 5px 0 0; font-size: 16px; }
+.panel-card-heading > strong { padding: 8px 11px; border-radius: 9px; color: #d76005; background: #fff1e5; font-size: 18px; }
+.panel-chart { display: flex; align-items: flex-end; gap: clamp(3px, .65vw, 9px); height: 205px; margin-top: 19px; padding-top: 20px; border-bottom: 1px solid #eee6df; background: repeating-linear-gradient(to bottom, #f5f0ec 0, #f5f0ec 1px, transparent 1px, transparent 48px); }
+.panel-chart-column { position: relative; display: flex; flex: 1 1 0; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; min-width: 3px; cursor: help; }
+.panel-chart-column i { display: block; width: 100%; max-width: 22px; height: var(--panel-bar-height); min-height: 5px; border-radius: 5px 5px 2px 2px; background: linear-gradient(180deg, #ff994a, #ff7200); transition: filter .18s ease, transform .18s ease; transform-origin: bottom; }
+.panel-chart-column:hover i { filter: saturate(1.15); transform: scaleX(1.14); }
+.panel-chart-column small { position: absolute; top: calc(100% + 6px); color: #9a938d; font-size: 8px; white-space: nowrap; }
+.panel-chart-value { position: absolute; bottom: calc(var(--panel-bar-height) + 5px); color: #d45e02; font-size: 8px; font-weight: 800; opacity: 0; transition: opacity .18s ease; }
+.panel-chart-column:hover .panel-chart-value { opacity: 1; }
+.panel-progress-card { display: flex; flex-direction: column; align-items: center; }
+.panel-progress-card .panel-card-heading { align-self: stretch; }
+.panel-progress-ring { position: relative; display: grid; place-items: center; width: 142px; height: 142px; margin: 24px auto 16px; border-radius: 50%; background: conic-gradient(#ff7200 calc(var(--panel-progress) * 1%), #f2e9e2 0); }
+.panel-progress-ring::before { content: ''; position: absolute; width: 108px; height: 108px; border-radius: 50%; background: #fff; }
+.panel-progress-ring > div { z-index: 1; display: flex; flex-direction: column; align-items: center; }
+.panel-progress-ring strong { font-size: 25px; }
+.panel-progress-ring span { margin-top: 3px; color: #8d8680; font-size: 9px; }
+.panel-progress-card > p { margin: 0; color: #817a74; text-align: center; font-size: 10.5px; }
+
+/* Activity controls filter the user timeline instantly on the client. */
+.panel-activity-card { overflow: hidden; }
+.panel-activity-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; padding: 20px; border-bottom: 1px solid #eee6df; }
+.panel-activity-header h2 { margin: 0; font-size: 17px; }
+.panel-filters { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.panel-filters button { width: auto; min-height: 31px; margin: 0; padding: 6px 10px; border: 1px solid #e8ded6; border-radius: 8px; color: #706964; background: #fff; font-size: 9.5px; font-weight: 700; }
+.panel-filters button:hover { color: #d86105; border-color: #ffc796; background: #fff8f2; }
+.panel-filters button.is-active { color: #fff; border-color: #ff7200; background: #ff7200; }
+.panel-filters em { margin-left: 4px; font-style: normal; opacity: .72; }
+.panel-timeline { padding: 0 20px; }
+.panel-activity-item { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 15px 0; border-bottom: 1px solid #f1ebe6; }
+.panel-activity-item[hidden] { display: none; }
+.panel-activity-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: #d86005; background: #fff0e3; font-size: 16px; font-weight: 800; }
+.panel-activity-icon--categorias { color: #7150aa; background: #f2edfa; }
+.panel-activity-icon--lixeira { color: #c23f3f; background: #fff0f0; }
+.panel-activity-icon--acessos { color: #287645; background: #eaf7ee; }
+.panel-activity-icon--administracao { color: #356f9c; background: #eaf4fb; }
+.panel-activity-item strong { color: #37322f; font-size: 11.5px; }
+.panel-activity-item p { margin: 4px 0 0; color: #88817b; font-size: 10.5px; }
+.panel-activity-item time { color: #716a65; text-align: right; font-size: 9.5px; font-weight: 700; }
+.panel-activity-item time small { display: block; margin-top: 3px; color: #aaa39d; font-weight: 500; }
+.panel-empty { padding: 42px 20px; color: #8d8680; text-align: center; }
+.panel-empty > span { display: block; margin-bottom: 8px; font-size: 28px; }
+.panel-empty h3 { margin: 0; color: #3b3632; font-size: 15px; }
+.panel-empty p { margin: 7px 0 15px; font-size: 10.5px; }
+.panel-empty a { display: inline-block; padding: 8px 12px; border-radius: 7px; color: #fff; background: #ff7200; font-size: 10px; font-weight: 800; text-decoration: none; }
+.panel-filter-empty { padding: 30px 20px; color: #96908b; text-align: center; font-size: 11px; }
+
+@media (max-width: 1000px) {
+    .panel-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .panel-grid { grid-template-columns: 1fr; }
+    .panel-progress-card { min-height: auto; }
+}
+
+@media (max-width: 720px) {
+    .panel-header, .panel-activity-header { flex-direction: column; align-items: stretch; }
+    .panel-periods, .panel-periods a { flex: 1; text-align: center; }
+    .panel-filters { justify-content: flex-start; }
+    .panel-chart-card { padding-inline: 14px; }
+}
+
+@media (max-width: 520px) {
+    .panel-stats { grid-template-columns: 1fr; }
+    .panel-stat-card { min-height: 92px; }
+    .panel-chart { gap: 2px; }
+    .panel-chart-column small { display: none; }
+    .panel-activity-item { grid-template-columns: 36px minmax(0, 1fr); }
+    .panel-activity-item time { grid-column: 2; text-align: left; }
+    .panel-activity-item time small { display: inline; margin-left: 4px; }
+}

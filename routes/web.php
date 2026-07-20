@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TrashController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\PanelController;
 
 Route::get('/', function () {
     return view('splash');
@@ -29,6 +30,7 @@ Route::post('/recover/answer', [LoginController::class, 'recoverReset'])->name('
 
 Route::middleware('note.auth')->group(function (): void {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/panel', [PanelController::class, 'index'])->name('panel.index');
 
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
     Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
