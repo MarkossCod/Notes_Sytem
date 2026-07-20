@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\Category;
 use App\Models\Note;
 use App\Models\NoteUser;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -120,5 +121,31 @@ class PanelDashboardTest extends TestCase
             ->assertSee('data-chart-type="bars"', false)
             ->assertSee('data-chart-type="line"', false)
             ->assertSee('data-chart-type="area"', false);
+    }
+
+    /** Confirms source-table dates feed note and category series even without activity-log records. */
+    public function test_panel_uses_existing_note_and_category_dates_in_chart(): void
+    {
+        $noteDate = now()->subDays(4)->toDateString();
+        $categoryDate = now()->subDays(2);
+
+        Note::create([
+            'user_name' => 'Markos',
+            'title' => 'Nota histórica',
+            'created_day' => $noteDate,
+        ]);
+
+        $category = Category::create(['user_name' => 'Markos', 'name' => 'Histórico']);
+        $category->forceFill(['created_at' => $categoryDate, 'updated_at' => $categoryDate])->save();
+
+        $this->withSession(['user_name' => 'Markos'])
+            ->get(route('panel.index', ['period' => 30]))
+            ->assertOk()
+            ->assertViewHas('chartTotals', fn (array $totals): bool => $totals['notes'] === 1
+                && $totals['categories'] === 1)
+            ->assertViewHas('summary', fn (array $summary): bool => $summary['latest_note_date'] === Carbon::parse($noteDate)->format('d/m/Y')
+                && $summary['latest_category_date'] === $categoryDate->format('d/m/Y'))
+            ->assertSee('Notas criadas')
+            ->assertSee('Categorias criadas');
     }
 }

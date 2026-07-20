@@ -3955,6 +3955,10 @@ canvas#bg {
 .panel-card-heading h2 { margin: 5px 0 0; font-size: 16px; }
 .panel-card-heading > strong, .panel-chart-heading-actions > strong { padding: 8px 11px; border-radius: 9px; color: #d76005; background: #fff1e5; font-size: 18px; }
 .panel-chart-heading-actions { display: flex; align-items: center; gap: 10px; }
+.panel-chart-metric { display: flex; flex-direction: column; gap: 4px; }
+.panel-chart-metric > span { color: #9a918a; font-size: 8px; letter-spacing: .06em; }
+.panel-chart-metric select { min-width: 132px; height: 36px; padding: 0 28px 0 10px; border: 1px solid #eadfd6; border-radius: 8px; color: #5f5853; background: #fff; font-size: 9.5px; font-weight: 700; outline: 0; }
+.panel-chart-metric select:focus { border-color: #ff9b50; box-shadow: 0 0 0 3px rgba(255, 114, 0, .11); }
 .panel-chart-types { display: flex; gap: 4px; padding: 3px; border: 1px solid #eadfd6; border-radius: 9px; background: #faf7f4; }
 .panel-chart-types button { display: inline-flex; align-items: center; gap: 5px; width: auto; min-height: 30px; margin: 0; padding: 6px 9px; border: 0; border-radius: 6px; color: #7c746e; background: transparent; font-size: 9.5px; font-weight: 700; }
 .panel-chart-types button:hover { color: #d86105; background: #fff; }
@@ -4022,7 +4026,7 @@ canvas#bg {
     .panel-filters { justify-content: flex-start; }
     .panel-chart-card { padding-inline: 14px; }
     .panel-chart-card .panel-card-heading { flex-direction: column; }
-    .panel-chart-heading-actions { width: 100%; justify-content: space-between; }
+    .panel-chart-heading-actions { width: 100%; flex-wrap: wrap; justify-content: space-between; }
 }
 
 @media (max-width: 520px) {
@@ -4030,6 +4034,8 @@ canvas#bg {
     .panel-stat-card { min-height: 92px; }
     .panel-chart { height: 190px; }
     .panel-chart-types button { padding-inline: 7px; font-size: 8.5px; }
+    .panel-chart-metric { width: 100%; }
+    .panel-chart-metric select { width: 100%; }
     .panel-chart-caption { margin-left: 0; }
     .panel-activity-item { grid-template-columns: 36px minmax(0, 1fr); }
     .panel-activity-item time { grid-column: 2; text-align: left; }

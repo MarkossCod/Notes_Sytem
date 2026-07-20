@@ -24,6 +24,8 @@ class PanelController extends Controller
         $notes = Note::query()->where('user_name', $userName);
         $totalNotes = (clone $notes)->count();
         $completedNotes = (clone $notes)->where('status', 'concluida')->count();
+        $latestNoteDay = Note::withTrashed()->where('user_name', $userName)->max('created_day');
+        $latestCategoryDate = Category::where('user_name', $userName)->max('created_at');
 
         $summary = [
             'notes' => $totalNotes,
@@ -32,6 +34,8 @@ class PanelController extends Controller
             'trash' => Note::onlyTrashed()->where('user_name', $userName)->count(),
             'completion_rate' => $totalNotes > 0 ? (int) round(($completedNotes / $totalNotes) * 100) : 0,
             'movements' => Activity::where('user_name', $userName)->where('created_at', '>=', $start)->count(),
+            'latest_note_date' => $latestNoteDay ? Carbon::parse($latestNoteDay)->format('d/m/Y') : null,
+            'latest_category_date' => $latestCategoryDate ? Carbon::parse($latestCategoryDate)->format('d/m/Y') : null,
         ];
 
         $dailyTotals = Activity::query()
@@ -41,7 +45,22 @@ class PanelController extends Controller
             ->groupBy('activity_date')
             ->pluck('total', 'activity_date');
 
-        $dailyChart = collect(range(0, $period - 1))->map(function (int $offset) use ($start, $dailyTotals): array {
+        // Creation series come from the source tables so older notes and categories also appear on the dashboard.
+        $noteTotals = Note::withTrashed()
+            ->where('user_name', $userName)
+            ->where('created_day', '>=', $start->toDateString())
+            ->selectRaw('created_day as activity_date, COUNT(*) as total')
+            ->groupBy('created_day')
+            ->pluck('total', 'activity_date');
+
+        $categoryTotals = Category::query()
+            ->where('user_name', $userName)
+            ->where('created_at', '>=', $start)
+            ->selectRaw('DATE(created_at) as activity_date, COUNT(*) as total')
+            ->groupBy('activity_date')
+            ->pluck('total', 'activity_date');
+
+        $dailyChart = collect(range(0, $period - 1))->map(function (int $offset) use ($start, $dailyTotals, $noteTotals, $categoryTotals): array {
             $date = $start->copy()->addDays($offset);
 
             return [
@@ -49,6 +68,9 @@ class PanelController extends Controller
                 'label' => $date->format('d/m'),
                 'tooltip' => $date->format('d/m/Y'),
                 'total' => (int) ($dailyTotals[$date->format('Y-m-d')] ?? 0),
+                'movements' => (int) ($dailyTotals[$date->format('Y-m-d')] ?? 0),
+                'notes' => (int) ($noteTotals[$date->format('Y-m-d')] ?? 0),
+                'categories' => (int) ($categoryTotals[$date->format('Y-m-d')] ?? 0),
             ];
         });
 
@@ -64,9 +86,18 @@ class PanelController extends Controller
                     'label' => $firstDate->format('d/m'),
                     'tooltip' => $firstDate->format('d/m').' a '.$lastDate->format('d/m/Y'),
                     'total' => (int) $week->sum('total'),
+                    'movements' => (int) $week->sum('movements'),
+                    'notes' => (int) $week->sum('notes'),
+                    'categories' => (int) $week->sum('categories'),
                 ];
             })->values()
             : $dailyChart;
+
+        $chartTotals = [
+            'movements' => (int) $chart->sum('movements'),
+            'notes' => (int) $chart->sum('notes'),
+            'categories' => (int) $chart->sum('categories'),
+        ];
 
         $recentActivities = Activity::query()
             ->where('user_name', $userName)
@@ -82,6 +113,7 @@ class PanelController extends Controller
             'summary',
             'chart',
             'chartGranularity',
+            'chartTotals',
             'recentActivities',
             'groupTotals',
             'period',

@@ -19,9 +19,9 @@
 
     {{-- Current-state indicators complement the historical activity data. --}}
     <section class="panel-stats" aria-label="Indicadores principais">
-        <x-panel.stat-card icon="📝" :value="$summary['notes']" label="Notas ativas" hint="Disponíveis na sua lista" />
+        <x-panel.stat-card icon="📝" :value="$summary['notes']" label="Notas ativas" :hint="$summary['latest_note_date'] ? 'Última criada em '.$summary['latest_note_date'] : 'Nenhuma nota criada'" />
         <x-panel.stat-card icon="✓" :value="$summary['completed']" label="Notas concluídas" :hint="$summary['completion_rate'].'% de conclusão'" tone="green" />
-        <x-panel.stat-card icon="▰" :value="$summary['categories']" label="Categorias" hint="Organização criada" tone="purple" />
+        <x-panel.stat-card icon="▰" :value="$summary['categories']" label="Categorias" :hint="$summary['latest_category_date'] ? 'Última criada em '.$summary['latest_category_date'] : 'Nenhuma categoria criada'" tone="purple" />
         <x-panel.stat-card icon="⌫" :value="$summary['trash']" label="Na lixeira" hint="Itens recuperáveis" tone="red" />
     </section>
 
@@ -34,6 +34,14 @@
                     <h2>Atividade nos últimos {{ $period }} dias</h2>
                 </div>
                 <div class="panel-chart-heading-actions">
+                    <label class="panel-chart-metric">
+                        <span>Dados exibidos</span>
+                        <select id="panelChartMetric" aria-label="Informação exibida no gráfico">
+                            <option value="movements">Movimentações</option>
+                            <option value="notes">Notas criadas</option>
+                            <option value="categories">Categorias criadas</option>
+                        </select>
+                    </label>
                     <div class="panel-chart-types" role="group" aria-label="Formato do gráfico">
                         <button type="button" data-chart-type="bars" aria-pressed="true" title="Gráfico de barras">
                             <span aria-hidden="true">▥</span> Barras
@@ -45,7 +53,7 @@
                             <span aria-hidden="true">◒</span> Área
                         </button>
                     </div>
-                    <strong>{{ $summary['movements'] }}</strong>
+                    <strong id="panelChartTotal" data-totals='@json($chartTotals)'>{{ $chartTotals['movements'] }}</strong>
                 </div>
             </div>
 
@@ -58,8 +66,8 @@
                      aria-label="Gráfico de movimentações {{ $chartGranularity === 'weekly' ? 'semanais' : 'diárias' }}">
                     <svg viewBox="0 0 900 230" preserveAspectRatio="none" aria-hidden="true"></svg>
                 </div>
-                <p class="panel-chart-caption">
-                    {{ $chartGranularity === 'weekly' ? 'Dados agrupados por semana para melhorar a leitura dos 90 dias.' : 'Dados apresentados por dia.' }}
+                <p class="panel-chart-caption" id="panelChartCaption">
+                    Movimentações {{ $chartGranularity === 'weekly' ? 'agrupadas por semana.' : 'apresentadas por dia.' }}
                 </p>
             </div>
         </article>
@@ -136,9 +144,21 @@
         const svg = chart.querySelector('svg');
         const series = JSON.parse(chart.dataset.series || '[]');
         const typeButtons = [...document.querySelectorAll('[data-chart-type]')];
+        const metricSelect = document.getElementById('panelChartMetric');
+        const totalLabel = document.getElementById('panelChartTotal');
+        const caption = document.getElementById('panelChartCaption');
+        const totals = JSON.parse(totalLabel.dataset.totals || '{}');
         const allowedTypes = ['bars', 'line', 'area'];
+        const allowedMetrics = ['movements', 'notes', 'categories'];
+        const metricLabels = {
+            movements: ['Movimentações', 'movimentação', 'movimentações'],
+            notes: ['Notas criadas', 'nota criada', 'notas criadas'],
+            categories: ['Categorias criadas', 'categoria criada', 'categorias criadas'],
+        };
         const savedType = localStorage.getItem('notes-panel-chart-type');
+        const savedMetric = localStorage.getItem('notes-panel-chart-metric');
         const initialType = allowedTypes.includes(savedType) ? savedType : 'bars';
+        let currentMetric = allowedMetrics.includes(savedMetric) ? savedMetric : 'movements';
         const namespace = 'http://www.w3.org/2000/svg';
 
         const createSvgElement = (tag, attributes = {}, text = '') => {
@@ -148,16 +168,18 @@
             return element;
         };
 
-        const addTitle = (element, point) => {
+        const addTitle = (element, point, metric) => {
+            const total = Number(point[metric] || 0);
             element.appendChild(createSvgElement(
                 'title',
                 {},
-                `${point.tooltip}: ${point.total} movimentação${point.total === 1 ? '' : 'ões'}`,
+                `${point.tooltip}: ${total} ${total === 1 ? metricLabels[metric][1] : metricLabels[metric][2]}`,
             ));
         };
 
-        const renderChart = (type) => {
+        const renderChart = (type, metric = currentMetric) => {
             svg.replaceChildren();
+            currentMetric = metric;
 
             const width = 900;
             const height = 230;
@@ -165,7 +187,7 @@
             const plotWidth = width - padding.left - padding.right;
             const plotHeight = height - padding.top - padding.bottom;
             const baseline = padding.top + plotHeight;
-            const maximum = Math.max(1, ...series.map((point) => Number(point.total)));
+            const maximum = Math.max(1, ...series.map((point) => Number(point[metric] || 0)));
             const xPosition = (index) => series.length === 1
                 ? padding.left + (plotWidth / 2)
                 : padding.left + ((plotWidth / Math.max(1, series.length - 1)) * index);
@@ -178,7 +200,7 @@
                 svg.appendChild(createSvgElement('text', { x: padding.left - 8, y: y + 3, class: 'panel-chart-axis-value' }, String(Math.round(maximum * (1 - ratio)))));
             });
 
-            const points = series.map((point, index) => `${xPosition(index)},${yPosition(point.total)}`).join(' ');
+            const points = series.map((point, index) => `${xPosition(index)},${yPosition(point[metric] || 0)}`).join(' ');
 
             if (type === 'area' && series.length) {
                 svg.appendChild(createSvgElement('polygon', {
@@ -192,11 +214,11 @@
                 series.forEach((point, index) => {
                     const marker = createSvgElement('circle', {
                         cx: xPosition(index),
-                        cy: yPosition(point.total),
-                        r: Number(point.total) > 0 ? 4 : 2.4,
+                        cy: yPosition(point[metric] || 0),
+                        r: Number(point[metric] || 0) > 0 ? 4 : 2.4,
                         class: 'panel-chart-marker',
                     });
-                    addTitle(marker, point);
+                    addTitle(marker, point, metric);
                     svg.appendChild(marker);
                 });
             }
@@ -206,7 +228,8 @@
                 const barWidth = Math.max(5, Math.min(28, slotWidth * .56));
 
                 series.forEach((point, index) => {
-                    const barHeight = Number(point.total) === 0 ? 0 : Math.max(4, baseline - yPosition(point.total));
+                    const value = Number(point[metric] || 0);
+                    const barHeight = value === 0 ? 0 : Math.max(4, baseline - yPosition(value));
                     const bar = createSvgElement('rect', {
                         x: xPosition(index) - (barWidth / 2),
                         y: baseline - barHeight,
@@ -215,7 +238,7 @@
                         rx: Math.min(5, barWidth / 3),
                         class: 'panel-chart-bar',
                     });
-                    addTitle(bar, point);
+                    addTitle(bar, point, metric);
                     svg.appendChild(bar);
                 });
             }
@@ -231,7 +254,11 @@
             });
 
             chart.dataset.type = type;
-            chart.setAttribute('aria-label', `Gráfico de ${type === 'bars' ? 'barras' : type === 'line' ? 'linha' : 'área'} com movimentações ${chart.dataset.granularity === 'weekly' ? 'semanais' : 'diárias'}.`);
+            const intervalLabel = chart.dataset.granularity === 'weekly' ? 'agrupadas por semana' : 'apresentadas por dia';
+            chart.setAttribute('aria-label', `Gráfico de ${type === 'bars' ? 'barras' : type === 'line' ? 'linha' : 'área'} com ${metricLabels[metric][0].toLowerCase()} ${intervalLabel}.`);
+            totalLabel.textContent = totals[metric] || 0;
+            caption.textContent = `${metricLabels[metric][0]} ${intervalLabel}.`;
+            metricSelect.value = metric;
             typeButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.chartType === type)));
         };
 
@@ -239,11 +266,17 @@
             button.addEventListener('click', () => {
                 const type = button.dataset.chartType;
                 localStorage.setItem('notes-panel-chart-type', type);
-                renderChart(type);
+                renderChart(type, currentMetric);
             });
         });
 
-        renderChart(initialType);
+        metricSelect.addEventListener('change', () => {
+            currentMetric = metricSelect.value;
+            localStorage.setItem('notes-panel-chart-metric', currentMetric);
+            renderChart(chart.dataset.type || initialType, currentMetric);
+        });
+
+        renderChart(initialType, currentMetric);
     })();
 
     // Filters the rendered timeline without another server request.
