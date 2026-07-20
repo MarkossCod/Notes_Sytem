@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Note;
 use App\Models\NoteUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -99,5 +100,25 @@ class PanelDashboardTest extends TestCase
             ->get(route('panel.index', ['period' => 365]))
             ->assertOk()
             ->assertViewHas('period', 30);
+    }
+
+    /** Confirms the 90-day chart is grouped into readable weekly points and exposes all formats. */
+    public function test_ninety_day_chart_uses_weekly_groups_and_format_controls(): void
+    {
+        Activity::create([
+            'user_name' => 'Markos',
+            'action' => 'note_created',
+            'description' => 'Movimentação do período longo.',
+        ]);
+
+        $this->withSession(['user_name' => 'Markos'])
+            ->get(route('panel.index', ['period' => 90]))
+            ->assertOk()
+            ->assertViewHas('chartGranularity', 'weekly')
+            ->assertViewHas('chart', fn (Collection $chart): bool => $chart->count() === 13
+                && $chart->sum('total') === 1)
+            ->assertSee('data-chart-type="bars"', false)
+            ->assertSee('data-chart-type="line"', false)
+            ->assertSee('data-chart-type="area"', false);
     }
 }

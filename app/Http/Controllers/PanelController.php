@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Category;
 use App\Models\Note;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -40,15 +41,32 @@ class PanelController extends Controller
             ->groupBy('activity_date')
             ->pluck('total', 'activity_date');
 
-        $chart = collect(range(0, $period - 1))->map(function (int $offset) use ($start, $dailyTotals): array {
+        $dailyChart = collect(range(0, $period - 1))->map(function (int $offset) use ($start, $dailyTotals): array {
             $date = $start->copy()->addDays($offset);
 
             return [
                 'date' => $date->format('Y-m-d'),
                 'label' => $date->format('d/m'),
+                'tooltip' => $date->format('d/m/Y'),
                 'total' => (int) ($dailyTotals[$date->format('Y-m-d')] ?? 0),
             ];
         });
+
+        // Ninety daily columns become unreadable on smaller screens, so this period is summarized by week.
+        $chartGranularity = $period === 90 ? 'weekly' : 'daily';
+        $chart = $period === 90
+            ? $dailyChart->chunk(7)->map(function ($week): array {
+                $firstDate = Carbon::parse($week->first()['date']);
+                $lastDate = Carbon::parse($week->last()['date']);
+
+                return [
+                    'date' => $firstDate->format('Y-m-d'),
+                    'label' => $firstDate->format('d/m'),
+                    'tooltip' => $firstDate->format('d/m').' a '.$lastDate->format('d/m/Y'),
+                    'total' => (int) $week->sum('total'),
+                ];
+            })->values()
+            : $dailyChart;
 
         $recentActivities = Activity::query()
             ->where('user_name', $userName)
@@ -60,6 +78,13 @@ class PanelController extends Controller
             ->groupBy(fn (Activity $activity): string => $activity->group)
             ->map->count();
 
-        return view('panel.index', compact('summary', 'chart', 'recentActivities', 'groupTotals', 'period'));
+        return view('panel.index', compact(
+            'summary',
+            'chart',
+            'chartGranularity',
+            'recentActivities',
+            'groupTotals',
+            'period',
+        ));
     }
 }
