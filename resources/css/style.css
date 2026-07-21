@@ -3172,9 +3172,9 @@ canvas#bg {
     margin: 0;
     padding: 0;
     border-radius: 8px;
-    border: 1px solid #eee;
-    background: white;
-    color: #666;
+    border: 1px solid #ffd1ac;
+    background: #fff7ef;
+    color: #e56500;
     line-height: 1;
     vertical-align: middle;
     cursor: pointer;
@@ -3183,12 +3183,19 @@ canvas#bg {
 
 .cat-action-icon {
     display: block;
-    width: 21px;
-    height: 21px;
+    width: 20px;
+    height: 20px;
 }
 
 .cat-action-btn:hover {
-    background: #fafafa;
+    border-color: #ff6d00;
+    background: #ff6d00;
+    color: #fff;
+}
+
+.cat-action-btn:focus-visible {
+    outline: 3px solid rgba(255, 109, 0, .24);
+    outline-offset: 2px;
 }
 
 .cat-action-menu {

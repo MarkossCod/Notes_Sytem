@@ -112,12 +112,11 @@
                             onclick="toggleCatMenu(event, {{ $category->id }})"
                             aria-label="Abrir opções de {{ $category->name }}"
                             aria-controls="catMenu{{ $category->id }}" aria-haspopup="true">
-                        {{-- Ícone More Square fornecido pelo usuário; o viewBox remove a área de crédito que não faz parte do desenho. --}}
-                        <svg class="cat-action-icon" viewBox="0 0 500 500" aria-hidden="true" focusable="false">
-                            <path fill="currentColor" d="M360.5 450.2H140.1c-49.7-.1-89.9-40.3-90-90V139.8c.1-49.7 40.3-89.9 90-90h220.3c49.7.1 89.9 40.3 90 90v220.3c0 49.8-40.2 90-89.9 90.1ZM140.1 81.8c-32 0-58 26-58 58v220.3c0 32 26 58 58 58h220.3c32 0 58-26 58-58V139.8c0-32-26-58-58-58H140.1Z"/>
-                            <circle fill="currentColor" cx="160.8" cy="250" r="24"/>
-                            <circle fill="currentColor" cx="250.3" cy="250" r="24"/>
-                            <circle fill="currentColor" cx="339.8" cy="250" r="24"/>
+                        {{-- Reticências horizontais indicam que o botão abre ações adicionais. --}}
+                        <svg class="cat-action-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <circle fill="currentColor" cx="5" cy="12" r="1.8"/>
+                            <circle fill="currentColor" cx="12" cy="12" r="1.8"/>
+                            <circle fill="currentColor" cx="19" cy="12" r="1.8"/>
                         </svg>
                     </button>
                     <div class="cat-action-menu" id="catMenu{{ $category->id }}">
