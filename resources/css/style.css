@@ -2412,6 +2412,15 @@ canvas#bg {
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+.sidebar-brand-logo {
+    display: block;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    object-fit: contain;
+}
+
 .sidebar-user {
     display: flex;
     align-items: center;

@@ -49,4 +49,30 @@ class HomepageStatsTest extends TestCase
             ->assertViewHas('categoriesCount', 2)
             ->assertViewHas('trashNotesCount', 1);
     }
+
+    /** Exibe busca e identificação superior apenas na homepage. */
+    public function test_topbar_search_and_user_are_limited_to_homepage(): void
+    {
+        $this->withSession(['user_name' => 'Markos'])
+            ->get(route('notes.index'))
+            ->assertOk()
+            ->assertSee('id="topbarSearch"', false)
+            ->assertSee('class="topbar-user"', false);
+
+        $this->withSession(['user_name' => 'Markos'])
+            ->get(route('notes.create'))
+            ->assertOk()
+            ->assertDontSee('id="topbarSearch"', false)
+            ->assertDontSee('class="topbar-user"', false);
+    }
+
+    /** Confirma que o menu utiliza o arquivo versionado da logo oficial. */
+    public function test_sidebar_uses_the_versioned_application_logo(): void
+    {
+        $this->withSession(['user_name' => 'Markos'])
+            ->get(route('notes.index'))
+            ->assertOk()
+            ->assertSee('notessytem-logo-192.png', false)
+            ->assertSee('alt="Logo do NotesSytem"', false);
+    }
 }

@@ -12,10 +12,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTESSYTEM</title>
     @vite(['resources/css/style.css', 'resources/js/app.js'])
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/manifest.json?v=2">
     <meta name="theme-color" content="#FF6D00">
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-    <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/icons/notessytem-logo-192.png?v=2">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/notessytem-logo-192.png?v=2">
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js');
@@ -46,7 +46,8 @@
             <span></span><span></span><span></span>
         </button>
 
-        @unless(request()->routeIs('categories.index'))
+        {{-- Busca e identificação permanecem somente na homepage de notas. --}}
+        @if(request()->routeIs('notes.index'))
         <div class="topbar-right">
             <div class="topbar-search" id="topbarSearch">
                 <button class="search-toggle-btn" id="searchToggleBtn" onclick="toggleSearch()" aria-label="Buscar">
@@ -62,7 +63,7 @@
                 <span>👋 {{ session('user_name') }}</span>
             </div>
         </div>
-        @endunless
+        @endif
     </header>
 
     {{-- Cada pagina injeta seu conteudo neste ponto do layout. --}}
