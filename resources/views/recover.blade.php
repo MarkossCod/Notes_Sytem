@@ -1,3 +1,4 @@
+{{-- Responsabilidade: identifica a conta na primeira etapa da recuperacao de senha. --}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

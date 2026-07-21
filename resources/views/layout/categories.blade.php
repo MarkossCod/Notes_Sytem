@@ -1,7 +1,9 @@
+{{-- Responsabilidade: lista, pesquisa, ordena, cria e edita as categorias do usuario autenticado. --}}
 @extends('layout.app')
 
 @section('content')
 
+{{-- Cabecalho da gestao e atalho para cadastrar uma nova categoria. --}}
 <div class="cat-header">
     <div class="cat-header-title">
         <div class="cat-header-icon">📁</div>
@@ -15,6 +17,7 @@
     </button>
 </div>
 
+{{-- Indicadores calculados pelo controlador para o usuario autenticado. --}}
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon">📁</div>
@@ -38,6 +41,7 @@
     </div>
 </div>
 
+{{-- Busca e ordenacao atuam localmente sobre as categorias carregadas. --}}
 <div class="cat-toolbar">
     <div class="cat-search">
         🔍 <input type="text" id="catSearchInput" placeholder="Buscar categorias...">
@@ -47,6 +51,7 @@
     </div>
 </div>
 
+{{-- A tabela apresenta estado, total de notas e total concluido por categoria. --}}
 <div class="cat-table-wrap">
     @if($categories->isEmpty())
         <div class="cat-empty">
@@ -119,6 +124,7 @@
 </div>
 
 <script>
+    // Alterna a ordem alfabetica das linhas sem nova requisicao ao servidor.
     function toggleCatSort() {
         const label = document.getElementById('catSortLabel');
         const rows = Array.from(document.querySelectorAll('#catTable tbody tr'));
@@ -131,6 +137,7 @@
         label.textContent = asc ? 'Z-A' : 'A-Z';
     }
 
+    // Filtra as linhas pelo nome enquanto o usuario digita.
     document.getElementById('catSearchInput')?.addEventListener('input', function () {
         const q = this.value.toLowerCase();
         document.querySelectorAll('#catTable tbody tr').forEach(row => {
@@ -138,6 +145,7 @@
         });
     });
 
+    // Mantem aberto apenas o menu de acoes da categoria selecionada.
     function toggleCatMenu(e, id) {
         e.stopPropagation();
         document.querySelectorAll('.cat-action-menu.open').forEach(m => {
@@ -164,6 +172,7 @@
         });
     }
 
+    // Reutiliza o mesmo modal para cadastrar ou preencher a edicao de uma categoria.
     function openCatModal(category) {
         const form = document.getElementById('catForm');
         const title = document.getElementById('catModalTitle');
@@ -203,6 +212,7 @@
 @endsection
 
 @section('modals')
+{{-- O formulario compartilhado muda rota e metodo conforme a operacao escolhida. --}}
 {{-- MODAL NOVA/EDITAR CATEGORIA --}}
 <div id="catModal" class="modal-overlay" onclick="closeCatModal()">
     <div class="modal-box" style="max-width:480px;" onclick="event.stopPropagation()">

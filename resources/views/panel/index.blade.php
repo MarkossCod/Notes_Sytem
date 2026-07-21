@@ -1,8 +1,9 @@
+{{-- Responsabilidade: apresenta indicadores, graficos e historico filtravel das movimentacoes do usuario. --}}
 @extends('layout.app')
 
 @section('content')
 <main class="panel-page">
-    {{-- Header controls the period used by every movement indicator. --}}
+    {{-- O periodo selecionado controla todos os indicadores de movimentacao. --}}
     <header class="panel-header">
         <div>
             <span class="panel-kicker">Visão geral</span>
@@ -17,7 +18,7 @@
         </nav>
     </header>
 
-    {{-- Current-state indicators complement the historical activity data. --}}
+    {{-- Os indicadores atuais complementam o historico apresentado abaixo. --}}
     <section class="panel-stats" aria-label="Indicadores principais">
         <x-panel.stat-card icon="📝" :value="$summary['notes']" label="Notas ativas" :hint="$summary['latest_note_date'] ? 'Última criada em '.$summary['latest_note_date'] : 'Nenhuma nota criada'" />
         <x-panel.stat-card icon="✓" :value="$summary['completed']" label="Notas concluídas" :hint="$summary['completion_rate'].'% de conclusão'" tone="green" />
@@ -26,7 +27,7 @@
     </section>
 
     <section class="panel-grid">
-        {{-- The responsive chart supports multiple formats without external dependencies. --}}
+        {{-- O grafico responsivo suporta barras, linha e area sem dependencia externa. --}}
         <article class="panel-card panel-chart-card">
             <div class="panel-card-heading">
                 <div>
@@ -72,7 +73,7 @@
             </div>
         </article>
 
-        {{-- Completion widget translates note status into a direct productivity indicator. --}}
+        {{-- O progresso converte o status das notas em um indicador direto de conclusao. --}}
         <article class="panel-card panel-progress-card">
             <div class="panel-card-heading">
                 <div>
@@ -87,7 +88,7 @@
         </article>
     </section>
 
-    {{-- Activity timeline can be filtered in place while keeping all recent data available. --}}
+    {{-- O historico pode ser filtrado localmente sem descartar os dados recentes recebidos. --}}
     <section class="panel-card panel-activity-card">
         <div class="panel-activity-header">
             <div>
@@ -136,7 +137,7 @@
 </main>
 
 <script>
-    // Renders the movement series in the format selected by the user and remembers that preference.
+    // Renderiza a serie no formato escolhido e preserva a preferencia no navegador.
     (() => {
         const chart = document.getElementById('panelMovementChart');
         if (!chart) return;
@@ -193,7 +194,7 @@
                 : padding.left + ((plotWidth / Math.max(1, series.length - 1)) * index);
             const yPosition = (total) => padding.top + plotHeight - ((Number(total) / maximum) * plotHeight);
 
-            // Horizontal guides keep all three formats easy to compare.
+            // As guias horizontais mantem os tres formatos visualmente comparaveis.
             [0, .5, 1].forEach((ratio) => {
                 const y = padding.top + (plotHeight * ratio);
                 svg.appendChild(createSvgElement('line', { x1: padding.left, y1: y, x2: width - padding.right, y2: y, class: 'panel-chart-grid-line' }));
@@ -279,7 +280,7 @@
         renderChart(initialType, currentMetric);
     })();
 
-    // Filters the rendered timeline without another server request.
+    // Filtra o historico ja renderizado sem uma nova requisicao ao servidor.
     document.querySelectorAll('[data-panel-filter]').forEach((button) => {
         button.addEventListener('click', () => {
             const filter = button.dataset.panelFilter;

@@ -1,3 +1,5 @@
+{{-- Responsabilidade: compartilha formulario, metadados e conteudo entre a criacao e a edicao de notas. --}}
+{{-- Define o modo do editor a partir da existencia da nota e do parametro de edicao. --}}
 @php
     $isSaved = isset($note) && $note;
     $startEditing = $isSaved && request()->query('edit') === '1';
@@ -5,6 +7,7 @@
 
 <div class="note-editor-wrap {{ $isSaved ? 'note-editor-saved' : 'note-editor-create' }}">
 
+    {{-- O mesmo formulario envia POST na criacao e PUT na atualizacao. --}}
     <form id="noteForm" action="{{ secure_url($isSaved ? route('notes.update', [$note->id], false) : route('notes.store', [], false)) }}" method="POST" autocomplete="off">
         @csrf
         @if($isSaved) @method('PUT') @endif

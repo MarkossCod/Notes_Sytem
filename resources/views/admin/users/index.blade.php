@@ -1,3 +1,4 @@
+{{-- Responsabilidade: exibe indicadores e permite ao administrador criar, localizar e manter contas de usuario. --}}
 @extends('layout.app')
 
 @section('content')

@@ -1,3 +1,4 @@
+{{-- Responsabilidade: mantem a edicao de divisoes, imagens e anexos legados vinculados a uma nota. --}}
 @extends('layout.app')
 @section('content')
 

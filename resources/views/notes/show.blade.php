@@ -1,6 +1,8 @@
+{{-- Responsabilidade: abre uma nota existente no editor e confirma seu envio reversivel para a Lixeira. --}}
 @extends('layout.app')
 
 @section('content')
+    {{-- Reutiliza o editor com os dados persistidos da nota selecionada. --}}
     @include('notes.editor', ['note' => $note])
 @endsection
 

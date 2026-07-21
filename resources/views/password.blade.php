@@ -1,3 +1,4 @@
+{{-- Responsabilidade: preserva a etapa visual legada de senha para compatibilidade com o fluxo antigo. --}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

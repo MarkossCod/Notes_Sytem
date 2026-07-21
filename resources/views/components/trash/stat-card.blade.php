@@ -1,6 +1,7 @@
+{{-- Responsabilidade: renderiza um indicador reutilizavel da Lixeira a partir das propriedades recebidas. --}}
 @props(['icon', 'value', 'label', 'footer', 'tone' => 'orange'])
 
-{{-- Reusable summary card for trash metrics. --}}
+{{-- As propriedades mantem estrutura e cores consistentes em todos os indicadores. --}}
 <article class="trash-stat-card">
     <div class="trash-stat-main">
         <span class="trash-stat-icon trash-stat-icon--{{ $tone }}" aria-hidden="true">{{ $icon }}</span>

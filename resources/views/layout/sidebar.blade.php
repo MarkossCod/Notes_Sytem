@@ -1,3 +1,4 @@
+{{-- Responsabilidade: monta a navegacao lateral e exibe opcoes conforme a funcao da conta autenticada. --}}
 <aside class="sidebar" id="sidebar">
     {{-- Identidade visual fixa da navegacao principal. --}}
     <div class="sidebar-brand">

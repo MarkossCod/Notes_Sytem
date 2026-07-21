@@ -1,3 +1,4 @@
+{{-- Responsabilidade: fornece menu, barra superior, conteudo e modais compartilhados pelas paginas autenticadas. --}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -29,8 +30,10 @@
 </head>
 <body>
 
+{{-- Inclui a navegacao lateral antes da estrutura principal da pagina. --}}
 @include('layout.sidebar')
 
+{{-- A barra superior oferece menu, busca contextual e identificacao da conta. --}}
 <div class="app-shell">
     <header class="topbar">
         <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Abrir menu">
@@ -56,18 +59,21 @@
         @endunless
     </header>
 
+    {{-- Cada pagina injeta seu conteudo neste ponto do layout. --}}
     <div class="container page-transition">
         @yield('content')
     </div>
 </div>
 
 <script>
+    // Controla em conjunto o menu, o fundo responsivo e o estado do botao.
     function toggleSidebar() {
         document.getElementById('sidebar').classList.toggle('sidebar-open');
         document.getElementById('sidebarBackdrop').classList.toggle('active');
         document.getElementById('hamburgerBtn').classList.toggle('open');
     }
 
+    // Abre a busca global e direciona o foco ao campo de texto.
     function openSearch() {
         const wrapper = document.getElementById('topbarSearch');
         const input = document.getElementById('topSearchInput');

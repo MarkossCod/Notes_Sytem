@@ -1,3 +1,4 @@
+{{-- Responsabilidade: apresenta a abertura animada da aplicacao antes do redirecionamento ao login. --}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

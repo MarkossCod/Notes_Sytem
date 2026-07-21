@@ -1,3 +1,4 @@
+{{-- Responsabilidade: coleta as credenciais, apresenta validacoes e inicia o acesso ao sistema. --}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -17,6 +18,7 @@
 <div class="floating" style="width:50px;height:50px;top:40%;left:10px;animation-delay:.8s"></div>
 <div class="floating" style="width:60px;height:60px;top:20px;right:60px;animation-delay:2s"></div>
 
+<!-- Cartao principal com mensagens, credenciais e acesso ao cadastro ou recuperacao. -->
 <div class="card" id="loginCard">
     <div class="logo-wrap">
         <svg viewBox="0 0 80 80" width="80" height="80">

@@ -1,3 +1,4 @@
+{{-- Responsabilidade: exibe os indicadores, a lista de notas e a visualizacao rapida da pagina inicial. --}}
 @extends('layout.app')
 
 @section('content')

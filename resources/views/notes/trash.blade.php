@@ -1,8 +1,9 @@
+{{-- Responsabilidade: lista notas excluidas e oferece restauracao ou exclusao permanente com confirmacao. --}}
 @extends('layout.app')
 
 @section('content')
 <div class="trash-page" data-trash-page>
-    {{-- Page heading and destructive bulk action. --}}
+    {{-- Cabecalho da pagina e acao em lote para esvaziar a Lixeira. --}}
     <header class="trash-header">
         <div class="trash-heading">
             <span class="trash-heading-icon" aria-hidden="true">🗑️</span>
@@ -28,7 +29,7 @@
         <div class="trash-alert trash-alert--error">⚠ {{ session('error') ?: $loadError }}</div>
     @endif
 
-    {{-- Summary cards mirror the retention and privacy information from the reference. --}}
+    {{-- Indicadores resumem volume, retencao, espaco estimado e protecao dos dados. --}}
     <section class="trash-stats" aria-label="Resumo da lixeira">
         <x-trash.stat-card icon="🗑" :value="$stats['total']" label="Notas na lixeira" footer="Arquivos excluídos" tone="red" />
         <x-trash.stat-card icon="◷" :value="$stats['retention'] . ' dias'" label="Retenção automática" footer="Tempo para exclusão definitiva" tone="green" />
@@ -37,7 +38,7 @@
     </section>
 
     <section class="trash-list-card">
-        {{-- Server-side filters keep search, ordering and pagination shareable by URL. --}}
+        {{-- Busca, ordenacao e paginacao sao processadas no servidor e preservadas na URL. --}}
         <form method="GET" action="{{ secure_url(route('trash.index', [], false)) }}" class="trash-toolbar">
             <label class="trash-search">
                 <span aria-hidden="true">⌕</span>
@@ -139,7 +140,7 @@
 @endsection
 
 @section('modals')
-{{-- Shared confirmation dialog for irreversible actions. --}}
+{{-- Um unico modal confirma as duas acoes irreversiveis da pagina. --}}
 <div id="trashConfirmModal" class="modal-overlay" onclick="closeTrashConfirm()">
     <div class="trash-confirm-modal" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="trashConfirmTitle">
         <span class="trash-confirm-icon" aria-hidden="true">!</span>

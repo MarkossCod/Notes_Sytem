@@ -1,3 +1,4 @@
+{{-- Responsabilidade: valida a resposta secreta e coleta uma nova senha na etapa final de recuperacao. --}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -13,6 +14,7 @@
 <div class="floating" style="width:80px;height:80px;bottom:20px;right:30px;animation-delay:1.5s"></div>
 <div class="floating" style="width:50px;height:50px;top:40%;left:10px;animation-delay:.8s"></div>
 
+<!-- Segunda etapa da recuperacao protegida pelos dados mantidos na sessao. -->
 <div class="card">
     <div class="logo-wrap">
         <svg viewBox="0 0 64 64" width="64" height="64">

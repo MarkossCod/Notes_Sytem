@@ -1,3 +1,4 @@
+{{-- Responsabilidade: fornece uma estrutura minima para paginas que nao precisam da navegacao autenticada. --}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

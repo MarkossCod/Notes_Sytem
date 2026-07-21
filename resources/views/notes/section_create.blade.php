@@ -1,3 +1,4 @@
+{{-- Responsabilidade: mantem o formulario legado de criacao de divisoes para compatibilidade com dados antigos. --}}
 @extends('layout.app')
 @section('content')
 <div class="ed-header">
