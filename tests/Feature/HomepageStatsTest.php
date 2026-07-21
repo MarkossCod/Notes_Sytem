@@ -66,13 +66,4 @@ class HomepageStatsTest extends TestCase
             ->assertDontSee('class="topbar-user"', false);
     }
 
-    /** Confirma que o menu utiliza o arquivo versionado da logo oficial. */
-    public function test_sidebar_uses_the_versioned_application_logo(): void
-    {
-        $this->withSession(['user_name' => 'Markos'])
-            ->get(route('notes.index'))
-            ->assertOk()
-            ->assertSee('notessytem-logo-192.png', false)
-            ->assertSee('alt="Logo do NotesSytem"', false);
-    }
 }

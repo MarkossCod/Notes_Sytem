@@ -8,8 +8,17 @@
 <aside class="sidebar" id="sidebar">
     {{-- Identidade visual fixa da navegacao principal. --}}
     <div class="sidebar-brand">
-        <img src="{{ secure_asset('icons/notessytem-logo-192.png') }}?v=2"
-             class="sidebar-brand-logo" alt="Logo do NotesSytem" width="34" height="34">
+        <svg viewBox="0 0 80 80" width="34" height="34" role="img" aria-label="Logo do NotesSytem">
+            <rect x="8" y="16" width="64" height="54" rx="7" fill="white" opacity="0.95"/>
+            <rect x="6" y="10" width="68" height="16" rx="6" fill="rgba(255,255,255,0.25)"/>
+            <circle cx="20" cy="18" r="4" fill="white"/>
+            <circle cx="34" cy="18" r="4" fill="white"/>
+            <circle cx="48" cy="18" r="4" fill="white"/>
+            <rect x="18" y="32" width="44" height="4" rx="2" fill="#FFE0B2"/>
+            <rect x="18" y="42" width="34" height="4" rx="2" fill="#FFE0B2"/>
+            <rect x="18" y="52" width="38" height="4" rx="2" fill="#FFE0B2"/>
+            <text x="40" y="66" text-anchor="middle" font-family="Arial" font-weight="900" font-size="13" fill="#FF6D00">NS</text>
+        </svg>
         <span>NOTESSYTEM</span>
     </div>
 

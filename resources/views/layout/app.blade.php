@@ -12,10 +12,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTESSYTEM</title>
     @vite(['resources/css/style.css', 'resources/js/app.js'])
-    <link rel="manifest" href="/manifest.json?v=2">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#FF6D00">
-    <link rel="apple-touch-icon" href="/icons/notessytem-logo-192.png?v=2">
-    <link rel="icon" type="image/png" sizes="192x192" href="/icons/notessytem-logo-192.png?v=2">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js');
