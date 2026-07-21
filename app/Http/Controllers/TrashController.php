@@ -117,7 +117,8 @@ class TrashController extends Controller
             DB::transaction(function (): void {
                 Note::onlyTrashed()
                     ->where('user_name', session('user_name'))
-                    ->forceDelete();
+                    ->get()
+                    ->each->forceDelete();
             });
 
             $this->activityLogger->record('trash_emptied', "Esvaziou a lixeira com {$deletedCount} nota(s).", metadata: [

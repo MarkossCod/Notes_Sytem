@@ -58,6 +58,16 @@
 <!-- Grade de notas ativas com visualizacao rapida e acesso a edicao. -->
 <div class="notes-grid" id="notesGrid">
     @foreach($notes as $note)
+    @php
+        // O popup recebe somente metadados seguros; o arquivo continua protegido pela rota autenticada.
+        $previewAttachments = collect($note->attachments ?? [])->map(function ($attachment, $index) use ($note) {
+            return [
+                'name' => $attachment['name'] ?? 'Arquivo anexado',
+                'size' => (int) ($attachment['size'] ?? 0),
+                'url' => secure_url(route('notes.attachments.show', [$note->id, $index], false)),
+            ];
+        })->values();
+    @endphp
     <div class="card fadeIn" data-title="{{ strtolower($note->title) }}">
 
         <h2>{{ $note->title }}</h2>
@@ -82,8 +92,9 @@
                     data-category="{{ optional($note->category)->name ?: 'Sem categoria' }}"
                     data-status="{{ $note->status }}"
                     data-priority="{{ $note->priority }}"
-                    data-tags="{{ implode(', ', $note->tags ?? []) }}"
-                    data-content="{{ strip_tags($note->content ?? '') }}"
+                    data-tags='@json(array_values($note->tags ?? []))'
+                    data-attachments='@json($previewAttachments)'
+                    data-content="{{ \App\Support\NoteContent::toPlainText($note->content) }}"
                     onclick="openNotePreview(this)">Visualizar</button>
             <a href="{{ secure_url(route('notes.show', [$note->id], false)) }}?edit=1" class="btn">Editar nota</a>
         </div>
@@ -111,10 +122,13 @@
         document.getElementById('notePreviewContent').textContent = button.dataset.content || 'Nenhum conteúdo informado.';
 
         const tagsContainer = document.getElementById('notePreviewTags');
-        const tags = button.dataset.tags.split(',').map(tag => tag.trim()).filter(Boolean);
+        const tags = parsePreviewList(button.dataset.tags);
         tagsContainer.innerHTML = '';
         if (tags.length === 0) {
-            tagsContainer.innerHTML = '<span class="note-preview-empty">Nenhuma etiqueta</span>';
+            const emptyTags = document.createElement('span');
+            emptyTags.className = 'note-preview-empty';
+            emptyTags.textContent = 'Nenhuma etiqueta';
+            tagsContainer.appendChild(emptyTags);
         } else {
             tags.forEach(tag => {
                 const chip = document.createElement('span');
@@ -124,7 +138,75 @@
             });
         }
 
+        renderPreviewAttachments(parsePreviewList(button.dataset.attachments));
+
         document.getElementById('notePreviewModal').classList.add('modal-active');
+    }
+
+    // Converte listas JSON do botão sem interromper o popup caso um registro antigo esteja incompleto.
+    function parsePreviewList(value) {
+        try {
+            const parsed = JSON.parse(value || '[]');
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    // Mostra o estado dos anexos e cria links protegidos para abrir cada arquivo.
+    function renderPreviewAttachments(attachments) {
+        const status = document.getElementById('notePreviewAttachmentStatus');
+        const list = document.getElementById('notePreviewAttachments');
+        list.innerHTML = '';
+
+        if (attachments.length === 0) {
+            status.textContent = 'Nenhum arquivo anexado';
+            const empty = document.createElement('span');
+            empty.className = 'note-preview-empty';
+            empty.textContent = 'Esta nota não possui arquivos.';
+            list.appendChild(empty);
+            return;
+        }
+
+        status.textContent = attachments.length === 1
+            ? '1 arquivo anexado'
+            : `${attachments.length} arquivos anexados`;
+
+        attachments.forEach(attachment => {
+            const item = document.createElement('div');
+            item.className = 'note-preview-attachment';
+
+            const details = document.createElement('div');
+            details.className = 'note-preview-attachment-details';
+            const icon = document.createElement('span');
+            icon.className = 'note-preview-attachment-icon';
+            icon.textContent = '📎';
+            const text = document.createElement('div');
+            const name = document.createElement('strong');
+            name.textContent = attachment.name || 'Arquivo anexado';
+            const size = document.createElement('span');
+            size.textContent = formatPreviewFileSize(Number(attachment.size || 0));
+            text.append(name, size);
+            details.append(icon, text);
+
+            const link = document.createElement('a');
+            link.className = 'note-preview-attachment-link';
+            link.href = attachment.url;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.textContent = 'Ver arquivo';
+
+            item.append(details, link);
+            list.appendChild(item);
+        });
+    }
+
+    // Formata o tamanho armazenado no banco para uma leitura simples no popup.
+    function formatPreviewFileSize(bytes) {
+        if (!bytes) return 'Tamanho não informado';
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1048576) return `${Math.round(bytes / 1024)} KB`;
+        return `${(bytes / 1048576).toFixed(1)} MB`;
     }
 
     // Fecha a visualizacao sem alterar a nota.
@@ -174,6 +256,14 @@
         <div class="note-preview-section">
             <span class="note-preview-label">Etiquetas</span>
             <div id="notePreviewTags" class="note-preview-tags"></div>
+        </div>
+
+        <div class="note-preview-section note-preview-attachments-section">
+            <div class="note-preview-attachments-heading">
+                <span class="note-preview-label">Anexos</span>
+                <span id="notePreviewAttachmentStatus" class="note-preview-attachment-status"></span>
+            </div>
+            <div id="notePreviewAttachments" class="note-preview-attachments"></div>
         </div>
 
         <div class="note-preview-section">

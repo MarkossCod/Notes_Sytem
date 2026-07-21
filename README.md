@@ -29,6 +29,8 @@ Aplicação web para organizar notas pessoais com categorias, etiquetas, priorid
 
 O detalhamento dos módulos, regras e arquivos está em [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md).
 
+Os anexos das notas são armazenados no disco definido por `FILESYSTEM_DISK` e não ficam expostos publicamente. Cada arquivo é aberto por uma rota autenticada que confirma o proprietário da nota. São aceitos até cinco arquivos de 10 MB por nota nos formatos PDF, documentos, planilhas, texto e imagens comuns.
+
 Para alterar as telas com segurança, consulte também [`docs/VIEWS_BLADE.md`](docs/VIEWS_BLADE.md).
 
 ## Requisitos
@@ -64,6 +66,8 @@ No Windows, `Copy-Item .env.example .env` pode substituir o comando `cp`. Config
 - Formulários mutáveis usam token CSRF e logout por requisição POST.
 
 Em produção, use HTTPS, `APP_DEBUG=false`, uma `APP_KEY` exclusiva e credenciais fornecidas por variáveis de ambiente. Não versionar o arquivo `.env`.
+
+Se a hospedagem não preservar o diretório local entre implantações, configure `FILESYSTEM_DISK` para um serviço persistente, como S3, antes de habilitar anexos em produção.
 
 ## Banco de dados
 

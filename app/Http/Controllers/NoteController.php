@@ -5,12 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Note;
 use App\Services\ActivityLogger;
+use App\Support\NoteContent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Throwable;
 
 class NoteController extends Controller
 {
+    /** Limite total de anexos mantidos por nota. */
+    private const MAX_ATTACHMENTS = 5;
+
     /** Coordena o ciclo de vida das notas e registra suas movimentacoes no painel. */
     public function __construct(private readonly ActivityLogger $activityLogger) {}
 
@@ -69,22 +78,30 @@ class NoteController extends Controller
         if (! session('user_name')) {
             return redirect()->route('login');
         }
-        $request->validate([
-            'title' => 'required',
-            'created_day' => 'required',
-            'status' => ['nullable', Rule::in(['em_andamento', 'pendente', 'concluida'])],
-        ]);
+        $request->validate($this->validationRules());
 
         $note = Note::create([
             'user_name' => $this->getUserName(),
             'title' => $request->title,
             'created_day' => $request->created_day,
-            'content' => $request->content,
+            'content' => NoteContent::normalizeHtml($request->content),
             'category_id' => $request->category_id ?: null,
             'status' => $request->status ?: 'em_andamento',
             'priority' => $request->priority ?: 'media',
             'tags' => $request->tags ? json_decode($request->tags, true) : [],
+            'attachments' => [],
         ]);
+
+        $storedAttachments = [];
+
+        try {
+            $storedAttachments = $this->storeAttachments($request->file('attachments', []), $note);
+            $note->update(['attachments' => $storedAttachments]);
+        } catch (Throwable $exception) {
+            $this->deleteStoredAttachments($storedAttachments);
+            $note->forceDelete();
+            throw $exception;
+        }
 
         $this->activityLogger->record('note_created', "Criou a nota \"{$note->title}\".", $note);
 
@@ -111,20 +128,34 @@ class NoteController extends Controller
     {
         $note = Note::where('user_name', $this->getUserName())->findOrFail($id);
         $previousStatus = $note->status;
-        $request->validate([
-            'title' => 'required',
-            'created_day' => 'required',
-            'status' => ['nullable', Rule::in(['em_andamento', 'pendente', 'concluida'])],
-        ]);
-        $note->update([
-            'title' => $request->title,
-            'created_day' => $request->created_day,
-            'content' => $request->content,
-            'category_id' => $request->category_id ?: null,
-            'status' => $request->status ?: 'em_andamento',
-            'priority' => $request->priority ?: 'media',
-            'tags' => $request->tags ? json_decode($request->tags, true) : [],
-        ]);
+        $request->validate($this->validationRules());
+        $currentAttachments = $note->attachments ?? [];
+        $incomingFiles = array_values(array_filter($request->file('attachments', [])));
+
+        if (count($currentAttachments) + count($incomingFiles) > self::MAX_ATTACHMENTS) {
+            throw ValidationException::withMessages([
+                'attachments' => 'Cada nota pode ter no máximo ' . self::MAX_ATTACHMENTS . ' anexos.',
+            ]);
+        }
+
+        $storedAttachments = [];
+
+        try {
+            $storedAttachments = $this->storeAttachments($incomingFiles, $note);
+            $note->update([
+                'title' => $request->title,
+                'created_day' => $request->created_day,
+                'content' => NoteContent::normalizeHtml($request->content),
+                'category_id' => $request->category_id ?: null,
+                'status' => $request->status ?: 'em_andamento',
+                'priority' => $request->priority ?: 'media',
+                'tags' => $request->tags ? json_decode($request->tags, true) : [],
+                'attachments' => array_merge($currentAttachments, $storedAttachments),
+            ]);
+        } catch (Throwable $exception) {
+            $this->deleteStoredAttachments($storedAttachments);
+            throw $exception;
+        }
         $action = $previousStatus !== 'concluida' && $note->status === 'concluida'
             ? 'note_completed'
             : 'note_updated';
@@ -134,6 +165,29 @@ class NoteController extends Controller
         $this->activityLogger->record($action, $description, $note);
 
         return redirect()->route('notes.show', $note->id)->with('success', 'Nota atualizada!');
+    }
+
+    /** Entrega um anexo privado somente ao proprietário da nota. */
+    public function showAttachment(int $id, int $attachment): StreamedResponse
+    {
+        $note = Note::where('user_name', $this->getUserName())->findOrFail($id);
+        $metadata = ($note->attachments ?? [])[$attachment] ?? null;
+
+        abort_unless(is_array($metadata) && ! empty($metadata['path']), 404);
+
+        $disk = $metadata['disk'] ?? config('filesystems.default', 'local');
+        $path = $metadata['path'];
+        abort_unless(Storage::disk($disk)->exists($path), 404);
+
+        return Storage::disk($disk)->response(
+            $path,
+            $metadata['name'] ?? basename($path),
+            [
+                'Content-Type' => $metadata['mime'] ?? 'application/octet-stream',
+                'Content-Disposition' => 'inline',
+                'X-Content-Type-Options' => 'nosniff',
+            ]
+        );
     }
 
     /** Aplica exclusao logica para que a nota possa ser restaurada pela Lixeira. */
@@ -151,5 +205,61 @@ class NoteController extends Controller
         return redirect()
             ->route('notes.index')
             ->with('success', "A nota \"{$noteTitle}\" foi movida para a lixeira.");
+    }
+
+    /** Regras compartilhadas pelos formulários de criação e edição. */
+    private function validationRules(): array
+    {
+        return [
+            'title' => ['required', 'string', 'max:255'],
+            'created_day' => ['required', 'date'],
+            'status' => ['nullable', Rule::in(['em_andamento', 'pendente', 'concluida'])],
+            'attachments' => ['nullable', 'array', 'max:' . self::MAX_ATTACHMENTS],
+            'attachments.*' => [
+                'file',
+                'max:10240',
+                'mimes:pdf,doc,docx,xls,xlsx,txt,png,jpg,jpeg,gif,webp',
+            ],
+        ];
+    }
+
+    /** Salva os arquivos no disco configurado e devolve apenas seus metadados. */
+    private function storeAttachments(array $files, Note $note): array
+    {
+        $disk = config('filesystems.default', 'local');
+        $stored = [];
+
+        try {
+            foreach ($files as $file) {
+                if (! $file instanceof UploadedFile) {
+                    continue;
+                }
+
+                $path = $file->store("notes/{$note->id}", $disk);
+                $stored[] = [
+                    'name' => $file->getClientOriginalName(),
+                    'path' => $path,
+                    'disk' => $disk,
+                    'mime' => $file->getMimeType() ?: 'application/octet-stream',
+                    'size' => $file->getSize(),
+                ];
+            }
+        } catch (Throwable $exception) {
+            $this->deleteStoredAttachments($stored);
+            throw $exception;
+        }
+
+        return $stored;
+    }
+
+    /** Remove arquivos gravados durante uma operação que não pôde ser concluída. */
+    private function deleteStoredAttachments(array $attachments): void
+    {
+        foreach ($attachments as $attachment) {
+            if (! empty($attachment['path'])) {
+                Storage::disk($attachment['disk'] ?? config('filesystems.default', 'local'))
+                    ->delete($attachment['path']);
+            }
+        }
     }
 }

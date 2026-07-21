@@ -14,7 +14,7 @@
 <div class="note-editor-wrap {{ $isSaved ? 'note-editor-saved' : 'note-editor-create' }}">
 
     {{-- A rota e o método mudam conforme $isSaved: POST cria uma nota; PUT atualiza somente a nota já carregada. --}}
-    <form id="noteForm" action="{{ secure_url($isSaved ? route('notes.update', [$note->id], false) : route('notes.store', [], false)) }}" method="POST" autocomplete="off">
+    <form id="noteForm" action="{{ secure_url($isSaved ? route('notes.update', [$note->id], false) : route('notes.store', [], false)) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
         @csrf
         @if($isSaved) @method('PUT') @endif
 
@@ -115,8 +115,21 @@
                         Arraste arquivos aqui<br>ou
                         <br>
                         <button type="button" class="ne-dropzone-btn" id="neSelectFilesBtn">Selecionar Arquivos</button>
-                        <input type="file" id="neFileInput" multiple style="display:none;">
+                        <input type="file" id="neFileInput" name="attachments[]" multiple
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.png,.jpg,.jpeg,.gif,.webp" style="display:none;">
                     </div>
+                    @if($isSaved && ! empty($note->attachments))
+                        <div class="ne-saved-files" aria-label="Arquivos já anexados">
+                            @foreach($note->attachments as $attachmentIndex => $attachment)
+                                <a class="ne-saved-file" href="{{ secure_url(route('notes.attachments.show', [$note->id, $attachmentIndex], false)) }}"
+                                   target="_blank" rel="noopener">
+                                    <span aria-hidden="true">📎</span>
+                                    <span class="ne-saved-file-name">{{ $attachment['name'] ?? 'Arquivo anexado' }}</span>
+                                    <span class="ne-saved-file-action">Ver</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
                     <div class="ne-file-list" id="neFileList"></div>
                 </div>
 
@@ -133,7 +146,7 @@
                 </div>
 
                 <div class="ne-content-area" id="neContent" contenteditable="{{ $isSaved ? 'false' : 'true' }}"
-                     data-placeholder="Digite o conteúdo da sua nota aqui...">{!! $isSaved ? $note->content : '' !!}</div>
+                     data-placeholder="Digite o conteúdo da sua nota aqui...">{!! $isSaved ? \App\Support\NoteContent::normalizeHtml($note->content) : '' !!}</div>
 
                 <input type="hidden" name="content" id="neContentHidden">
 
@@ -345,11 +358,14 @@
     /* ===== Status / Prioridade — bolinha colorida ===== */
     // (mantidos como <select> nativos para acessibilidade; a cor é indicada pelo emoji na option)
 
-    /* ===== Anexos (visual — upload real é o próximo passo no backend) ===== */
+    /* ===== Anexos — seleção, arraste e envio real junto com o formulário ===== */
     const dropzone = document.getElementById('neDropzone');
     const selectFilesBtn = document.getElementById('neSelectFilesBtn');
     const fileInput = document.getElementById('neFileInput');
     const fileList = document.getElementById('neFileList');
+    const existingAttachmentCount = @json($isSaved ? count($note->attachments ?? []) : 0);
+    const maximumAttachments = 5;
+    let selectedFiles = [];
 
     function humanSize(bytes) {
         if (bytes < 1024) return bytes + ' B';
@@ -357,18 +373,71 @@
         return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
     }
 
-    function addFiles(files) {
-        Array.from(files).forEach(file => {
+    function fileKey(file) {
+        return `${file.name}:${file.size}:${file.lastModified}`;
+    }
+
+    function syncFileInput() {
+        const transfer = new DataTransfer();
+        selectedFiles.forEach(file => transfer.items.add(file));
+        fileInput.files = transfer.files;
+    }
+
+    function renderSelectedFiles() {
+        fileList.innerHTML = '';
+
+        selectedFiles.forEach((file, index) => {
             const item = document.createElement('div');
             item.className = 'ne-file-item';
-            item.innerHTML = `📄 ${file.name} <span class="size">${humanSize(file.size)}</span> <button type="button">✕</button>`;
-            item.querySelector('button').addEventListener('click', () => item.remove());
+
+            const icon = document.createElement('span');
+            icon.textContent = '📄';
+            const name = document.createElement('span');
+            name.className = 'ne-file-name';
+            name.textContent = file.name;
+            const size = document.createElement('span');
+            size.className = 'size';
+            size.textContent = humanSize(file.size);
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.setAttribute('aria-label', `Remover ${file.name}`);
+            removeButton.textContent = '✕';
+            removeButton.addEventListener('click', () => {
+                selectedFiles.splice(index, 1);
+                syncFileInput();
+                renderSelectedFiles();
+            });
+
+            item.append(icon, name, size, removeButton);
             fileList.appendChild(item);
         });
     }
 
+    function addFiles(files) {
+        if (fileInput.disabled) return;
+
+        const availableSlots = maximumAttachments - existingAttachmentCount - selectedFiles.length;
+        if (availableSlots <= 0) {
+            window.alert(`Cada nota pode ter no máximo ${maximumAttachments} anexos.`);
+            return;
+        }
+
+        const knownFiles = new Set(selectedFiles.map(fileKey));
+        const newFiles = Array.from(files)
+            .filter(file => !knownFiles.has(fileKey(file)))
+            .slice(0, availableSlots);
+
+        selectedFiles.push(...newFiles);
+        syncFileInput();
+        renderSelectedFiles();
+
+        if (Array.from(files).length > newFiles.length) {
+            window.alert(`Foram aceitos apenas arquivos novos dentro do limite de ${maximumAttachments} anexos.`);
+        }
+    }
+
     selectFilesBtn.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', () => addFiles(fileInput.files));
+    fileInput.addEventListener('change', () => addFiles(Array.from(fileInput.files)));
 
     ['dragenter', 'dragover'].forEach(evt => dropzone.addEventListener(evt, e => {
         e.preventDefault(); dropzone.classList.add('drag-over');
@@ -384,10 +453,13 @@
     const wordCount = document.getElementById('neWordCount');
 
     function updateCount() {
-        const text = content.innerText.trim();
+        const text = content.innerText.replace(/\u00a0/g, ' ').trim();
         const words = text ? text.split(/\s+/).length : 0;
         wordCount.textContent = `${words} palavras • ${text.length} caracteres`;
-        contentHidden.value = content.innerHTML;
+        contentHidden.value = content.innerHTML
+            .replace(/&amp;nbsp;?/gi, ' ')
+            .replace(/&nbsp;?/gi, ' ')
+            .replace(/\u00a0/g, ' ');
     }
 
     content.addEventListener('input', updateCount);
@@ -397,7 +469,7 @@
     document.addEventListener('keydown', function (e) {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
             e.preventDefault();
-            document.getElementById('noteForm').submit();
+            document.getElementById('noteForm').requestSubmit();
         }
     });
 

@@ -99,7 +99,7 @@
                                         <span class="trash-note-icon" aria-hidden="true">▤</span>
                                         <div>
                                             <strong>{{ $note->title }}</strong>
-                                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($note->content ?: 'Sem conteúdo'), 78) }}</p>
+                                            <p>{{ \Illuminate\Support\Str::limit(\App\Support\NoteContent::toPlainText($note->content) ?: 'Sem conteúdo', 78) }}</p>
                                         </div>
                                     </div>
                                 </td>

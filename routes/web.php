@@ -39,6 +39,9 @@ Route::middleware('note.auth')->group(function (): void {
     Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
     Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::get('/notes/{id}/attachments/{attachment}', [NoteController::class, 'showAttachment'])
+        ->whereNumber(['id', 'attachment'])
+        ->name('notes.attachments.show');
     Route::get('/notes/{id}', [NoteController::class, 'show'])->name('notes.show');
     Route::put('/notes/{id}', [NoteController::class, 'update'])->name('notes.update');
     Route::delete('/notes/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');

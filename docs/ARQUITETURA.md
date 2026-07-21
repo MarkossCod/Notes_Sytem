@@ -26,8 +26,9 @@ Regra principal: uma conta inativa não pode acessar recursos privados. O últim
 
 ### Notas
 
-- `NoteController` lista, cria, exibe, atualiza e envia notas para a Lixeira.
-- `Note` armazena conteúdo, status, prioridade, etiquetas, categoria e exclusão lógica.
+- `NoteController` lista, cria, exibe, atualiza, entrega anexos privados e envia notas para a Lixeira.
+- `Note` armazena conteúdo, status, prioridade, etiquetas, categoria, metadados dos anexos e exclusão lógica.
+- `NoteContent` normaliza espaços HTML e converte o conteúdo do editor em texto legível para cards, popups e Lixeira.
 - `notes/editor.blade.php` é reutilizado pela criação e pela edição.
 - `notes/index.blade.php` exibe indicadores, cards e o modal de visualização.
 
