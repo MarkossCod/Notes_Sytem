@@ -1,5 +1,11 @@
-{{-- Responsabilidade: compartilha formulario, metadados e conteudo entre a criacao e a edicao de notas. --}}
-{{-- Define o modo do editor a partir da existencia da nota e do parametro de edicao. --}}
+{{--
+    PARCIAL: editor compartilhado de notas
+    FINALIDADE: montar título, data, categoria, etiquetas, status, prioridade, anexos e conteúdo para criar ou editar uma nota.
+    DADOS RECEBIDOS: $note é null na criação e contém o registro na edição; $categories contém apenas categorias ativas do usuário.
+    FLUXO: sem nota envia POST para notes.store; com nota envia PUT para notes.update. $isSaved controla as diferenças da interface.
+    AO ALTERAR: mantenha names, IDs e valores de status/prioridade sincronizados com NoteController e com o JavaScript deste arquivo.
+--}}
+{{-- $isSaved separa criação de edição; $startEditing permite abrir uma nota salva já com os campos liberados pela query ?edit=1. --}}
 @php
     $isSaved = isset($note) && $note;
     $startEditing = $isSaved && request()->query('edit') === '1';
@@ -7,7 +13,7 @@
 
 <div class="note-editor-wrap {{ $isSaved ? 'note-editor-saved' : 'note-editor-create' }}">
 
-    {{-- O mesmo formulario envia POST na criacao e PUT na atualizacao. --}}
+    {{-- A rota e o método mudam conforme $isSaved: POST cria uma nota; PUT atualiza somente a nota já carregada. --}}
     <form id="noteForm" action="{{ secure_url($isSaved ? route('notes.update', [$note->id], false) : route('notes.store', [], false)) }}" method="POST" autocomplete="off">
         @csrf
         @if($isSaved) @method('PUT') @endif

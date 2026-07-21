@@ -1,4 +1,10 @@
-{{-- Responsabilidade: abre uma nota existente no editor e confirma seu envio reversivel para a Lixeira. --}}
+{{--
+    VIEW: visualização e edição de uma nota existente
+    FINALIDADE: carregar o editor compartilhado e manter o modal que confirma o envio da nota para a Lixeira.
+    DADOS RECEBIDOS: $note e $categories são preparados por NoteController@show.
+    EXCLUSÃO: o formulário DELETE chama NoteController@destroy, que usa exclusão lógica e permite restauração.
+    AO ALTERAR: mantenha o modal fora do contêiner principal e preserve noteDeleteForm/neDeleteBtn usados pelo JavaScript.
+--}}
 @extends('layout.app')
 
 @section('content')

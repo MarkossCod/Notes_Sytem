@@ -1,4 +1,9 @@
-{{-- Responsabilidade: fornece uma estrutura minima para paginas que nao precisam da navegacao autenticada. --}}
+{{--
+    LAYOUT: páginas sem navegação principal
+    FINALIDADE: oferecer recursos globais, animação de entrada e suporte PWA sem renderizar menu lateral ou barra superior.
+    CONTEÚDO RECEBIDO: @yield('content') injeta a página e @yield('modals') permite modais fora do contêiner animado.
+    AO ALTERAR: mantenha @vite e o registro do service worker para que estilos, scripts e instalação PWA continuem funcionando.
+--}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

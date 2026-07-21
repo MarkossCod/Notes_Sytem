@@ -1,4 +1,10 @@
-{{-- Responsabilidade: exibe os indicadores, a lista de notas e a visualizacao rapida da pagina inicial. --}}
+{{--
+    VIEW: página inicial de notas
+    FINALIDADE: apresentar totais, listar notas ativas e abrir uma visualização rápida sem editar o registro.
+    DADOS RECEBIDOS: $notes e os totais são calculados por NoteController@index para o usuário autenticado.
+    INTERAÇÕES: os atributos data-* de cada botão alimentam o modal; topSearchInput filtra os cards pelo título.
+    AO ALTERAR: mantenha os data-* e seus IDs correspondentes no modal ou atualize também openNotePreview().
+--}}
 @extends('layout.app')
 
 @section('content')
@@ -95,7 +101,7 @@
     };
     const notePriorityLabels = { baixa: 'Baixa', media: 'Média', alta: 'Alta' };
 
-    // Preenche e abre o modal com os dados codificados no card selecionado.
+    // Lê os atributos data-* do botão, converte códigos em rótulos e preenche o modal sem solicitar novamente os dados ao servidor.
     function openNotePreview(button) {
         document.getElementById('notePreviewTitle').textContent = button.dataset.title;
         document.getElementById('notePreviewDate').textContent = button.dataset.date;
@@ -126,7 +132,7 @@
         document.getElementById('notePreviewModal').classList.remove('modal-active');
     }
 
-    // Filtra os cards localmente pelo titulo digitado na busca superior.
+    // Normaliza a busca para minúsculas e alterna display; os cards continuam no HTML e nenhuma nota é modificada.
     function filterNotes(query) {
         query = query.toLowerCase();
         document.querySelectorAll('#notesGrid .card').forEach(card => {

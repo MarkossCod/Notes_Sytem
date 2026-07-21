@@ -1,4 +1,10 @@
-{{-- Responsabilidade: monta a navegacao lateral e exibe opcoes conforme a funcao da conta autenticada. --}}
+{{--
+    PARCIAL: navegação lateral das páginas internas
+    FINALIDADE: exibir atalhos do sistema, identificar o usuário da sessão e oferecer logout.
+    REGRAS: o link Usuários aparece apenas quando session('user_role') é "admin"; a classe active acompanha a rota atual.
+    USO: incluído por layout/app.blade.php.
+    AO ALTERAR: use nomes de rotas existentes e mantenha o logout como formulário POST com @csrf.
+--}}
 <aside class="sidebar" id="sidebar">
     {{-- Identidade visual fixa da navegacao principal. --}}
     <div class="sidebar-brand">

@@ -1,4 +1,10 @@
-{{-- Responsabilidade: mantem o formulario legado de criacao de divisoes para compatibilidade com dados antigos. --}}
+{{--
+    VIEW LEGADA: criação de divisão de nota
+    FINALIDADE: preservar a interface de divisões antigas, incluindo conteúdo, imagens e arquivos.
+    DADOS RECEBIDOS: $note identifica a nota proprietária.
+    SITUAÇÃO ATUAL: o editor principal substituiu as divisões; esta view não participa do fluxo atual definido em routes/web.php.
+    AO ALTERAR: confirme antes se haverá rota e controlador compatíveis; não reutilize uploads sem validação no backend.
+--}}
 @extends('layout.app')
 @section('content')
 <div class="ed-header">

@@ -29,6 +29,8 @@ Aplicação web para organizar notas pessoais com categorias, etiquetas, priorid
 
 O detalhamento dos módulos, regras e arquivos está em [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md).
 
+Para alterar as telas com segurança, consulte também [`docs/VIEWS_BLADE.md`](docs/VIEWS_BLADE.md).
+
 ## Requisitos
 
 - PHP 8.3 ou superior;

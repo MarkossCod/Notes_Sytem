@@ -1,4 +1,10 @@
-{{-- Responsabilidade: cadastra uma conta publica ou conclui a configuracao de um usuario predefinido. --}}
+{{--
+    VIEW PÚBLICA: cadastro de conta
+    FINALIDADE: criar uma conta pública ou concluir o primeiro acesso quando $pendingUser estiver definido.
+    ENVIO: o formulário POST chama LoginController@register pela rota register.store.
+    REGRAS: senha e confirmação seguem StrongPassword; pergunta e resposta serão usadas na recuperação.
+    AO ALTERAR: preserve os names enviados, @csrf e o tratamento condicional do nome do usuário.
+--}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

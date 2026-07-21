@@ -1,4 +1,10 @@
-{{-- Responsabilidade: fornece menu, barra superior, conteudo e modais compartilhados pelas paginas autenticadas. --}}
+{{--
+    LAYOUT: páginas internas autenticadas
+    FINALIDADE: reunir menu lateral, barra superior, conteúdo da página e modais globais em uma única estrutura.
+    CONTEÚDO RECEBIDO: @yield('content') recebe a página; @yield('modals') recebe modais que precisam cobrir a viewport.
+    DEPENDÊNCIAS: usa dados da sessão, nomes de rotas, layout/sidebar.blade.php, style.css e resources/js/app.js.
+    AO ALTERAR: IDs como sidebar, topbarSearch e hamburgerBtn são usados pelo JavaScript e não devem ser renomeados isoladamente.
+--}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -66,14 +72,14 @@
 </div>
 
 <script>
-    // Controla em conjunto o menu, o fundo responsivo e o estado do botao.
+    // Abre ou fecha o menu lateral. As três classes são alteradas juntas para sincronizar menu, fundo e ícone em telas pequenas.
     function toggleSidebar() {
         document.getElementById('sidebar').classList.toggle('sidebar-open');
         document.getElementById('sidebarBackdrop').classList.toggle('active');
         document.getElementById('hamburgerBtn').classList.toggle('open');
     }
 
-    // Abre a busca global e direciona o foco ao campo de texto.
+    // Expande a busca superior e move o foco após a animação. O campo é consumido pela página que registrar o evento input.
     function openSearch() {
         const wrapper = document.getElementById('topbarSearch');
         const input = document.getElementById('topSearchInput');

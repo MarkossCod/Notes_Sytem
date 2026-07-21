@@ -1,4 +1,9 @@
-{{-- Responsabilidade: identifica a conta na primeira etapa da recuperacao de senha. --}}
+{{--
+    VIEW PÚBLICA: identificação para recuperar senha
+    FINALIDADE: receber o nome da conta antes de apresentar a pergunta secreta.
+    ENVIO: o formulário POST chama LoginController@recoverQuestion pela rota recover.question.
+    AO ALTERAR: mantenha mensagens genéricas para não facilitar a descoberta de contas e preserve @csrf.
+--}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

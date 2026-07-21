@@ -1,4 +1,10 @@
-{{-- Responsabilidade: renderiza um indicador reutilizavel da Lixeira a partir das propriedades recebidas. --}}
+{{--
+    COMPONENTE: indicador resumido da Lixeira
+    FINALIDADE: apresentar quantidade, retenção, espaço e proteção com a mesma estrutura.
+    PROPRIEDADES: icon, value, label e footer são obrigatórias; tone assume "orange" quando não for enviada.
+    USO: <x-trash.stat-card ... /> em notes/trash.blade.php.
+    AO ALTERAR: ajuste @props quando adicionar uma propriedade e atualize todas as chamadas do componente.
+--}}
 @props(['icon', 'value', 'label', 'footer', 'tone' => 'orange'])
 
 {{-- As propriedades mantem estrutura e cores consistentes em todos os indicadores. --}}

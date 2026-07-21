@@ -1,4 +1,10 @@
-{{-- Responsabilidade: coleta as credenciais, apresenta validacoes e inicia o acesso ao sistema. --}}
+{{--
+    VIEW PÚBLICA: login
+    FINALIDADE: receber nome e senha, exibir erros e encaminhar o usuário para cadastro ou recuperação.
+    ENVIO: o formulário POST chama LoginController@store pela rota login.store.
+    DADOS DE RETORNO: $errors mostra falhas de validação e session('success') confirma ações concluídas.
+    AO ALTERAR: não remova @csrf, os names user_name/password nem autocomplete; o controlador depende desses campos.
+--}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

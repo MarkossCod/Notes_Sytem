@@ -1,4 +1,10 @@
-{{-- Responsabilidade: lista notas excluidas e oferece restauracao ou exclusao permanente com confirmacao. --}}
+{{--
+    VIEW: Lixeira de notas
+    FINALIDADE: pesquisar notas excluídas, restaurá-las ou removê-las definitivamente de forma individual ou em lote.
+    DADOS RECEBIDOS: $notes é paginado; $stats alimenta os indicadores; $loadError informa falhas de carregamento.
+    ORIGEM DOS DADOS: TrashController@index. Restore usa PATCH; exclusão individual e esvaziamento usam DELETE.
+    AO ALTERAR: ações permanentes devem continuar usando o modal de confirmação e formulários protegidos por @csrf.
+--}}
 @extends('layout.app')
 
 @section('content')
@@ -167,7 +173,7 @@
         this.classList.toggle('active');
     });
 
-    // Um único diálogo confirma tanto a exclusão individual quanto o esvaziamento.
+    // Copia título e mensagem do formulário clicado para um único modal. Só envia o formulário depois da confirmação explícita.
     document.querySelectorAll('.js-confirm-delete').forEach(form => {
         form.addEventListener('submit', event => {
             event.preventDefault();

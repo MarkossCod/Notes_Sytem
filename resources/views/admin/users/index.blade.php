@@ -1,4 +1,10 @@
-{{-- Responsabilidade: exibe indicadores e permite ao administrador criar, localizar e manter contas de usuario. --}}
+{{--
+    VIEW: Administração de usuários
+    FINALIDADE: mostrar indicadores das contas e permitir que um administrador cadastre ou altere usuários.
+    DADOS RECEBIDOS: $metrics contém os totais; $users é a lista paginada; $errors e session('success') exibem retornos dos formulários.
+    ORIGEM DOS DADOS: AdminUserController@index. As gravações usam store, update e resetPassword do mesmo controlador.
+    AO ALTERAR: preserve @csrf, @method e os atributos name dos campos, pois eles correspondem à validação do controlador.
+--}}
 @extends('layout.app')
 
 @section('content')

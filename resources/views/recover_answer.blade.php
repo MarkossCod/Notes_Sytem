@@ -1,4 +1,9 @@
-{{-- Responsabilidade: valida a resposta secreta e coleta uma nova senha na etapa final de recuperacao. --}}
+{{--
+    VIEW PÚBLICA: confirmação e redefinição de senha
+    FINALIDADE: mostrar $question, validar a resposta secreta e coletar uma nova senha forte com confirmação.
+    ENVIO: o formulário POST chama LoginController@recoverReset pela rota recover.reset.
+    AO ALTERAR: nunca exiba a resposta armazenada e mantenha password/password_confirmation compatíveis com a validação.
+--}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

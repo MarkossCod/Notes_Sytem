@@ -1,4 +1,10 @@
-{{-- Responsabilidade: lista, pesquisa, ordena, cria e edita as categorias do usuario autenticado. --}}
+{{--
+    VIEW: gerenciamento de categorias
+    FINALIDADE: listar, pesquisar, ordenar, cadastrar, editar, ativar, desativar e excluir categorias do usuário atual.
+    DADOS RECEBIDOS: $categories contém a lista e contagens; os quatro totais alimentam os cartões de resumo.
+    ORIGEM DOS DADOS: CategoryController@index. Os formulários chamam store, update, toggle e destroy.
+    AO ALTERAR: preserve data-name, IDs iniciados por cat e os métodos POST/PUT/PATCH/DELETE, pois o JavaScript e as rotas dependem deles.
+--}}
 @extends('layout.app')
 
 @section('content')
@@ -124,7 +130,7 @@
 </div>
 
 <script>
-    // Alterna a ordem alfabetica das linhas sem nova requisicao ao servidor.
+    // Reordena no navegador as linhas já carregadas. Depende de #catTable, data-name e do texto A-Z/Z-A exibido em catSortLabel.
     function toggleCatSort() {
         const label = document.getElementById('catSortLabel');
         const rows = Array.from(document.querySelectorAll('#catTable tbody tr'));
@@ -137,7 +143,7 @@
         label.textContent = asc ? 'Z-A' : 'A-Z';
     }
 
-    // Filtra as linhas pelo nome enquanto o usuario digita.
+    // Compara a busca com data-name e apenas oculta as linhas; nenhum registro é excluído ou consultado novamente.
     document.getElementById('catSearchInput')?.addEventListener('input', function () {
         const q = this.value.toLowerCase();
         document.querySelectorAll('#catTable tbody tr').forEach(row => {
@@ -145,7 +151,7 @@
         });
     });
 
-    // Mantem aberto apenas o menu de acoes da categoria selecionada.
+    // Fecha outros menus e abre o menu cujo ID segue o padrão catMenu + id da categoria.
     function toggleCatMenu(e, id) {
         e.stopPropagation();
         document.querySelectorAll('.cat-action-menu.open').forEach(m => {
@@ -172,7 +178,7 @@
         });
     }
 
-    // Reutiliza o mesmo modal para cadastrar ou preencher a edicao de uma categoria.
+    // Sem categoria, prepara POST para criação. Com categoria, preenche os campos e troca rota/método para PUT de atualização.
     function openCatModal(category) {
         const form = document.getElementById('catForm');
         const title = document.getElementById('catModalTitle');

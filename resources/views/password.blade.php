@@ -1,4 +1,9 @@
-{{-- Responsabilidade: preserva a etapa visual legada de senha para compatibilidade com o fluxo antigo. --}}
+{{--
+    VIEW LEGADA: etapa separada de senha
+    FINALIDADE: preservar a interface do fluxo antigo que solicitava a senha depois do nome do usuário.
+    SITUAÇÃO ATUAL: routes/web.php não registra password.check; o login atual recebe nome e senha na mesma página.
+    AO ALTERAR: não reative somente a view; primeiro implemente rota, validação, limitação de tentativas e controlador seguros.
+--}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

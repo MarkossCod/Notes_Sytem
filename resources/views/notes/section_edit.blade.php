@@ -1,4 +1,10 @@
-{{-- Responsabilidade: mantem a edicao de divisoes, imagens e anexos legados vinculados a uma nota. --}}
+{{--
+    VIEW LEGADA: edição de divisão de nota
+    FINALIDADE: preservar a edição de conteúdo, imagens existentes, novas imagens e anexos de divisões antigas.
+    DADOS RECEBIDOS: $note identifica a nota e $section contém a divisão que seria editada.
+    SITUAÇÃO ATUAL: não integra o fluxo atual de rotas; permanece apenas para compatibilidade e referência histórica.
+    AO ALTERAR: qualquer reativação exige autorização por usuário, validação de arquivos e rotas correspondentes no backend.
+--}}
 @extends('layout.app')
 @section('content')
 

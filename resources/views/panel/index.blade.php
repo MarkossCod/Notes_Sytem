@@ -1,4 +1,10 @@
-{{-- Responsabilidade: apresenta indicadores, graficos e historico filtravel das movimentacoes do usuario. --}}
+{{--
+    VIEW: Painel de atividades
+    FINALIDADE: exibir indicadores, gráfico de movimentações, progresso das notas e histórico recente do usuário.
+    DADOS RECEBIDOS: $summary contém totais; $chart contém a série; $recentActivities contém o histórico; $period define 7, 30 ou 90 dias.
+    ORIGEM DOS DADOS: PanelController@index. O formato do gráfico e os filtros do histórico são aplicados no navegador.
+    AO ALTERAR: mantenha o objeto chart compatível com renderChart() e prefira calcular novas métricas no controlador.
+--}}
 @extends('layout.app')
 
 @section('content')
@@ -137,7 +143,7 @@
 </main>
 
 <script>
-    // Renderiza a serie no formato escolhido e preserva a preferencia no navegador.
+    // Limpa o SVG, calcula a escala e chama o desenho de barras, linha ou área. O formato escolhido é salvo no localStorage.
     (() => {
         const chart = document.getElementById('panelMovementChart');
         if (!chart) return;
@@ -280,7 +286,7 @@
         renderChart(initialType, currentMetric);
     })();
 
-    // Filtra o historico ja renderizado sem uma nova requisicao ao servidor.
+    // Mostra somente itens cujo data-group corresponde ao filtro; "all" restaura todos sem consultar o backend.
     document.querySelectorAll('[data-panel-filter]').forEach((button) => {
         button.addEventListener('click', () => {
             const filter = button.dataset.panelFilter;

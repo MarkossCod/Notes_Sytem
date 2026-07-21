@@ -1,4 +1,9 @@
-{{-- Responsabilidade: apresenta a abertura animada da aplicacao antes do redirecionamento ao login. --}}
+{{--
+    VIEW PÚBLICA: abertura animada
+    FINALIDADE: apresentar a identidade do Notes System e redirecionar automaticamente para o login.
+    DEPENDÊNCIAS: IDs do SVG, canvas e barra de progresso são controlados pelo JavaScript deste arquivo.
+    AO ALTERAR: renomeie um ID somente se atualizar todas as referências no script e mantenha um redirecionamento final acessível.
+--}}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
