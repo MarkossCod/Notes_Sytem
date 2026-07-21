@@ -58,7 +58,13 @@
                         <option value="oldest" @selected(request('order') === 'oldest')>Mais antigas</option>
                     </select>
                 </label>
-                <button type="button" class="trash-view-toggle" id="trashViewToggle" aria-label="Alternar visualização" title="Alternar visualização">▦</button>
+                <button type="button" class="trash-view-toggle" id="trashViewToggle"
+                        aria-label="Alternar visualização" title="Alternar visualização">
+                    {{-- Equivalente SVG de @mui/icons-material/ViewCompact para uso direto no Blade. --}}
+                    <svg class="trash-view-toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path fill="currentColor" d="M3 5v14h18V5H3Zm8 12H5v-2h6v2Zm0-4H5v-2h6v2Zm0-4H5V7h6v2Zm8 8h-6v-2h6v2Zm0-4h-6v-2h6v2Zm0-4h-6V7h6v2Z"/>
+                    </svg>
+                </button>
             </div>
         </form>
 

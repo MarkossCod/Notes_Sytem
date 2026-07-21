@@ -258,26 +258,54 @@
     const tagAddBtn = document.getElementById('neTagAddBtn');
     const tagInput = document.getElementById('neTagInput');
     const tagsHidden = document.getElementById('neTagsHidden');
-    let tags = @json($isSaved ? ($note->tags ?? []) : []);
+    const initialTags = @json($isSaved ? ($note->tags ?? []) : []);
+    const normalizeTag = value => String(value).trim().toLocaleLowerCase('pt-BR');
+
+    // Remove repetições antigas sem alterar a escrita da primeira ocorrência.
+    let tags = initialTags.reduce((uniqueTags, tag) => {
+        const label = String(tag).trim();
+        const alreadyExists = uniqueTags.some(existingTag => normalizeTag(existingTag) === normalizeTag(label));
+        if (label && !alreadyExists) uniqueTags.push(label);
+        return uniqueTags;
+    }, []);
 
     function renderTags() {
         tagsWrap.innerHTML = '';
         tags.forEach((tag, idx) => {
             const chip = document.createElement('span');
             chip.className = 'ne-tag-chip';
-            chip.innerHTML = `${tag} <button type="button" data-idx="${idx}">✕</button>`;
+
+            // textContent evita que um nome de etiqueta seja interpretado como HTML.
+            const label = document.createElement('span');
+            label.className = 'ne-tag-label';
+            label.textContent = tag;
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'ne-tag-remove';
+            removeButton.dataset.idx = idx;
+            removeButton.setAttribute('aria-label', `Remover etiqueta ${tag}`);
+            removeButton.textContent = '×';
+
+            chip.append(label, removeButton);
             tagsWrap.appendChild(chip);
         });
         tagsHidden.value = JSON.stringify(tags);
     }
     renderTags();
 
-    tagsWrap.addEventListener('click', function (e) {
-        if (e.target.tagName === 'BUTTON') {
-            tags.splice(Number(e.target.dataset.idx), 1);
-            renderTags();
-        }
+    tagsWrap.addEventListener('click', function (event) {
+        const removeButton = event.target.closest('.ne-tag-remove');
+        if (!removeButton || !tagsWrap.contains(removeButton)) return;
+
+        tags.splice(Number(removeButton.dataset.idx), 1);
+        renderTags();
     });
+
+    function closeTagInput() {
+        tagInput.style.display = 'none';
+        tagAddBtn.style.display = 'inline-flex';
+    }
 
     tagAddBtn.addEventListener('click', function () {
         tagAddBtn.style.display = 'none';
@@ -287,15 +315,30 @@
     });
 
     function commitTag() {
-        const val = tagInput.value.trim();
-        if (val) { tags.push(val); renderTags(); }
-        tagInput.style.display = 'none';
-        tagAddBtn.style.display = 'inline-flex';
+        const value = tagInput.value.trim();
+
+        // Limpar antes de ocultar impede que Enter e blur salvem o mesmo valor duas vezes.
+        tagInput.value = '';
+        closeTagInput();
+
+        const alreadyExists = tags.some(tag => normalizeTag(tag) === normalizeTag(value));
+        if (!value || alreadyExists) return;
+
+        tags.push(value);
+        renderTags();
     }
 
-    tagInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { e.preventDefault(); commitTag(); }
-        if (e.key === 'Escape') { tagInput.style.display = 'none'; tagAddBtn.style.display = 'inline-flex'; }
+    tagInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            commitTag();
+        }
+
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            tagInput.value = '';
+            closeTagInput();
+        }
     });
     tagInput.addEventListener('blur', commitTag);
 

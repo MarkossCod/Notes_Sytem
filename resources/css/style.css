@@ -1268,7 +1268,12 @@ button:hover {
 .trash-toolbar-actions { display: flex; align-items: center; gap: 10px; }
 .trash-sort { display: flex; align-items: center; min-height: 38px; padding: 0 10px; border: 1px solid #ddd; border-radius: 7px; background: #fff; }
 .trash-sort select { border: 0; outline: 0; color: #333; background: transparent; font-size: 12px; font-weight: 600; }
-.trash-view-toggle { width: 40px; height: 38px; border: 1px solid #ddd; border-radius: 7px; color: #555; background: #fff; }
+.trash-view-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 38px; margin: 0; padding: 0; border: 1px solid #ddd; border-radius: 7px;
+    color: #555; background: #fff; line-height: 1; vertical-align: middle; cursor: pointer;
+}
+.trash-view-toggle-icon { display: block; width: 22px; height: 22px; }
 .trash-view-toggle.active { border-color: #ff9a4b; color: #e56805; background: #fff7f0; }
 
 .trash-loading { position: absolute; z-index: 3; inset: 86px 24px 24px; display: flex; justify-content: center; align-items: center; gap: 10px; border-radius: 8px; color: #777; background: rgba(255,255,255,.94); font-size: 13px; transition: opacity .15s; }
@@ -3155,18 +3160,31 @@ canvas#bg {
 
 .cat-action {
     position: relative;
+    vertical-align: middle;
 }
 
 .cat-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 36px;
     height: 36px;
+    margin: 0;
+    padding: 0;
     border-radius: 8px;
     border: 1px solid #eee;
     background: white;
     color: #666;
-    font-weight: 700;
+    line-height: 1;
+    vertical-align: middle;
     cursor: pointer;
-    transition: background .2s;
+    transition: color .2s, background .2s, border-color .2s;
+}
+
+.cat-action-icon {
+    display: block;
+    width: 21px;
+    height: 21px;
 }
 
 .cat-action-btn:hover {
@@ -3402,16 +3420,19 @@ canvas#bg {
 .ne-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
 
 .ne-tag-chip {
-    display: inline-flex; align-items: center; gap: 6px; background: #FFF3E0; color: #E06E00;
-    border-radius: 20px; padding: 6px 12px; font-size: 12.5px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 7px; min-height: 30px; background: #FFF3E0; color: #E06E00;
+    border-radius: 20px; padding: 5px 7px 5px 12px; font-size: 12.5px; font-weight: 600; line-height: 1.2;
 }
 .ne-tag-chip:nth-child(3n+2) { background: #F3E8FF; color: #8B5CF6; }
 .ne-tag-chip:nth-child(3n+3) { background: #E8F5E9; color: #2E7D32; }
-.ne-tag-chip button {
-    background: none; border: none; padding: 0; color: inherit; font-size: 13px; line-height: 1;
-    cursor: pointer; opacity: .7;
+.ne-tag-label { display: inline-flex; align-items: center; min-height: 18px; }
+.ne-tag-chip .ne-tag-remove {
+    display: inline-flex; align-items: center; justify-content: center; flex: 0 0 20px;
+    width: 20px; height: 20px; margin: 0; padding: 0; border: 0; border-radius: 50%;
+    color: inherit; background: transparent; font-family: Arial, sans-serif; font-size: 17px; line-height: 1;
+    cursor: pointer; opacity: .72;
 }
-.ne-tag-chip button:hover { opacity: 1; }
+.ne-tag-chip .ne-tag-remove:hover { background: rgba(0, 0, 0, .07); opacity: 1; }
 
 .ne-tag-add {
     display: inline-flex; align-items: center; gap: 6px; background: #fafafa; border: 1px dashed #ddd;
